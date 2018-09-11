@@ -21,7 +21,7 @@ Installation
 
 We recommend to simply add the location of your clone of this directory to your PYTHONPATH.
 
-If you use bash, you could for instance add the following line to your ``.bash_profile`` or ``.profile`` or equivalent::
+To do so, if you use bash, add this line to your ``.bash_profile`` or ``.profile`` or equivalent file:
 
 	export PYTHONPATH=${PYTHONPATH}:/path/to/momentsml/
 
