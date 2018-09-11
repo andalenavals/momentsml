@@ -1,5 +1,5 @@
 """
-Top-level classes and functions to help running MegaLUT on GREAT3.
+Top-level classes and functions to help running MomentsML on GREAT3.
 """
 
 import logging
@@ -16,7 +16,7 @@ from megalut import tools
 class GREAT3Run(utils.Branch):
 	"""
 	This is a simple class to group frequently used variables, on top of the Branch class.
-	Unlike Branch, it does specify paths to MegaLUT-internal temporary files and directories, and handles a workdir.
+	Unlike Branch, it does specify paths to MomentsML-internal temporary files and directories, and handles a workdir.
 	"""
 	
 	def __init__(self, experiment, obstype, sheartype, datadir, truthdir, workdir, g3publicdir, subfields=None, ncpu=None, skipdone=False):
@@ -100,7 +100,7 @@ class GREAT3Run(utils.Branch):
 		return os.path.join(self.workdir, "%03i" % subfield, "/".join(args))
 	
 
-	# Files that MegaLUT will write: 
+	# Files that MomentsML will write: 
 	
 #	def obsincat(self, subfield, imgtype, prefix="", xt=None, yt=None):
 #		"""

@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 def train(catalog, conflist, workbasedir):
     """
-    Top-level function to train Tenbilacs with data from a MegaLUT catalog.
+    Top-level function to train Tenbilacs with data from a MomentsML catalog.
     Does not modify or return the input catalog, it really just trains.
     
     :param conflist: A list of tuples ("ada5g1.cfg", "sum55.cfg") of filepaths to the configuration files for the data selection and the machine learning.

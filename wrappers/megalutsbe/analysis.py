@@ -35,7 +35,7 @@ def analyse(cat,
 	e1m = tools.metrics.metrics(cat, labelfeature=tools.feature.Feature(colname_gal_g1s), predlabelfeature=tools.feature.Feature(colname_e1_guesses, rea="Full"))
 	e2m = tools.metrics.metrics(cat, labelfeature=tools.feature.Feature(colname_gal_g2s), predlabelfeature=tools.feature.Feature(colname_e2_guesses, rea="Full"))
 	
-	print "MegaLUT metrics in pixel frame:"
+	print "MomentsML metrics in pixel frame:"
 	print "e1: m/100 = %.4f +/- %.4f, c/100 = %.4f +/- %.4f, predfrac = %.2f %%" % (e1m["m"]*100.0, e1m["merr"]*100.0, e1m["c"]*100.0, e1m["cerr"]*100.0, e1m["predfrac"]*100.0)
 	print "e2: m/100 = %.4f +/- %.4f, c/100 = %.4f +/- %.4f, predfrac = %.2f %%" % (e2m["m"]*100.0, e2m["merr"]*100.0, e2m["c"]*100.0, e2m["cerr"]*100.0, e2m["predfrac"]*100.0)
 	

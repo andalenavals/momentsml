@@ -1,8 +1,8 @@
 """
-MegaLUT galaxy shape measurement package
+MomentsML galaxy shape measurement package
 
 Note that this code is currently not public.
-Contact the MegaLUT developers for any questions.
+Contact the MomentsML developers for any questions.
 """
 
 __all__ = ["learn", "meas", "plot", "sim", "tools"]

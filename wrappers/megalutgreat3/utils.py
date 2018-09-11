@@ -9,7 +9,7 @@ class Branch:
 	A class to define the file paths of the GREAT3 data and other branch-specific stuff.
 	This is to tell code where GREAT3 stuff is.
 	It's NOT to tell code where to write (intermediary) files or to specify workdirs etc!
-	So in fact there should be no MegaLUT related things in here.
+	So in fact there should be no MomentsML related things in here.
 	"""
 
 	def __init__(self, experiment, obstype, sheartype, datadir=".", truthdir="."):
@@ -99,7 +99,7 @@ class Branch:
 
 
 	# Now we only define here the paths to the "input" stuff, set by GREAT3.
-	# No MegaLUT-internal files!
+	# No MomentsML-internal files!
 	
 	
 	def get_ftiles(self, xt, yt):

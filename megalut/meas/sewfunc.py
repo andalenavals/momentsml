@@ -20,7 +20,7 @@ import os
 
 def measfct(catalog, runon="img", **kwargs):
 	"""
-	MegaLUT-conform measfct wrapper, offering the possiblity to run either on "img" stamps, or on
+	MomentsML-conform measfct wrapper, offering the possiblity to run either on "img" stamps, or on
 	the "psf" stamps associated to the catalog. This might be useful for FDNT, depending on how
 	a pipeline handles PSF measurements.
 	

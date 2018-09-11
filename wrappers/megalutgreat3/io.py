@@ -33,7 +33,7 @@ def readgalcat(branch, subfield, xt=None, yt=None):
 		assert data.shape[1] == 5
 	
 	ids = [int(line[2]) for line in data]
-	xs = data[:,0]+1.5 # To get the same pixel convention as MegaLUT
+	xs = data[:,0]+1.5 # To get the same pixel convention as MomentsML
 	ys = data[:,1]+1.5 # idem
 	
 	if xt is None and yt is None:

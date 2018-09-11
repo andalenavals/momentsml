@@ -50,7 +50,7 @@ def hjoin(table1, table2, idcol):
 	
 	These kind of things are easy to do with astropy tables.
 	The present function is just a wrapper for one type of operation that is very
-	frequently required when running MegaLUT.
+	frequently required when running MomentsML.
 
 	Instead of a simple hstack (which would rely on the order of rows), here we use 
 	join to match the rows, using the idcol (i.e., "ID") column.

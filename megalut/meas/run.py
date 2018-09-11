@@ -112,8 +112,8 @@ def onsims(simdir, simparams, measdir, measfct, measfctkwargs, ncpu=1, skipdone=
 def general(incatfilepaths, outcatfilepaths, measfct, measfctkwargs, ncpu=1, skipdone=True, incatmetadicts=None):
 	"""
 	Run the given shape measurement (measfct) on your images using a multiprocessing pool map (ncpu).
-	This measfct must be MegaLUT-compliant, i.e. find all the required images by reading the meta of the passed catalog.
-	Note that if you want to run on MegaLUT simulations, see the function onsims() above (which calls this function).
+	This measfct must be MomentsML-compliant, i.e. find all the required images by reading the meta of the passed catalog.
+	Note that if you want to run on MomentsML simulations, see the function onsims() above (which calls this function).
 	
 	
 	:param incatfilepaths: list of paths to the pickled input catalogs.
@@ -121,7 +121,7 @@ def general(incatfilepaths, outcatfilepaths, measfct, measfctkwargs, ncpu=1, ski
 		to run on the image file(s) specified as ImageInfo objects in the catalog's meta dicts.
 		Note that there is a trick to run with **different meta dicts**, see argument incatmetadicts below.
 	:param outcatfilepaths: list of paths where the corresponding output catalog pickles should be written.
-	:param measfct: The function that measures the sources. It has to be MegaLUT-compliant, i.e., it has to find
+	:param measfct: The function that measures the sources. It has to be MomentsML-compliant, i.e., it has to find
 		all the required images by reading the meta of the passed catalog.
 		Often you will define this funtion yourself, as you might want to run different algorithms in one shot.
 	:param measfctkwargs: keyword arguments controlling the behavior of the measfct.

@@ -168,7 +168,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
 	:param sersiccut: cuts the sersic profile at this number of rad
 	
 	.. note::
-		See this function in MegaLUT v4 (great3) for attempts to speed up galsim by playing with fft params, accuracy, etc...
+		See this function in MomentsML v4 (great3) for attempts to speed up galsim by playing with fft params, accuracy, etc...
 	
 	.. note::
 		About speed, if you specify trunc, better express the scale radius.

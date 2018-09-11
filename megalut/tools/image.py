@@ -95,7 +95,7 @@ def getstamp(x, y, img, stampsize, getfrom=None):
 			assert stamp.array.shape == (stampsize, stampsize)
 	# if from numpy:
 	elif getfrom=="np":
-		# By MegaLUT's definition, a pixel is centered at 0.5,0.5
+		# By MomentsML's definition, a pixel is centered at 0.5,0.5
 		dd=+.5
 		xmin=int(round(x-dd-stampsize/2.))
 		xmax=int(round(x-dd+stampsize/2.))

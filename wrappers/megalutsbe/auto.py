@@ -1,8 +1,8 @@
 """
-This module contains stuff for a "single-step" application of MegaLUT to SBE data, for testing by the SDC.
+This module contains stuff for a "single-step" application of MomentsML to SBE data, for testing by the SDC.
 
 Given the very different approach from what I did when playing with the SBE interactively...
-	1) regarding the multiprocessing (one job per image, end-to-end: we do not use MegaLUT's own multiprocessing)
+	1) regarding the multiprocessing (one job per image, end-to-end: we do not use MomentsML's own multiprocessing)
 	2) regarding the configuration (seen as pure input, not generated  by previous steps)
 ...we do not attempt to reuse any run.Run code here.
 So there is some code duplication from the run module.
@@ -142,7 +142,7 @@ class Worker():
 		
 		self.splitworkname = io.splitworkname(self.sbepath)
 		self.outdir = os.path.join(self.topoutdir, self.splitworkname[0])
-		self.outcatfilepath = os.path.join(self.outdir, self.splitworkname[1]+"_MegaLUT_output.fits")
+		self.outcatfilepath = os.path.join(self.outdir, self.splitworkname[1]+"_MomentsML_output.fits")
 		
 	
 	def __str__(self):
@@ -167,7 +167,7 @@ class Worker():
 		
 	def makeobsincat(self):
 		"""
-		Turns the SBE catalogs into MegaLUT catalogs 
+		Turns the SBE catalogs into MomentsML catalogs 
 		"""
 		
 		logger.info("{}: making the input catalog...".format(self))
@@ -184,13 +184,13 @@ class Worker():
 		   
 		# We add the xid, yid, x and y columns
 		# Did some trial and error tests, to find out that one should start y at the bottom
-		# to get compatible with MegaLUT standarts.
+		# to get compatible with MomentsML standarts.
 		cat["xid"] = np.concatenate([np.arange(n) for i in range(n)])
 		cat["yid"] = np.concatenate([np.ones(n, dtype=np.int)*i for i in range(n)])		
 		cat["x"] = stampsize/2.0 + cat["xid"]*(stampsize + 1) + 0.5
 		cat["y"] = stampsize/2.0 + cat["yid"]*(stampsize + 1) + 0.5
 		
-		# We rename or translate some of the parameters into MegaLUT-style:
+		# We rename or translate some of the parameters into MomentsML-style:
 		cat["tru_psf_g1"] = cat["PSF_shape_1"] * np.cos(2.0*cat["PSF_shape_2"]*np.pi/180)
 		cat["tru_psf_g2"] = cat["PSF_shape_1"] * np.sin(2.0*cat["PSF_shape_2"]*np.pi/180)
 		cat["tru_psf_sigma"] = cat["PSF_sigma_arcsec"] / sbesamplescale
@@ -246,7 +246,7 @@ class Worker():
 		mlparams = {}
 		execfile(os.path.join(self.configdir, "mlparams.py"), mlparams)
 	
-		# Run MegaLUT
+		# Run MomentsML
 		cat = megalut.learn.run.predict(cat, self.configdir, mlparams["trainparamslist"])
 			
 		# And write the output

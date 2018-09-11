@@ -68,7 +68,7 @@ def pngstampgrid(img, cat, pngfilepath, xname="x", yname="y", stampsize=100, nco
 				f2nstamp.drawline(s/2, s/4, l=30, t=np.pi/2.0)	
 				f2nstamp.drawline(s/4, s/2, l=30, t=0.0)
 
-				# Just for reference, some other stuff from previous MegaLUT versions:				
+				# Just for reference, some other stuff from previous MomentsML versions:				
 				#f2nstamp.drawrectangle(1, s-1, 1, s-1)	
 				#f2nstamp.drawrectangle(140, s-140, 140, s-140, colour=(0,255,255))	
 				# Showing the measured shape, in red

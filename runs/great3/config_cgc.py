@@ -13,7 +13,7 @@ great3 = mg3.great3.GREAT3Run(
 	sheartype = "constant",
 	datadir = "/vol/fohlen11/fohlen11_1/mtewes/GREAT3",
 	truthdir = "/vol/fohlen11/fohlen11_1/mtewes/GREAT3/truth", # Only needed for final analysis plots
-	workdir = "/vol/fohlen11/fohlen11_1/mtewes/2017_MegaLUT_GREAT3/cgc_v2",
+	workdir = "/vol/fohlen11/fohlen11_1/mtewes/2017_MomentsML_GREAT3/cgc_v2",
 	g3publicdir = "/users/mtewes/code/great3-public",
 	
 	

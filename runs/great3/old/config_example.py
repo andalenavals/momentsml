@@ -5,7 +5,7 @@ Copy this file into config.py, and make changes as appropriate.
 
 
 
-# General configuration for MegaLUT
+# General configuration for MomentsML
 datadir = "/vol/fohlen11/fohlen11_1/mtewes/GREAT3"
 trushapedir = "/vol/fohlen11/fohlen11_1/mtewes/GREAT3/truth"
 
@@ -13,7 +13,7 @@ trushapedir = "/vol/fohlen11/fohlen11_1/mtewes/GREAT3/truth"
 experiment = "control" # This gets used to access the correct GREAT3 files
 obstype = "ground"
 sheartype = "constant"
-workdir = "/vol/fohlen11/fohlen11_1/mtewes/2016_MegaLUT_GREAT3/cgc-2" # Where intermediary files are written. Choose it to reflect the branch!
+workdir = "/vol/fohlen11/fohlen11_1/mtewes/2016_MomentsML_GREAT3/cgc-2" # Where intermediary files are written. Choose it to reflect the branch!
 
 # Script configuration
 skipdone = True
@@ -25,8 +25,8 @@ loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;2
 
 # External paths to libraries
 sexpath = "sex"
-corr2path = "/home/kuntzer/workspace/MegaLUT/MegaLUT-github/presubmission_script"
-presubdir = "/home/kuntzer/workspace/MegaLUT/MegaLUT-github/presubmission_script"
+corr2path = "/home/kuntzer/workspace/MomentsML/MomentsML-github/presubmission_script"
+presubdir = "/home/kuntzer/workspace/MomentsML/MomentsML-github/presubmission_script"
 
 
 # And now some frequently used functions related to this configuration:
@@ -57,9 +57,9 @@ def load_run():
 
 ###### Thibault's settings:
 """
-# General configuration for MegaLUT
-datadir = "/home/kuntzer/workspace/MegaLUT/MegaLUT-github/great3_data/"
-trushapedir = "/home/kuntzer/workspace/MegaLUT/MegaLUT-github/great3_true_shape/"
+# General configuration for MomentsML
+datadir = "/home/kuntzer/workspace/MomentsML/MomentsML-github/great3_data/"
+trushapedir = "/home/kuntzer/workspace/MomentsML/MomentsML-github/great3_true_shape/"
 workdir = None
 skipdone = True
 ncpu = 8
@@ -69,6 +69,6 @@ loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;2
 
 # External path to library
 sexpath = "sex"
-corr2path = "/home/kuntzer/workspace/MegaLUT/MegaLUT-github/presubmission_script"
-presubdir = "/home/kuntzer/workspace/MegaLUT/MegaLUT-github/presubmission_script"
+corr2path = "/home/kuntzer/workspace/MomentsML/MomentsML-github/presubmission_script"
+presubdir = "/home/kuntzer/workspace/MomentsML/MomentsML-github/presubmission_script"
 """

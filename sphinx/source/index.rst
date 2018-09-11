@@ -1,15 +1,15 @@
-.. MegaLUT documentation master file, created by
+.. MomentsML documentation master file, created by
    sphinx-quickstart on Tue Aug 26 11:36:03 2014.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-MegaLUT documentation
+MomentsML documentation
 =====================
 
 About
 -----
 
-MegaLUT is a weak-lensing-galaxy-shape-measurement-with-machine-learning package written in python.
+MomentsML is a weak-lensing-galaxy-shape-measurement-with-machine-learning package written in python.
 
 Last build of this documentation : |today|.
 

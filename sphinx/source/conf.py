@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# MegaLUT documentation build configuration file, created by
+# MomentsML documentation build configuration file, created by
 # sphinx-quickstart on Tue Aug 26 11:36:03 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -50,8 +50,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'MegaLUT'
-copyright = u'2014, The MegaLUT developers'
+project = u'MomentsML'
+copyright = u'2014, The MomentsML developers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -183,7 +183,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'MegaLUTdoc'
+htmlhelp_basename = 'MomentsMLdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -203,8 +203,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'MegaLUT.tex', u'MegaLUT Documentation',
-   u'The MegaLUT developers', 'manual'),
+  ('index', 'MomentsML.tex', u'MomentsML Documentation',
+   u'The MomentsML developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -233,8 +233,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'megalut', u'MegaLUT Documentation',
-     [u'The MegaLUT developers'], 1)
+    ('index', 'megalut', u'MomentsML Documentation',
+     [u'The MomentsML developers'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -247,8 +247,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'MegaLUT', u'MegaLUT Documentation',
-   u'The MegaLUT developers', 'MegaLUT', 'One line description of project.',
+  ('index', 'MomentsML', u'MomentsML Documentation',
+   u'The MomentsML developers', 'MomentsML', 'One line description of project.',
    'Miscellaneous'),
 ]
 

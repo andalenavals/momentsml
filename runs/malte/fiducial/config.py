@@ -11,10 +11,10 @@ loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;2
 #loggerformat='PID %(process)06d | %(asctime)s | %(levelname)s: %(name)s(%(funcName)s): %(message)s'
 logging.basicConfig(format=loggerformat,level=logging.INFO)
 
-#workdir = "/vol/fohlen11/fohlen11_1/mtewes/MegaLUT/fiducial"
-#workdir = "/vol/euclid5/euclid5_raid3/mtewes/MegaLUT_fiducial" # <--- used for constant PSF
-#workdir = "/vol/fohlen11/fohlen11_1/mtewes/MegaLUT/new_fiducial" # <--- used for vp
-workdir = "/vol/fohlen12/data1/mtewes/MegaLUT/fiducial" # <-- for weights vp
+#workdir = "/vol/fohlen11/fohlen11_1/mtewes/MomentsML/fiducial"
+#workdir = "/vol/euclid5/euclid5_raid3/mtewes/MomentsML_fiducial" # <--- used for constant PSF
+#workdir = "/vol/fohlen11/fohlen11_1/mtewes/MomentsML/new_fiducial" # <--- used for vp
+workdir = "/vol/fohlen12/data1/mtewes/MomentsML/fiducial" # <-- for weights vp
 
 simdir = os.path.join(workdir, "sim")
 simmeasdir = os.path.join(workdir, "simmeas")

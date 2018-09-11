@@ -43,7 +43,7 @@ def SBE_make_psf_image(sigma, shear, npix=200, pixel_scale=0.1, subsample_scale=
 
 def measfct(catalog, runon="img", psf_from=None, stampsize=None, se_config_filepath=None, **kwargs):
         """
-        This is a wrapper around FDNT that meets the requirements of a MegaLUT-conformed shape
+        This is a wrapper around FDNT that meets the requirements of a MomentsML-conformed shape
 	measurement function, namely to take only one catalog (astropy table) object containing
 	-- or linking to -- all the required data.
 

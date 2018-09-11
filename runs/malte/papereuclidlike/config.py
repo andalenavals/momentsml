@@ -11,7 +11,7 @@ loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;2
 #loggerformat='PID %(process)06d | %(asctime)s | %(levelname)s: %(name)s(%(funcName)s): %(message)s'
 logging.basicConfig(format=loggerformat,level=logging.INFO)
 
-workdir = "/vol/fohlen12/data1/mtewes/MegaLUT/papereuclidlike"
+workdir = "/vol/fohlen12/data1/mtewes/MomentsML/papereuclidlike"
 gemsdir = "/vol/fohlen12/data1/mtewes/GEMS"
 spectrumpath = "/vol/fohlen12/data1/mtewes/Pickles_spectra/pickles_uk_27.fits"
 

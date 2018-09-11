@@ -5,7 +5,7 @@ Download & Installation
 Dependencies
 ------------
 
-MegaLUT is currently developed using python 2.7 (and requires it).
+MomentsML is currently developed using python 2.7 (and requires it).
 
 It uses the usual numpy, scipy, matplotlib, and
 
@@ -32,19 +32,19 @@ Installation
 
 
 First, the longer answer: especially if you want to tweak/read the code and do frequent commits or updates, just add the directory containing ``megalut`` to your ``PYTHONPATH``.
-That way you can keep MegaLUT in any convenient place on your system, and modify it on the fly, without having to ``python setup.py install`` after any modification.
+That way you can keep MomentsML in any convenient place on your system, and modify it on the fly, without having to ``python setup.py install`` after any modification.
 
 For tcsh, add for instance something like this to your .tcshrc ::
 
 
-	#setenv PYTHONPATH /path/to/MegaLUT
+	#setenv PYTHONPATH /path/to/MomentsML
 	# or, to add to the existing stuff :
 	
-	setenv PYTHONPATH ${PYTHONPATH}:/path/to/MegaLUT
+	setenv PYTHONPATH ${PYTHONPATH}:/path/to/MomentsML
 	
 or, if you use bash, to your .bash_profile or equivalent::
 
-	export PYTHONPATH=${PYTHONPATH}:/path/to/MegaLUT/
+	export PYTHONPATH=${PYTHONPATH}:/path/to/MomentsML/
 
 ... and then from any python you can simply ``import megalut``.
 

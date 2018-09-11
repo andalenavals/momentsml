@@ -4,7 +4,7 @@ About
 =====
 
 
-This code illustrates the use of MegaLUT on GREAT3 data and reproduces the related figures from our paper. The scripts might be useful to play with GREAT3, but are not meant and do not have the quality to be reused for other purposes or surveys.
+This code illustrates the use of MomentsML on GREAT3 data and reproduces the related figures from our paper. The scripts might be useful to play with GREAT3, but are not meant and do not have the quality to be reused for other purposes or surveys.
 
 We focus on the constant-shear single-epoch constant-PSF branches, but running on the corresponding variable-shear branches is equally simple.
 
@@ -21,9 +21,9 @@ The pipeline uses python 2.7 and the usual "scipy stack" (numpy, scipy, matplotl
 - astropy (1.1 or above)
 - Tenbilac
 	- ADD INFO HERE
-- MegaLUT
+- MomentsML
 	- ADD INFO HERE
-- MegaLUT-GREAT3 wrapper
+- MomentsML-GREAT3 wrapper
 	- ADD INFO HERE
 
 
@@ -64,7 +64,7 @@ Before starting to run anything, we suggest that you have a look at the followin
   - mlconfig/
   	Files in here are configurations for the machine learning with Tenbilac.
 	There are two kinds of files:
-	- ada*.cfg tell MegaLUT what features and inputs should be fed into Tenbilac, and how the predicted output data should be named.
+	- ada*.cfg tell MomentsML what features and inputs should be fed into Tenbilac, and how the predicted output data should be named.
 	- sum*.cfg are actual Tenbilac configuration files, with all the Tenbilac settings.
 
 
@@ -90,11 +90,11 @@ You are then ready for the first script, also to test that everythign is in plac
 This is a rather fast one. It runs a shape measurement (apaptive moments) on the 9 "star" stamps of each subfield of the given branch.
 We'll need this data for all subfields, but you could also start by setting `subfields = [0]` in your `config.py` to get a first idea. Afterwards, run it again with `subfields = range(0, 200)` (or `subfields = range(1, 200)`, as 0 is already done). Of course, such a split in subfields can also be done with all the other scripts.
 
-MegaLUT uses astropy tables to hold all catalogs. And it saves these tables into python pickle files. The result of this script is such a catalog, in your workdir/subfield/obs: `star_meascat.pkl`. 
+MomentsML uses astropy tables to hold all catalogs. And it saves these tables into python pickle files. The result of this script is such a catalog, in your workdir/subfield/obs: `star_meascat.pkl`. 
 
 ### run_12_measobsgals.py
 
-This is a not-that-fast one, it measures the features on the GREAT3 galaxies (we call them "obs", for "observed", to distinguish them from MegaLUT-internal simulations).
+This is a not-that-fast one, it measures the features on the GREAT3 galaxies (we call them "obs", for "observed", to distinguish them from MomentsML-internal simulations).
 
 This script uses multiprocessing: before starting it, set the option `ncpu` in config.py to the number of cpus you want to use. 
 

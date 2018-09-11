@@ -2,7 +2,7 @@
 Wrapper around the FANN neural network library, using pyfann that ships with FANN 2.1 beta.
 http://leenissen.dk/fann/wp/
 
-Wrapper initially written for MegaLUT, December 2013.
+Wrapper initially written for MomentsML, December 2013.
 This is a standalone module, using only numpy arrays. It is not limited to shape measurement.
 Run it as a script to see a demo.
 

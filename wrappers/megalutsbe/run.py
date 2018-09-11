@@ -1,5 +1,5 @@
 """
-This defines classes useful for step-by-step / manual use of MegaLUT on SBE data.
+This defines classes useful for step-by-step / manual use of MomentsML on SBE data.
 """
 
 import megalut
@@ -53,7 +53,7 @@ class Run():
 	
 	def makecats(self, onlyn = None, sbe_sample_scale=0.05):
 		"""
-		Read the SBE data files and prepare MegaLUT "observations" catalogs.
+		Read the SBE data files and prepare MomentsML "observations" catalogs.
 		For each SBE image, an input catalog is written into the workdir.
 		"""
 
@@ -96,7 +96,7 @@ class Run():
 			cat["Galaxy_g1"] = cat["Galaxy_shear_1"] * np.cos(2.0*cat["Galaxy_shear_2"]*np.pi/180)
  			cat["Galaxy_g2"] = cat["Galaxy_shear_1"] * np.sin(2.0*cat["Galaxy_shear_2"]*np.pi/180)
 
-			# And for convenience, include some standard MegaLUT names for the PSFs
+			# And for convenience, include some standard MomentsML names for the PSFs
 			cat["tru_psf_g1"] = cat["PSF_e1"]
 			cat["tru_psf_g2"] = cat["PSF_e2"]
 			cat["tru_psf_sigma"] = cat["PSF_sigma_arcsec"] / sbe_sample_scale
@@ -209,7 +209,7 @@ class Run():
 	
 	def drawsims(self, simparams, n=100, nc=10, ncat=1, nrea=1, stampsize=200):
 		"""
-		Draws many sims on several cpus, in the standard MegaLUT style.
+		Draws many sims on several cpus, in the standard MomentsML style.
 		
 		n is number of galaxies
 		nc is number of columns

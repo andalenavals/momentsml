@@ -1,6 +1,6 @@
 """
 This code is neither public, nor cleaned up.
-Contact the MegaLUT developers (via mtewes at astro.uni-bonn.de) for any questions.
+Contact the MomentsML developers (via mtewes at astro.uni-bonn.de) for any questions.
 """
 
 __all__ = ["io", "run", "plot", "analysis"]

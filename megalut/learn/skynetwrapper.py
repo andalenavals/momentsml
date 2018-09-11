@@ -2,7 +2,7 @@
 Wrapper around SkyNet neural network regression
 http://arxiv.org/abs/1309.0790
 
-Wrapper written for MegaLUT, December 2013.
+Wrapper written for MomentsML, December 2013.
 This is a standalone module, you can run it as a script to see a demo.
 """
 

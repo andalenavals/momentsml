@@ -3,7 +3,7 @@ Building this documentation
 
 This documentation is made using Sphinx (`<http://sphinx-doc.org>`_).
 
-To build the documentation by yourself (assuming you have the latest version of sphinx), ``cd`` into the ``sphinx`` directory of the MegaLUT distribution, and::
+To build the documentation by yourself (assuming you have the latest version of sphinx), ``cd`` into the ``sphinx`` directory of the MomentsML distribution, and::
 
 	[make clean]
 	make apidoc

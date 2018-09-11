@@ -24,7 +24,7 @@ except:
 
 def measfct(catalog, runon="img", stampsize=None, **kwargs):
 	"""
-	This is a wrapper around galsim_adamom that meets the requirements of a MegaLUT-conform shape measurement function, namely
+	This is a wrapper around galsim_adamom that meets the requirements of a MomentsML-conform shape measurement function, namely
 	to take only one catalog (astropy table) object containing -- or link to -- all the required data.
 	In other words, this is a function that you could pass to meas.run.general() etc.
 	If you want to combine several shape measurement algorithms into one shot, you would define such a function yourself (not here
