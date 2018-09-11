@@ -1,9 +1,9 @@
 MomentsML
 =========
 
-This repository contains a python shear measurement toolbox and scripts accompanying the paper "Weak-lensing shear measurement with machine learning: Teaching artificial neural networks about feature noise" (https://arxiv.org/abs/1807.02120).
+This repository contains a python shear measurement toolbox and scripts accompanying the paper "Weak-lensing shear measurement with machine learning: Teaching artificial neural networks about feature noise" (Tewes et al. 2018, https://arxiv.org/abs/1807.02120, [paper website](https://astro.uni-bonn.de/~mtewes/ml-shear-meas/)).
 
-Note that this code is provided for demonstration and prototyping purposes. It is not designed to be integrated into any shear measurement pipeline.
+Note that this code is provided for demonstration and prototyping purposes. It is not designed to be integrated into a shear measurement pipeline.
 
 Dependencies
 ------------
