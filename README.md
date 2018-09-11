@@ -12,7 +12,8 @@ The code depends on:
 
  * python 2.7, with the usual numpy, scipy, and matplotlib
  * GalSim
- * Astropy
+ * astropy
+ * [[tenbilac|https://github.com/mtewes/tenbilac]] (for the Machine Learning part)
 
 
 Installation
