@@ -1,8 +1,8 @@
 
 
 
-import megalut
-import megalut.learn
+import momentsml
+import momentsml.learn
 import os
 import numpy as np
 

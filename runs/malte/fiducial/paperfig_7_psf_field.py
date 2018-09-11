@@ -1,12 +1,12 @@
 import config
 import os
 import numpy as np
-import megalut.plot
+import momentsml.plot
 
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse, Arrow, FancyArrowPatch
-import megalut.plot.figures as figures
+import momentsml.plot.figures as figures
 import matplotlib.ticker as ticker
 
 import simparams

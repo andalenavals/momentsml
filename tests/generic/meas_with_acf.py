@@ -3,23 +3,23 @@ Standalone demo illustrating the use of the ACF technique.
 """
 import logging
 
-from megalut.meas.acf import run
-import megalut.sim
+from momentsml.meas.acf import run
+import momentsml.sim
 
 import pylab as plt
 
 logging.basicConfig(level=logging.INFO)
 
 # First Create an image with a catalog (See draw_and_measure_sims.py for more info.).
-class MySimParams(megalut.sim.params.Params):
+class MySimParams(momentsml.sim.params.Params):
     def get_flux(self):
         return 300.
     
 mysimparams = MySimParams()
 # We make a catalog of 100 simulated galaxies :
-simcat = megalut.sim.stampgrid.drawcat(mysimparams, n=10, stampsize=32)
+simcat = momentsml.sim.stampgrid.drawcat(mysimparams, n=10, stampsize=32)
 # Now, we pass this catalog to drawimg, to generate the actual simulated images.
-megalut.sim.stampgrid.drawimg(simcat, 
+momentsml.sim.stampgrid.drawimg(simcat, 
     simgalimgfilepath="simgalimg.fits",
     simtrugalimgfilepath="simtrugalimg.fits",
     simpsfimgfilepath="simpsfimg.fits"

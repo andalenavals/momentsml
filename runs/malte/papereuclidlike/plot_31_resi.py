@@ -5,15 +5,15 @@ import numpy as np
 import matplotlib.ticker as ticker
 import matplotlib
 
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 plt.rc('text', usetex=True)
 
 import logging
 logger = logging.getLogger(__name__)
 
-#megalut.plot.figures.set_fancy(14)
+#momentsml.plot.figures.set_fancy(14)
 from matplotlib import rc
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
@@ -23,21 +23,21 @@ rc('text', usetex=True)
 
 
 valcat = os.path.join(config.valdir, config.valname + ".pkl")
-cat = megalut.tools.io.readpickle(valcat)
+cat = momentsml.tools.io.readpickle(valcat)
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 
 
 
-cat = megalut.tools.table.shuffle(cat) # otherwise scatter plots look weird as they got sorted by tru s1 s2
+cat = momentsml.tools.table.shuffle(cat) # otherwise scatter plots look weird as they got sorted by tru s1 s2
 
-megalut.tools.table.addstats(cat, "snr")
+momentsml.tools.table.addstats(cat, "snr")
 
 
 #select = False
 #if select:
 #	
-#	s = megalut.tools.table.Selector("snr_mean > 10", [
+#	s = momentsml.tools.table.Selector("snr_mean > 10", [
 #		("min", "snr_mean", 10.0),
 #	])
 #	catsel = s.select(cat)
@@ -55,17 +55,17 @@ snr_mean = Feature("snr_mean", nicename="$\\langle \mathrm{S}/\mathrm{N}\\rangle
 for comp in ["1"]:
 
 	
-	megalut.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
-	megalut.tools.table.addstats(cat, "pre_s{}".format(comp))
+	momentsml.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
+	momentsml.tools.table.addstats(cat, "pre_s{}".format(comp))
 	
 	cat["abs_pre_s{}_bias".format(comp)] = np.fabs(cat["pre_s{}_bias".format(comp)])
 	cat["log_abs_pre_s{}_bias".format(comp)] = np.log10(np.fabs(cat["pre_s{}_bias".format(comp)]))
 	
 	
-	s_high = megalut.tools.table.Selector("snr_mean > 10", [
+	s_high = momentsml.tools.table.Selector("snr_mean > 10", [
 		("min", "snr_mean", 10.0),
 	])
-	s_low = megalut.tools.table.Selector("snr_mean < 10", [
+	s_low = momentsml.tools.table.Selector("snr_mean < 10", [
 		("max", "snr_mean", 10.0),
 	])
 	
@@ -117,13 +117,13 @@ for comp in ["1"]:
 	rasterized=True
 
 	ax = fig.add_subplot(2, 2, 1)
-	megalut.plot.scatter.scatter(ax, cat_high, tru_s,  pre_s_bias, featc=snr_mean, cmap="plasma_r", s=10, rasterized=rasterized)
+	momentsml.plot.scatter.scatter(ax, cat_high, tru_s,  pre_s_bias, featc=snr_mean, cmap="plasma_r", s=10, rasterized=rasterized)
 	ax.set_ylim((-0.01, 0.01))
 	ax.text(0.1, 0.87, r"$\langle \mathrm{S}/\mathrm{N} \rangle > 10$", verticalalignment='center', transform=ax.transAxes)
 	ax.axhline(color="black", lw=0.5)
 	
 	ax = fig.add_subplot(2, 2, 2)
-	megalut.plot.scatter.scatter(ax, cat_low, tru_s,  pre_s_bias, featc=snr_mean, cmap="plasma_r", s=10, rasterized=rasterized)
+	momentsml.plot.scatter.scatter(ax, cat_low, tru_s,  pre_s_bias, featc=snr_mean, cmap="plasma_r", s=10, rasterized=rasterized)
 	ax.set_ylim((-0.1, 0.1))
 	ax.text(0.1, 0.87, r"$\langle \mathrm{S}/\mathrm{N} \rangle < 10$", verticalalignment='center', transform=ax.transAxes)
 	ax.axhline(color="black", lw=0.5)
@@ -131,19 +131,19 @@ for comp in ["1"]:
 	
 	ax = fig.add_subplot(2, 2, 3)
 	cnorm = matplotlib.colors.SymLogNorm(linthresh=0.005)
-	megalut.plot.scatter.scatter(ax, cat_high, tru_s, tru_rad, featc=pre_s_bias_fix, cmap="coolwarm", norm=cnorm, s=10, rasterized=rasterized)
+	momentsml.plot.scatter.scatter(ax, cat_high, tru_s, tru_rad, featc=pre_s_bias_fix, cmap="coolwarm", norm=cnorm, s=10, rasterized=rasterized)
 	ax.text(0.1, 0.87, r"$\langle \mathrm{S}/\mathrm{N} \rangle > 10$", verticalalignment='center', transform=ax.transAxes)
 	
 	
 	"""
 	ax = fig.add_subplot(1, 3, 3)
 	cnorm = matplotlib.colors.SymLogNorm(linthresh=0.001)
-	megalut.plot.scatter.scatter(ax, cat, tru_sb, tru_rad, featc=pre_s_bias, cmap="coolwarm")
+	momentsml.plot.scatter.scatter(ax, cat, tru_sb, tru_rad, featc=pre_s_bias, cmap="coolwarm")
 	"""
 	
 	ax = fig.add_subplot(2, 2, 4)
 	cnorm = matplotlib.colors.LogNorm(vmin=1e-4, vmax=1e-1, clip=True)
-	megalut.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, featc=abs_pre_s_bias, cmap="plasma_r", s=10, norm=cnorm, rasterized=rasterized)
+	momentsml.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, featc=abs_pre_s_bias, cmap="plasma_r", s=10, norm=cnorm, rasterized=rasterized)
 	
 	# Now we plot the snr limit
 	
@@ -151,6 +151,6 @@ for comp in ["1"]:
 	#plt.tight_layout()
 
 
-	megalut.plot.figures.savefig(os.path.join(config.valdir, config.valname + "_resi_{}".format(comp)), fig, fancy=True, pdf_transparence=True)
+	momentsml.plot.figures.savefig(os.path.join(config.valdir, config.valname + "_resi_{}".format(comp)), fig, fancy=True, pdf_transparence=True)
 	plt.show()
 

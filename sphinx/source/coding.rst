@@ -7,7 +7,7 @@ Imports
 
 No using statements.
 
-From within a subpackage or submodule, import other megalut modules usign relative paths, e.g.::
+From within a subpackage or submodule, import other momentsml modules usign relative paths, e.g.::
 
 	from .. import tools
 
@@ -17,7 +17,7 @@ The __init__.py file of a package does not have to systematically import all sub
 Logging
 -------
 
-In any megalut module, write::
+In any momentsml module, write::
 
 	import logging
 	logger = logging.getLogger(__name__)

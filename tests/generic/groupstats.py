@@ -7,7 +7,7 @@ logging.basicConfig(format='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcNam
 
 import numpy as np
 import astropy.table
-import megalut
+import momentsml
 
 # First we make a bunch of catalogs to play with:
 
@@ -31,8 +31,8 @@ print incats[-1]
 
 # And we call groupstats (you can try out both):
 
-#groupcat = megalut.tools.table.groupstats(incats, groupcols=["b"], removecols=["c"], removereas=True, keepfirstrea=True)
-groupcat = megalut.tools.table.groupstats(incats, groupcols=["b", "c"], removecols=["a"], removereas=False)
+#groupcat = momentsml.tools.table.groupstats(incats, groupcols=["b"], removecols=["c"], removereas=True, keepfirstrea=True)
+groupcat = momentsml.tools.table.groupstats(incats, groupcols=["b", "c"], removecols=["a"], removereas=False)
 
 
 print "The output:"

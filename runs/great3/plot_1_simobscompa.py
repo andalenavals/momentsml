@@ -4,10 +4,10 @@ Classic simobscompa plot
 import matplotlib
 matplotlib.use("AGG")
 
-import megalut
-import megalutgreat3
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml
+import momentsmlgreat3
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -34,12 +34,12 @@ def main():
 		
 		measdir = config.great3.subpath(subfield, "simmeas")
 
-		simcat = megalut.tools.io.readpickle(os.path.join(measdir, spname, "groupmeascat.pkl"))
-		#print megalut.tools.table.info(simcat)
+		simcat = momentsml.tools.io.readpickle(os.path.join(measdir, spname, "groupmeascat.pkl"))
+		#print momentsml.tools.table.info(simcat)
 
 
-		obscat = megalut.tools.io.readpickle(config.great3.subpath(subfield, "obs", "img_meascat.pkl"))
-		#print megalut.tools.table.info(obscat)
+		obscat = momentsml.tools.io.readpickle(config.great3.subpath(subfield, "obs", "img_meascat.pkl"))
+		#print momentsml.tools.table.info(obscat)
 		#obscat = obscat[:1000]
 			
 		plot(simcat, obscat, filepath=plotpath)
@@ -102,57 +102,57 @@ def plot(simcat, obscat, filepath=None):
 
 	ax = fig.add_subplot(3, 5, 1)
 
-	megalut.plot.contour.simobs(ax, simcat, obscat, adamom_g1, adamom_g2, plotpoints=False, nlines=2)
-	#megalut.plot.hist.hist(ax, simcat, snr, color="red", label="Training", normed=True)
-	#megalut.plot.hist.hist(ax, obscat, snr, color="blue", label="GREAT3", normed=True)
+	momentsml.plot.contour.simobs(ax, simcat, obscat, adamom_g1, adamom_g2, plotpoints=False, nlines=2)
+	#momentsml.plot.hist.hist(ax, simcat, snr, color="red", label="Training", normed=True)
+	#momentsml.plot.hist.hist(ax, obscat, snr, color="blue", label="GREAT3", normed=True)
 
 	ax = fig.add_subplot(3, 5, 2)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, adamom_g1, adamom_g2)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, adamom_g1, adamom_g2)
 	
 	ax = fig.add_subplot(3, 5, 3)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, snr, adamom_sigma, legend=True)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, snr, adamom_sigma, legend=True)
 
 	ax = fig.add_subplot(3, 5, 4)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, adamom_flux, adamom_sigma)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, adamom_flux, adamom_sigma)
 
 	ax = fig.add_subplot(3, 5, 5)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, Feature("adamom_flux", 0, 80, rea=rea), Feature("adamom_sigma", 0.5, 3.5, rea=rea))
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, Feature("adamom_flux", 0, 80, rea=rea), Feature("adamom_sigma", 0.5, 3.5, rea=rea))
 	
 
 	ax = fig.add_subplot(3, 5, 6)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, aperphot_sb2, aperphot_sb3)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, aperphot_sb2, aperphot_sb3)
 
 	ax = fig.add_subplot(3, 5, 7)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, aperphot_sb5, aperphot_sb8)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, aperphot_sb5, aperphot_sb8)
 
 	ax = fig.add_subplot(3, 5, 8)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, aperphot_sbr1, aperphot_sbr2)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, aperphot_sbr1, aperphot_sbr2)
 
 	ax = fig.add_subplot(3, 5, 9)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, adamom_log_flux, adamom_sigma)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, adamom_log_flux, adamom_sigma)
 
 
 
 
 	ax = fig.add_subplot(3, 5, 11)
-	megalut.plot.contour.simobs(ax, simcat, obscat, skymad, skymean, plotpoints=False)
+	momentsml.plot.contour.simobs(ax, simcat, obscat, skymad, skymean, plotpoints=False)
 
 	ax = fig.add_subplot(3, 5, 12)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, aperphot_log_sb2, aperphot_log_sb5)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, aperphot_log_sb2, aperphot_log_sb5)
 
 	ax = fig.add_subplot(3, 5, 13)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, adamom_rho4, adamom_sigma)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, adamom_rho4, adamom_sigma)
 
 	ax = fig.add_subplot(3, 5, 14)
-	megalut.plot.scatter.simobs(ax, simcat, obscat, adamom_log_flux, adamom_rho4)
+	momentsml.plot.scatter.simobs(ax, simcat, obscat, adamom_log_flux, adamom_rho4)
 	#ax.set_xscale("log", nonposx='clip')
 
 	
 	#ax = fig.add_subplot(3, 4, 12)
-	#megalut.plot.scatter.simobs(ax, simcat, obscat, psf_adamom_g1, psf_adamom_g2)
+	#momentsml.plot.scatter.simobs(ax, simcat, obscat, psf_adamom_g1, psf_adamom_g2)
 
 	#ax = fig.add_subplot(3, 4, 2)
-	#megalut.plot.scatter.scatter(ax, cat, Feature("tru_s1"), Feature("tru_s2"))
+	#momentsml.plot.scatter.scatter(ax, cat, Feature("tru_s1"), Feature("tru_s2"))
 
 	
 	

@@ -1,8 +1,8 @@
 import galsim
 import astropy
-import megalut
-import megalut.meas
-import megalut.meas.aperphot
+import momentsml
+import momentsml.meas
+import momentsml.meas.aperphot
 import os
 import numpy as np
 
@@ -22,14 +22,14 @@ x = [33.5, 73.0, -8]
 y = [43.5, 83.0, -8]
 tru_max_rad=[3.0, 2.5, 0.0]
 cat = astropy.table.Table((x, y, tru_max_rad), names=["x", "y", "tru_max_rad"])
-cat.meta["img"] = megalut.tools.imageinfo.ImageInfo("test.fits")
+cat.meta["img"] = momentsml.tools.imageinfo.ImageInfo("test.fits")
 #print cat
 
 
 # We can run a measurment on them:
 
-#cat = megalut.meas.skystats.measfct(cat, stampsize=20)
-cat = megalut.meas.galsim_adamom.measfct(cat, stampsize=20)
-cat = megalut.meas.aperphot.measfct(cat, xname="x", yname="y", radii=[1, 2, 2.5, 2.51, 3, 3.01])
+#cat = momentsml.meas.skystats.measfct(cat, stampsize=20)
+cat = momentsml.meas.galsim_adamom.measfct(cat, stampsize=20)
+cat = momentsml.meas.aperphot.measfct(cat, xname="x", yname="y", radii=[1, 2, 2.5, 2.51, 3, 3.01])
 
 print cat

@@ -4,8 +4,8 @@ Simulates a dedicated training set for each subfield.
 
 import argparse
 
-import megalut
-import megalut.meas
+import momentsml
+import momentsml.meas
 import config
 import numpy as np
 import os
@@ -364,7 +364,7 @@ def run(subfield, sp, drawconf):
 	
 	# We have to read in the obs catalog of this subfield to get the noise of the sky:
 	if sp.noise_level != 0:
-		obscat = megalut.tools.io.readpickle(config.great3.subpath(subfield, "obs", "img_meascat.pkl"))
+		obscat = momentsml.tools.io.readpickle(config.great3.subpath(subfield, "obs", "img_meascat.pkl"))
 		sp.noise_level = np.ma.mean(obscat["skymad"])
 		logger.info("Noise level set to {}".format(sp.noise_level))
 	
@@ -373,11 +373,11 @@ def run(subfield, sp, drawconf):
 	measdir = config.great3.subpath(subfield, "simmeas")
 	
 	# Loading the PSF for the subfield
-	psfcat = megalut.tools.io.readpickle(config.great3.subpath(subfield, "obs", "star_meascat.pkl"))
+	psfcat = momentsml.tools.io.readpickle(config.great3.subpath(subfield, "obs", "star_meascat.pkl"))
 	
 
 	# Simulating images
-	megalut.sim.run.multi(
+	momentsml.sim.run.multi(
 		simdir=simdir,
 		simparams=sp,
 		drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":config.great3.stampsize()},
@@ -389,7 +389,7 @@ def run(subfield, sp, drawconf):
 
 
 	# Measuring the newly drawn images
-	megalut.meas.run.onsims(
+	momentsml.meas.run.onsims(
 		simdir=simdir,
 		simparams=sp,
 		measdir=measdir,
@@ -400,7 +400,7 @@ def run(subfield, sp, drawconf):
 	)
 
 
-	cat = megalut.meas.avg.onsims(
+	cat = momentsml.meas.avg.onsims(
 		measdir=measdir, 
 		simparams=sp,
 		task="group",
@@ -408,27 +408,27 @@ def run(subfield, sp, drawconf):
 		removecols=measfcts.removecols
 	)
 
-	megalut.tools.table.keepunique(cat)
-	megalut.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
+	momentsml.tools.table.keepunique(cat)
+	momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
 
 	
 	# For shear sims, we group the results in cases of same true shears
 	if drawconf["groupmode"] == "shear":
 			
-		cat = megalut.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])
-		megalut.tools.table.keepunique(cat)
-		#print megalut.tools.table.info(cat)
-		megalut.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl")) # Just overwrite, don't need the other one
+		cat = momentsml.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])
+		momentsml.tools.table.keepunique(cat)
+		#print momentsml.tools.table.info(cat)
+		momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl")) # Just overwrite, don't need the other one
 
 	
 	"""
 	# For statell sims, we group by ellipticity
 	if "statell" in sp.name:
 		
-		cat = megalut.tools.table.groupreshape(cat, groupcolnames=["tru_g1", "tru_g2"])
-		megalut.tools.table.keepunique(cat)
-		#print megalut.tools.table.info(cat)
-		megalut.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl")) # Just overwrite, don't need the other one
+		cat = momentsml.tools.table.groupreshape(cat, groupcolnames=["tru_g1", "tru_g2"])
+		momentsml.tools.table.keepunique(cat)
+		#print momentsml.tools.table.info(cat)
+		momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl")) # Just overwrite, don't need the other one
 	"""
 	
 

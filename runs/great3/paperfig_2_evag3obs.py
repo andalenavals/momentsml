@@ -2,12 +2,12 @@ import matplotlib
 #matplotlib.use("AGG")
 matplotlib.use("pdf")
 
-import megalut
-import megalut.tools
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml
+import momentsml.tools
+import momentsml.plot
+from momentsml.tools.feature import Feature
 
-import megalutgreat3
+import momentsmlgreat3
 import astropy
 
 
@@ -76,7 +76,7 @@ catpath = config.great3.path("summary_{}.pkl".format(config.predcode))
 #catpath = config.great3.path("{}_summary_{}.pkl".format(config.datasets["mimic-great3"], config.predcode))
 
 
-cat = megalut.tools.io.readpickle(catpath)
+cat = momentsml.tools.io.readpickle(catpath)
 
 
 # Computing residuals
@@ -114,8 +114,8 @@ cat["pre_s+w_res"] = cat["pre_s+w"] - cat["tru_s+"]
 cat["pre_sxw_res"] = cat["pre_sxw"] - cat["tru_sx"]
 
 
-#print megalut.tools.table.info(cat)
-#mets = megalutgreat3.utils.metrics(cat, ("tru_s1", "tru_s2"), ("pre_s1w", "pre_s2w"), psfgcols=("tru_psf_g1", "tru_psf_g2"))
+#print momentsml.tools.table.info(cat)
+#mets = momentsmlgreat3.utils.metrics(cat, ("tru_s1", "tru_s2"), ("pre_s1w", "pre_s2w"), psfgcols=("tru_psf_g1", "tru_psf_g2"))
 
 
 def labeloutliers(ax, cat, pre, tru, thr=0.01, whichones=None):
@@ -137,7 +137,7 @@ def labeloutliers(ax, cat, pre, tru, thr=0.01, whichones=None):
 	
 
 def addmetrics(ax, xfeat, yfeat):
-	metrics = megalut.tools.metrics.metrics(cat, xfeat, yfeat, pre_is_res=True)
+	metrics = momentsml.tools.metrics.metrics(cat, xfeat, yfeat, pre_is_res=True)
 	line1 = r"$\mathrm{RMSD} = %.5f $" % (metrics["rmsd"])
 	#line2 = r"$m: %.1f +/- %.1f; c: %.1f +/- %.1f$" % (metrics["m"]*1000.0, metrics["merr"]*1000.0, metrics["c"]*1000.0, metrics["cerr"]*1000.0)
 	#line2 = r"$m=%.1f \pm %.1f; c=%.1f \pm %.1f \, [10^{-3}]$" % (metrics["m"]*1000.0, metrics["merr"]*1000.0, metrics["c"]*1000.0, metrics["cerr"]*1000.0)
@@ -192,7 +192,7 @@ featc = Feature("psf_adamom_sigma", nicename=r"PSF $\mathtt{adamom\_sigma}$ [pix
 
 
 ax = plt.axes([.09, paneltoplevel, panelxw, panelyw])
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_s1", -sr, sr, nicename=r"True $g_1$"), Feature("pre_s1_res", -srp, srp, nicename=r"Predicted $g_1$ $-$ True $g_1$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_s1", -sr, sr, nicename=r"True $g_1$"), Feature("pre_s1_res", -srp, srp, nicename=r"Predicted $g_1$ $-$ True $g_1$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
 labeloutliers(ax, cat, "pre_s1", "tru_s1", whichones=whichones)
 ax.set_title("Without weights")
 ax.title.set_position([.5, 1.1])
@@ -209,7 +209,7 @@ addmetrics(ax, Feature("tru_s1"), Feature("pre_s1_res"))
 
 
 ax = plt.axes([.33, paneltoplevel, panelxw, panelyw])
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_s1", -sr, sr, nicename=r"True $g_1$"), Feature("pre_s1w_res", -srp, srp, nicename=r"Predicted $g_1$ $-$ True $g_1$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_s1", -sr, sr, nicename=r"True $g_1$"), Feature("pre_s1w_res", -srp, srp, nicename=r"Predicted $g_1$ $-$ True $g_1$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
 labeloutliers(ax, cat, "pre_s1w", "tru_s1", thr=0.004, whichones=whichones)
 ax.set_title("With weights")
 ax.title.set_position([.5, 1.1])
@@ -225,7 +225,7 @@ addmetrics(ax, Feature("tru_s1"), Feature("pre_s1w_res"))
 
 
 ax = plt.axes([.68, paneltoplevel, panelxw+0.02, panelyw])
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_s+", -sr, sr, nicename=r"True $g_+$"), Feature("pre_s+w_res", -srp, srp, nicename=r"Predicted $g_+$ $-$ True $g_+$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, idlinekwargs={"color":"black"})
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_s+", -sr, sr, nicename=r"True $g_+$"), Feature("pre_s+w_res", -srp, srp, nicename=r"Predicted $g_+$ $-$ True $g_+$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, idlinekwargs={"color":"black"})
 labeloutliers(ax, cat, "pre_s+w", "tru_s+", thr=0.004, whichones=whichones)
 ax.set_title("With weights")
 ax.title.set_position([.5, 1.1])
@@ -245,7 +245,7 @@ addmetrics(ax, Feature("tru_s+"), Feature("pre_s+w_res"))
 
 ax = plt.axes([.09, panelbottomlevel, panelxw, panelyw])
 
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_s2", -sr, sr, nicename=r"True $g_2$"), Feature("pre_s2_res", -srp, srp, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_s2", -sr, sr, nicename=r"True $g_2$"), Feature("pre_s2_res", -srp, srp, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
 labeloutliers(ax, cat, "pre_s2", "tru_s2", whichones=whichones)
 
 ax.set_yscale('symlog', linthreshy=symthres)
@@ -262,7 +262,7 @@ addmetrics(ax, Feature("tru_s2"), Feature("pre_s2_res"))
 
 ax = plt.axes([.33, panelbottomlevel, panelxw, panelyw])
 
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_s2", -sr, sr, nicename=r"True $g_2$"), Feature("pre_s2w_res", -srp, srp, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_s2", -sr, sr, nicename=r"True $g_2$"), Feature("pre_s2w_res", -srp, srp, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
 labeloutliers(ax, cat, "pre_s2w", "tru_s2", thr=0.004, whichones=whichones)
 
 ax.set_yscale('symlog', linthreshy=symthres)
@@ -278,7 +278,7 @@ addmetrics(ax, Feature("tru_s2"), Feature("pre_s2w_res"))
 
 ax = plt.axes([.68, panelbottomlevel, panelxw, panelyw])
 
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_sx", -sr, sr, nicename=r"True $g_{\times}$"), Feature("pre_sxw_res", -srp, srp, nicename=r"Predicted $g_{\times}$ $-$ True $g_{\times}$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_sx", -sr, sr, nicename=r"True $g_{\times}$"), Feature("pre_sxw_res", -srp, srp, nicename=r"Predicted $g_{\times}$ $-$ True $g_{\times}$"), featc, yisres=True, cmap=cmap, metrics=defaultmetrics, showidline=True, hidecbar=True, idlinekwargs={"color":"black"})
 labeloutliers(ax, cat, "pre_sxw", "tru_sx", thr=0.004, whichones=whichones)
 #labeloutliers(ax, cat, "pre_sx", "tru_sx")
 

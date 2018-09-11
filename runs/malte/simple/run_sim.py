@@ -48,7 +48,7 @@ sp.sr = 0.1
 
 
 """
-megalut.sim.run.multi(
+momentsml.sim.run.multi(
 	simdir=workdir,
 	simparams=sp,
 	drawcatkwargs={"n":10000, "nc":100, "stampsize":64},
@@ -59,7 +59,7 @@ megalut.sim.run.multi(
 	)
 
 
-megalut.meas.run.onsims(
+momentsml.meas.run.onsims(
 	simdir=workdir,
 	simparams=sp,
 	measdir=workdir,
@@ -70,7 +70,7 @@ megalut.meas.run.onsims(
 	)
 
 
-cat = megalut.meas.avg.onsims(
+cat = momentsml.meas.avg.onsims(
 	measdir=workdir, 
 	simparams=sp,
 	task="group",
@@ -78,16 +78,16 @@ cat = megalut.meas.avg.onsims(
 	removecols=measfcts.default_removecols
 	)
 
-megalut.tools.io.writepickle(cat, os.path.join(workdir, sp.name, "groupmeascat.pkl"))
+momentsml.tools.io.writepickle(cat, os.path.join(workdir, sp.name, "groupmeascat.pkl"))
 
 """
-cat = megalut.tools.io.readpickle(os.path.join(workdir, sp.name, "groupmeascat.pkl"))
-cat = megalut.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])
-#cat = megalut.tools.table.groupreshape(cat, groupcolnames=["tru_g1", "tru_g2"])
+cat = momentsml.tools.io.readpickle(os.path.join(workdir, sp.name, "groupmeascat.pkl"))
+cat = momentsml.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])
+#cat = momentsml.tools.table.groupreshape(cat, groupcolnames=["tru_g1", "tru_g2"])
 
-megalut.tools.table.keepunique(cat)
-#print megalut.tools.table.info(cat)
-megalut.tools.io.writepickle(cat, os.path.join(workdir, sp.name, "groupmeascat_cases.pkl"))
+momentsml.tools.table.keepunique(cat)
+#print momentsml.tools.table.info(cat)
+momentsml.tools.io.writepickle(cat, os.path.join(workdir, sp.name, "groupmeascat_cases.pkl"))
 
 
 

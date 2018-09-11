@@ -1,7 +1,7 @@
 import sewpy
 import tenbilac
-import megalut
-import megalutgreat3
+import momentsml
+import momentsmlgreat3
 import measfcts
 import simparams
 import mymlparams

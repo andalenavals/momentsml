@@ -4,8 +4,8 @@ import os
 import numpy as np
 import matplotlib.ticker as ticker
 
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 
 import logging
@@ -39,7 +39,7 @@ else:
 	valname = config.valname
 
 valcat = os.path.join(config.valdir, valname + ".pkl")
-cat = megalut.tools.io.readpickle(valcat)
+cat = momentsml.tools.io.readpickle(valcat)
 
 
 widescale=False
@@ -61,8 +61,8 @@ else:
 
 
 if select:
-	megalut.tools.table.addstats(cat, "snr")
-	s = megalut.tools.table.Selector("snr_mean > 10", [
+	momentsml.tools.table.addstats(cat, "snr")
+	s = momentsml.tools.table.Selector("snr_mean > 10", [
 		("min", "snr_mean", 10.0),
 	])
 	cat = s.select(cat)
@@ -79,8 +79,8 @@ for comp in ["1","2"]:
 		
 	cat["pre_s{}w_norm".format(comp)] = cat["pre_s{}w".format(comp)] / np.max(cat["pre_s{}w".format(comp)])
 
-	megalut.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
-	megalut.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
+	momentsml.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
+	momentsml.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
 	cat["pre_s{}_wbias".format(comp)] = cat["pre_s{}_wmean".format(comp)] - cat["tru_s{}".format(comp)]
 """
 
@@ -97,12 +97,12 @@ tru_psf_fwhm = Feature("tru_psf_fwhm", 4.1, 5.35, nicename=r"PSF FWHM [pix]")
 def make_plot(ax, featbin, showlegend=False):
 	ax.axhline(0.0, color='gray', lw=0.5)	
 	if weights is True:
-		megalut.plot.mcbin.mcbin(ax, cat, Feature("tru_s1"), Feature("pre_s1", rea="all"), featbin, featprew=Feature("pre_s1w", rea="all"), comp=1, regressmethod=regressmethod)
-		megalut.plot.mcbin.mcbin(ax, cat, Feature("tru_s2"), Feature("pre_s2", rea="all"), featbin, featprew=Feature("pre_s2w", rea="all"), comp=2, showbins=False, showlegend=showlegend, regressmethod=regressmethod)
+		momentsml.plot.mcbin.mcbin(ax, cat, Feature("tru_s1"), Feature("pre_s1", rea="all"), featbin, featprew=Feature("pre_s1w", rea="all"), comp=1, regressmethod=regressmethod)
+		momentsml.plot.mcbin.mcbin(ax, cat, Feature("tru_s2"), Feature("pre_s2", rea="all"), featbin, featprew=Feature("pre_s2w", rea="all"), comp=2, showbins=False, showlegend=showlegend, regressmethod=regressmethod)
 	else:
-		megalut.plot.mcbin.mcbin(ax, cat, Feature("tru_s1"), Feature("pre_s1", rea="all"), featbin, comp=1, regressmethod=regressmethod)
-		megalut.plot.mcbin.mcbin(ax, cat, Feature("tru_s2"), Feature("pre_s2", rea="all"), featbin, comp=2, showbins=False, showlegend=showlegend, regressmethod=regressmethod)	
-	megalut.plot.mcbin.make_symlog(ax, featbin, lim=lim)
+		momentsml.plot.mcbin.mcbin(ax, cat, Feature("tru_s1"), Feature("pre_s1", rea="all"), featbin, comp=1, regressmethod=regressmethod)
+		momentsml.plot.mcbin.mcbin(ax, cat, Feature("tru_s2"), Feature("pre_s2", rea="all"), featbin, comp=2, showbins=False, showlegend=showlegend, regressmethod=regressmethod)	
+	momentsml.plot.mcbin.make_symlog(ax, featbin, lim=lim)
 	ax.set_xlabel(featbin.nicename)
 
 
@@ -134,7 +134,7 @@ ax.set_yticklabels([])
 
 fig.text(.005, .94, text, fontdict={"fontsize":12})
 
-megalut.plot.figures.savefig(os.path.join(config.valdir, valname + "_psf_biases"), fig, fancy=True)
+momentsml.plot.figures.savefig(os.path.join(config.valdir, valname + "_psf_biases"), fig, fancy=True)
 
 plt.show()
 

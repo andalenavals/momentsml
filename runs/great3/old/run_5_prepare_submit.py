@@ -1,12 +1,12 @@
 import os
 import numpy as np
 
-import megalut.tools as tools
-import megalut.learn as learn
+import momentsml.tools as tools
+import momentsml.learn as learn
 
 import config
 
-import megalutgreat3 as mg3
+import momentsmlgreat3 as mg3
 
 import logging
 logging.basicConfig(format=config.loggerformat, level=logging.DEBUG)

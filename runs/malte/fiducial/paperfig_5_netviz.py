@@ -6,15 +6,15 @@ import matplotlib.ticker as ticker
 import matplotlib
 
 import tenbilac
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-megalut.plot.figures.set_fancy(14)
+momentsml.plot.figures.set_fancy(14)
 
 mode = "s"
 #mode = "w"
@@ -32,8 +32,8 @@ elif mode is "w":
 
 for (dataconfpath, toolconfpath) in conflist:
 
-	toolconfig = megalut.learn.tenbilacrun.readconfig(toolconfpath)
-	dataconfig = megalut.learn.tenbilacrun.readconfig(dataconfpath)
+	toolconfig = momentsml.learn.tenbilacrun.readconfig(toolconfpath)
+	dataconfig = momentsml.learn.tenbilacrun.readconfig(dataconfpath)
 	confname = dataconfig.get("setup", "name") + "_" + toolconfig.get("setup", "name")
 	trainworkdir = os.path.join(workbasedir, confname) # We will pass this to Tenbilac
 	
@@ -60,5 +60,5 @@ for (dataconfpath, toolconfpath) in conflist:
 	
 	
 
-	#megalut.plot.figures.savefig(os.path.join(config.valdir, config.datasets["ts"] + "_" + confname + "_msbevo"), fig, fancy=True, pdf_transparence=True)
+	#momentsml.plot.figures.savefig(os.path.join(config.valdir, config.datasets["ts"] + "_" + confname + "_msbevo"), fig, fancy=True, pdf_transparence=True)
 	#plt.show()

@@ -3,9 +3,9 @@ matplotlib.use("AGG")
 
 import argparse
 
-import megalut.tools
-import megalut.learn
-import megalut
+import momentsml.tools
+import momentsml.learn
+import momentsml
 import tenbilac
 
 import config
@@ -38,14 +38,14 @@ for subfield in config.great3.subfields:
 	
 	# And to the catalogue
 	traincatpath = os.path.join(measdir, "groupmeascat_predforw.pkl")
-	cat = megalut.tools.io.readpickle(traincatpath)
+	cat = momentsml.tools.io.readpickle(traincatpath)
 		
 	
 	# Now we might want to copy an existing training to start from there.
 	if args.startfrom is not None:
 		logger.info("Copying existing training from {}...".format(args.startfrom))
 	
-		dirnames = megalut.learn.tenbilacrun.confnames(config.weightconflist)
+		dirnames = momentsml.learn.tenbilacrun.confnames(config.weightconflist)
 		for (dirname, conf) in zip(dirnames, config.weightconflist):
 			newtraindirpath = os.path.join(traindir, dirname)
 			if os.path.isdir(newtraindirpath):
@@ -65,7 +65,7 @@ for subfield in config.great3.subfields:
 			print "##############################   Is it ok to keep the normer ?"
 	
 	# Running the training	
-	dirnames = megalut.learn.tenbilacrun.train(cat, config.weightconflist, traindir)
+	dirnames = momentsml.learn.tenbilacrun.train(cat, config.weightconflist, traindir)
 	#dirnames = ["ada4s1w_sum33wmassshort", "ada4s2w_sum33wmassshort"]
 	
 	# Summary plot and self-predictions
@@ -76,13 +76,13 @@ for subfield in config.great3.subfields:
 		tenbilac.plot.summaryerrevo(ten.committee, filepath=os.path.join(traindir, "{}_summary.png".format(dirname)))
 
 
-	cat = megalut.tools.io.readpickle(traincatpath) # To get the full catalog with all cases	
+	cat = momentsml.tools.io.readpickle(traincatpath) # To get the full catalog with all cases	
 	
 	for (dirname, conf) in zip(dirnames, config.weightconflist):
 
-		predcat = megalut.learn.tenbilacrun.predict(cat, [conf], traindir)
+		predcat = momentsml.learn.tenbilacrun.predict(cat, [conf], traindir)
 		predcatpath = os.path.join(traindir, "{}_selfpred.pkl".format(dirname))
-		megalut.tools.io.writepickle(predcat, predcatpath)
+		momentsml.tools.io.writepickle(predcat, predcatpath)
 		figpredcatpath = os.path.join(traindir, "{}_selfpred.png".format(dirname))
 		
 		if "s2" in conf[0] or "g2" in conf[0]:

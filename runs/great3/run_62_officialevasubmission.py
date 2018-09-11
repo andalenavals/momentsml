@@ -3,8 +3,8 @@ This calls the GREAT3 evaluation function
 """
 
 
-import megalut
-import megalut.tools
+import momentsml
+import momentsml.tools
 
 import astropy
 

@@ -1,14 +1,14 @@
-import megalut
+import momentsml
 import os
 import config
 import numpy as np
 
-from megalut.tools.feature import Feature
+from momentsml.tools.feature import Feature
 
 import matplotlib
 import matplotlib.pyplot as plt
 
-#megalut.plot.figures.set_fancy(14)
+#momentsml.plot.figures.set_fancy(14)
 from matplotlib import rc
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
@@ -16,9 +16,9 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex=True)
 
 
-cat = megalut.tools.io.readpickle(os.path.join(config.workdir, "cat.pkl"))
+cat = momentsml.tools.io.readpickle(os.path.join(config.workdir, "cat.pkl"))
 
-print megalut.tools.table.info(cat)
+print momentsml.tools.table.info(cat)
 
 
 fig = plt.figure(figsize=(4, 2.5))
@@ -41,12 +41,12 @@ tru_sersicn = Feature("tru_sersicn", 0, 6.5, nicename=r"${\textrm{S\'ersic}$ ind
 
 
 ax = fig.add_subplot(1, 1, 1)
-megalut.plot.hist.hist(ax, cat, tru_sersicn, normed=True)
+momentsml.plot.hist.hist(ax, cat, tru_sersicn, normed=True)
 ax.set_ylabel("Relative frequency")
 #ax.set_yticklabels([])
 
 
-megalut.plot.figures.savefig(os.path.join(config.valdir, "sourcecat2"), fig, fancy=True, pdf_transparence=True, nocrop=True)
+momentsml.plot.figures.savefig(os.path.join(config.valdir, "sourcecat2"), fig, fancy=True, pdf_transparence=True, nocrop=True)
 
 #plt.tight_layout()
 plt.show()

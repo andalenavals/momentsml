@@ -1,12 +1,12 @@
 """
 Parameters describing how galaxies should be drawn
 """
-import megalut.sim
+import momentsml.sim
 import numpy as np
 
 
 
-class G3CGCSersics(megalut.sim.params.Params):
+class G3CGCSersics(momentsml.sim.params.Params):
 	"""
 	Sersic profiles for GREAT3 training, validation, and tests.
 	"""
@@ -16,7 +16,7 @@ class G3CGCSersics(megalut.sim.params.Params):
 		- distmode switches between different parameter distributions
 		- obstype also affects parameter distributiosn
 		"""
-		megalut.sim.params.Params.__init__(self)
+		momentsml.sim.params.Params.__init__(self)
 		if name is not None:
 			self.name = name
 		self.snc_type = snc_type
@@ -221,11 +221,11 @@ def contracted_rayleigh(sigma, max_val, p):
 	return (tmp / np.power(1 + np.power(tmp / max_val, p), 1.0 / p))
 
 
-#class CGCSersics(megalut.sim.params.Params):
+#class CGCSersics(momentsml.sim.params.Params):
 #
 #
 #	def __init__(self):
-#		megalut.sim.params.Params.__init__(self)
+#		momentsml.sim.params.Params.__init__(self)
 #		self.snc_type = 1000
 #		
 #

@@ -3,8 +3,8 @@ This generates the "submission file" (for constant shear branches), bypassing th
 """
 
 
-import megalut
-import megalut.tools
+import momentsml
+import momentsml.tools
 
 import astropy
 
@@ -18,7 +18,7 @@ logging.basicConfig(format=config.loggerformat, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 catpath = config.great3.path("summary_{}.pkl".format(config.predcode))
-cat = megalut.tools.io.readpickle(catpath)
+cat = momentsml.tools.io.readpickle(catpath)
 
 subcat = cat["subfield","pre_s1w","pre_s2w"]
 

@@ -1,4 +1,4 @@
-import megalut.sim
+import momentsml.sim
 import numpy as np
 import random # np.random.choice is only available for newer numpys...
 
@@ -8,14 +8,14 @@ import itertools
 
 
 
-class Simple1(megalut.sim.params.Params):
+class Simple1(momentsml.sim.params.Params):
 	"""
 	No PSF, just round Gaussians, but with Euclid zeropoint and sky level etc.
 	"""
 	
 	
 	def __init__(self):
-		megalut.sim.params.Params.__init__(self)
+		momentsml.sim.params.Params.__init__(self)
 
 	
 	def stat(self):

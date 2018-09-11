@@ -3,7 +3,7 @@ matplotlib.use("AGG")
 
 import os
 
-import megalut.learn
+import momentsml.learn
 
 import config
 
@@ -26,8 +26,8 @@ traindir = os.path.join(config.traindir, config.datasets["ts"])
 	
 # And to the catalogue
 traincatpath = os.path.join(measdir, "groupmeascat.pkl")
-cat = megalut.tools.io.readpickle(traincatpath)
-#print megalut.tools.table.info(cat)
+cat = momentsml.tools.io.readpickle(traincatpath)
+#print momentsml.tools.table.info(cat)
 
 
 if args.target is "e":
@@ -42,8 +42,8 @@ else:
 select=True
 if select:
 	logger.warning("Selection of cases is activated!")
-	megalut.tools.table.addstats(cat, "snr")
-	s = megalut.tools.table.Selector("snrcut", [
+	momentsml.tools.table.addstats(cat, "snr")
+	s = momentsml.tools.table.Selector("snrcut", [
 		#("max", "adamom_failfrac", 0.01),
 		("min", "snr_mean", args.snrcut),
 	])
@@ -52,30 +52,30 @@ if select:
 
 
 # Running the training
-dirnames = megalut.learn.tenbilacrun.train(cat, config.shearconflist, traindir)
+dirnames = momentsml.learn.tenbilacrun.train(cat, config.shearconflist, traindir)
 
 
 
 
 """
-#megalut.tools.table.addstats(cat, "snr")
+#momentsml.tools.table.addstats(cat, "snr")
 #cat.sort("adamom_failfrac")
 #cat.sort("magnitude")
 #print cat["magnitude", "adamom_failfrac", "snr_mean"][:]
 #exit()	
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 """
 
 
 """	
 # Self-predicting
 
-cat = megalut.tools.io.readpickle(traincatpath) # To get the full catalog with all cases, not just the selected ones
+cat = momentsml.tools.io.readpickle(traincatpath) # To get the full catalog with all cases, not just the selected ones
 for (dirname, conf) in zip(dirnames, config.shearconflist):
 
-	predcat = megalut.learn.tenbilacrun.predict(cat, [conf], traindir)
+	predcat = momentsml.learn.tenbilacrun.predict(cat, [conf], traindir)
 	predcatpath = os.path.join(traindir, "{}_selfpred.pkl".format(dirname))
-	megalut.tools.io.writepickle(predcat, predcatpath)
+	momentsml.tools.io.writepickle(predcat, predcatpath)
 	figpredcatpath = os.path.join(traindir, "{}_selfpred.png".format(dirname))
 		
 	if "s2" in conf[0] or "g2" in conf[0]:

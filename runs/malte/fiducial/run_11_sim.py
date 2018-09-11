@@ -2,7 +2,7 @@ import matplotlib
 matplotlib.use("AGG")
 
 import os
-import megalut
+import momentsml
 import config
 import argparse
 
@@ -863,7 +863,7 @@ def run(configuration):
 
 
 	# Simulating images
-	megalut.sim.run.multi(
+	momentsml.sim.run.multi(
 		simdir=simdir,
 		simparams=sp,
 		drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":config.drawstampsize},
@@ -875,7 +875,7 @@ def run(configuration):
 
 
 	# Measuring the newly drawn images
-	megalut.meas.run.onsims(
+	momentsml.meas.run.onsims(
 		simdir=simdir,
 		simparams=sp,
 		measdir=measdir,
@@ -886,7 +886,7 @@ def run(configuration):
 	)
 	
 
-	cat = megalut.meas.avg.onsims(
+	cat = momentsml.meas.avg.onsims(
 		measdir=measdir, 
 		simparams=sp,
 		task="group",
@@ -894,19 +894,19 @@ def run(configuration):
 		removecols=measfcts.default_removecols
 	)
 
-	megalut.tools.table.keepunique(cat)
-	megalut.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
+	momentsml.tools.table.keepunique(cat)
+	momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
 	
 	
 	# Now we perform some additional computations on this catalog.
-	cat = megalut.tools.io.readpickle(os.path.join(measdir, sp.name, "groupmeascat.pkl"))
+	cat = momentsml.tools.io.readpickle(os.path.join(measdir, sp.name, "groupmeascat.pkl"))
 	
 	if drawconf["groupmode"] == "shear":
 	
-		#cat = megalut.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])
-		cat = megalut.tools.table.fastgroupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])	
+		#cat = momentsml.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])
+		cat = momentsml.tools.table.fastgroupreshape(cat, groupcolnames=["tru_s1", "tru_s2"])	
 	
-		megalut.tools.table.keepunique(cat)
+		momentsml.tools.table.keepunique(cat)
 	
 	if drawconf["groupmode"] in ["shear", "ellipticity"]:
 	
@@ -915,8 +915,8 @@ def run(configuration):
 		logger.info("We have {} realizations".format(nrea))
 		cat["adamom_failfrac"] = np.sum(cat["adamom_g1"].mask, axis=1) / float(nrea)		
 	
-		#print megalut.tools.table.info(cat)
-		megalut.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
+		#print momentsml.tools.table.info(cat)
+		momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
 
 
 

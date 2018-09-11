@@ -153,7 +153,7 @@ class Branch:
 	
 
 
-import megalut.tools.calc
+import momentsml.tools.calc
 import numpy as np
 
 def metrics(cat, trucols, predcols, psfgcols, latex=True):
@@ -170,8 +170,8 @@ def metrics(cat, trucols, predcols, psfgcols, latex=True):
 	assert cat[predcols[1]].ndim == 1
 
 	
-	pixres1 = megalut.tools.calc.linreg(cat[trucols[0]], cat[predcols[0]], prob=0.68) # Component 1
-	pixres2 = megalut.tools.calc.linreg(cat[trucols[1]], cat[predcols[1]], prob=0.68) # Component 2
+	pixres1 = momentsml.tools.calc.linreg(cat[trucols[0]], cat[predcols[0]], prob=0.68) # Component 1
+	pixres2 = momentsml.tools.calc.linreg(cat[trucols[1]], cat[predcols[1]], prob=0.68) # Component 2
 	
 	returndict["m1"] = pixres1["m"]
 	returndict["m1err"] = pixres1["merr"]
@@ -199,8 +199,8 @@ def metrics(cat, trucols, predcols, psfgcols, latex=True):
 	g2trot = cat[trucols[0]] * np.sin(-2. * rotations) + cat[trucols[1]] * np.cos(-2. * rotations)
  	
 	
-	pixresplus = megalut.tools.calc.linreg(g1trot, g1prot, prob=0.68)
-	pixrescros = megalut.tools.calc.linreg(g2trot, g2prot, prob=0.68)
+	pixresplus = momentsml.tools.calc.linreg(g1trot, g1prot, prob=0.68)
+	pixrescros = momentsml.tools.calc.linreg(g2trot, g2prot, prob=0.68)
 	
 	returndict["m+"] = pixresplus["m"]
 	returndict["m+err"] = pixresplus["merr"]

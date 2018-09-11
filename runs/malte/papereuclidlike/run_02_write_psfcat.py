@@ -1,4 +1,4 @@
-import megalut
+import momentsml
 import astropy
 import os
 import config
@@ -15,7 +15,7 @@ cat = astropy.table.Table([[psfpos[0]], [psfpos[1]]], names=('{}x'.format(prefix
 
 
 # To measure the PSF, we attach the image:
-cat.meta["img"] = megalut.tools.imageinfo.ImageInfo(
+cat.meta["img"] = momentsml.tools.imageinfo.ImageInfo(
     filepath=os.path.join(config.workdir, "psf.fits"),
     xname="{}x".format(prefix),
     yname="{}y".format(prefix),
@@ -35,5 +35,5 @@ if abs(meascat["skystampsum"] - 1.0) > 0.001:
 
 # We do not save the measurement here, as we don't need all those fields to be repeated  in our further galaxy measurement catalogs.
   
-megalut.tools.io.writepickle(cat, os.path.join(config.workdir, "psfcat.pkl"))
+momentsml.tools.io.writepickle(cat, os.path.join(config.workdir, "psfcat.pkl"))
 

@@ -1,6 +1,6 @@
 
 import os
-import megalut
+import momentsml
 import numpy as np
 
 import config
@@ -22,11 +22,11 @@ variant = "snrsigma" #<----
 #variant = "realcut" # <-----
 
 incatpath = os.path.join(config.simmeasdir, incatname, "groupmeascat.pkl")
-cat = megalut.tools.io.readpickle(incatpath)
+cat = momentsml.tools.io.readpickle(incatpath)
 logger.info("Fraction of masked gals in input catalog:")
 logger.info(float(np.sum(cat["adamom_sigma"].mask)) / np.size(cat["adamom_sigma"].mask))
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 
 if variant is "snr":
 
@@ -69,4 +69,4 @@ outcatdir = os.path.join(config.simmeasdir, outcatname)
 if not os.path.exists(outcatdir):
 	os.mkdir(outcatdir)
 
-megalut.tools.io.writepickle(cat, os.path.join(outcatdir, "groupmeascat.pkl"))
+momentsml.tools.io.writepickle(cat, os.path.join(outcatdir, "groupmeascat.pkl"))

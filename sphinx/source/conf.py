@@ -233,7 +233,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'megalut', u'MomentsML Documentation',
+    ('index', 'momentsml', u'MomentsML Documentation',
      [u'The MomentsML developers'], 1)
 ]
 

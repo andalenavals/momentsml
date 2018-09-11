@@ -1,4 +1,4 @@
-import megalut.meas
+import momentsml.meas
 
 
 def default(catalog, stampsize):
@@ -7,14 +7,14 @@ def default(catalog, stampsize):
 	"""	
 	
 	# HSM adamom
-	catalog = megalut.meas.galsim_adamom.measfct(catalog, stampsize=stampsize, variant="wider")
-	catalog = megalut.meas.adamom_calc.measfct(catalog)
+	catalog = momentsml.meas.galsim_adamom.measfct(catalog, stampsize=stampsize, variant="wider")
+	catalog = momentsml.meas.adamom_calc.measfct(catalog)
 	
 	# And skystats
-	catalog = megalut.meas.skystats.measfct(catalog, stampsize=stampsize)
+	catalog = momentsml.meas.skystats.measfct(catalog, stampsize=stampsize)
 	
 	# And snr
-	catalog = megalut.meas.snr.measfct(catalog, gain=1.0e12) # Gain set to give sky-limited SNR
+	catalog = momentsml.meas.snr.measfct(catalog, gain=1.0e12) # Gain set to give sky-limited SNR
 	
 	
 	return catalog

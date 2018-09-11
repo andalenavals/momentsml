@@ -8,8 +8,8 @@ Note that you can edit the simparams name below, to iteratively tune params or f
 """
 
 
-import megalut
-import megalutgreat3
+import momentsml
+import momentsmlgreat3
 
 import config
 import simparams
@@ -24,18 +24,18 @@ logging.basicConfig(format=config.loggerformat, level=logging.INFO)
 
 great3 = config.load_run()
 
-psfcat = megalut.tools.io.readpickle(great3.path("obs", "allstars_meascat.pkl"))
+psfcat = momentsml.tools.io.readpickle(great3.path("obs", "allstars_meascat.pkl"))
 #print psfcat
 #exit()
 
 # Among those, we select only the PSFs corresponding to the right subfields.
 # This way we can do for example sims with only one PSF, to compare to the obs of one subfield.
 
-subsel = megalut.tools.table.Selector("subfield", [("inlist", "subfield", config.subfields)])
+subsel = momentsml.tools.table.Selector("subfield", [("inlist", "subfield", config.subfields)])
 psfcat = subsel.select(psfcat)
 
 #print psfcat
-#print megalut.tools.table.info(psfcat)
+#print momentsml.tools.table.info(psfcat)
 
 simdir = great3.path("sim", "allstars")
 measdir = great3.path("simmeas", "allstars")
@@ -46,7 +46,7 @@ sp.snc_type = 1
 
 
 # Generate catalogs and draw the corresponding stamps, using galsim, 
-megalut.sim.run.multi(
+momentsml.sim.run.multi(
 	simdir=simdir,
 	simparams=sp,
 	drawcatkwargs={"n":1000, "nc":1, "stampsize":great3.stampsize()},
@@ -62,7 +62,7 @@ megalut.sim.run.multi(
 
 
 # Run the feature measuements on those stamps:
-megalut.meas.run.onsims(
+momentsml.meas.run.onsims(
 	simdir=simdir,
 	simparams=sp,
 	measdir=measdir,
@@ -81,7 +81,7 @@ megalut.meas.run.onsims(
 # Group those results into one single catalog
 # There is not that much to do here, as we haven't used nrea
 
-cat = megalut.meas.avg.onsims(
+cat = momentsml.meas.avg.onsims(
 	measdir=measdir, 
 	simparams=sp,
 	task="group",
@@ -89,16 +89,16 @@ cat = megalut.meas.avg.onsims(
 	removecols=measfcts.removecols
 )
 
-megalut.tools.table.keepunique(cat)
-megalut.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
+momentsml.tools.table.keepunique(cat)
+momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
 
 
 """
 # Restructure this flat catalog to define "cases" and "realizations" for the machine learning (i.e., make it a 3D catalog).
-cat = megalut.tools.io.readpickle(os.path.join(measdir, sp.name, "groupmeascat.pkl"))
-cat = megalut.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2", "tru_flux", "tru_rad"])
-megalut.tools.table.keepunique(cat)
-megalut.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat_cases.pkl"))
+cat = momentsml.tools.io.readpickle(os.path.join(measdir, sp.name, "groupmeascat.pkl"))
+cat = momentsml.tools.table.groupreshape(cat, groupcolnames=["tru_s1", "tru_s2", "tru_flux", "tru_rad"])
+momentsml.tools.table.keepunique(cat)
+momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat_cases.pkl"))
 """
 
 

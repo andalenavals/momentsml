@@ -1,5 +1,5 @@
-import megalut.sim
-import megalut.tools as tl
+import momentsml.sim
+import momentsml.tools as tl
 import numpy as np
 import random # np.random.choice is only available for newer numpys...
 import os
@@ -63,7 +63,7 @@ def psf_field_1(x, y):
 	
 
 
-class Fiducial(megalut.sim.params.Params):
+class Fiducial(momentsml.sim.params.Params):
 	"""
 	Fiducial parameters
 	"""
@@ -75,7 +75,7 @@ class Fiducial(megalut.sim.params.Params):
 		- noise_level 1.0 means that the fiducial noise level will be used, 0 means no noise
 		"""
 		
-		megalut.sim.params.Params.__init__(self)
+		momentsml.sim.params.Params.__init__(self)
 		if name is not None:
 			self.name = name
 		self.snc_type = snc_type

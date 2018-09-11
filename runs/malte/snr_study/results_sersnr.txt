@@ -1,5 +1,5 @@
 
-How does sersicn influence SNRs (megalut vs sextractor)?
+How does sersicn influence SNRs (momentsml vs sextractor)?
 For each sersicn, the size is adjusted so that adamom_sigma is roughly 1.8 pixels
 
 

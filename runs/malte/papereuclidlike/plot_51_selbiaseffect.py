@@ -10,8 +10,8 @@ import matplotlib.ticker as ticker
 import matplotlib.colors
 import matplotlib
 
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 
 import logging
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 
-#megalut.plot.figures.set_fancy(14)
+#momentsml.plot.figures.set_fancy(14)
 from matplotlib import rc
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
@@ -57,21 +57,21 @@ else:
 	mode = 1
 
 valcatpath = os.path.join(config.valdir, valname + ".pkl")
-cat = megalut.tools.io.readpickle(valcatpath)
+cat = momentsml.tools.io.readpickle(valcatpath)
 
 
 # Important so that masked point don't show up in the third panel
 cat["snr"].mask = cat["pre_s1"].mask
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 
 for comp in ["1","2"]:
 
 	
 	#cat["pre_s{}w_norm".format(comp)] = cat["pre_s{}w".format(comp)] / np.max(cat["pre_s{}w".format(comp)])
-	#megalut.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
+	#momentsml.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
 	
-	megalut.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
+	momentsml.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
 	cat["pre_s{}_wbias".format(comp)] = cat["pre_s{}_wmean".format(comp)] - cat["tru_s{}".format(comp)]
 
 
@@ -94,7 +94,7 @@ pre_s2_wbias = Feature("pre_s2_wbias", -resr, resr, nicename=r"$\left(\sum\hat{g
 
 
 def addmetrics(ax, xfeat, yfeat):
-	metrics = megalut.tools.metrics.metrics(cat, xfeat, yfeat, pre_is_res=True)
+	metrics = momentsml.tools.metrics.metrics(cat, xfeat, yfeat, pre_is_res=True)
 	line1 = r"$10^3 \mu=%.1f \pm %.1f $" % (metrics["m"]*1000.0, metrics["merr"]*1000.0)
 	line2 = r"$10^3 c=%.2f \pm %.2f $" % (metrics["c"]*1000.0, metrics["cerr"]*1000.0)
 	
@@ -121,7 +121,7 @@ idlinekwargs = {"color":"black", "ls":"-"}
 
 
 ax = fig.add_subplot(1, 3, 1)
-megalut.plot.scatter.scatter(ax, cat, tru_s1, pre_s1_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
+momentsml.plot.scatter.scatter(ax, cat, tru_s1, pre_s1_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
 addmetrics(ax, tru_s1, pre_s1_wbias)
 
 #ax.set_xlabel("")
@@ -131,7 +131,7 @@ addmetrics(ax, tru_s1, pre_s1_wbias)
 
 
 ax = fig.add_subplot(1, 3, 2)
-megalut.plot.scatter.scatter(ax, cat, tru_s2, pre_s2_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
+momentsml.plot.scatter.scatter(ax, cat, tru_s2, pre_s2_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
 addmetrics(ax, tru_s2, pre_s2_wbias)
 
 #ax.set_ylabel("")
@@ -140,7 +140,7 @@ addmetrics(ax, tru_s2, pre_s2_wbias)
 
 if mode != 3:
 	ax = fig.add_subplot(1, 3, 3)
-	cb = megalut.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, snr, cmap="plasma_r", rasterized = True, norm=matplotlib.colors.LogNorm(vmin=3.0, vmax=150.0))
+	cb = momentsml.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, snr, cmap="plasma_r", rasterized = True, norm=matplotlib.colors.LogNorm(vmin=3.0, vmax=150.0))
 	ticks = [5, 10, 20, 40, 80]
 	ticklabels = [str(tick) for tick in ticks]
 	cb.set_ticks(ticks)
@@ -149,7 +149,7 @@ if mode != 3:
 
 fig.text(.005, .94, title, fontdict={"fontsize":12})
 
-megalut.plot.figures.savefig(os.path.join(config.valdir, valname.replace(".", "p") + "_selbiaseffect"), fig, fancy=True, pdf_transparence=True, nocrop=True)
+momentsml.plot.figures.savefig(os.path.join(config.valdir, valname.replace(".", "p") + "_selbiaseffect"), fig, fancy=True, pdf_transparence=True, nocrop=True)
 plt.show()
 
 

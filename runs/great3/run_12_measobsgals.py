@@ -8,8 +8,8 @@ import datetime
 import numpy as np
 import astropy.table
 
-import megalut
-import megalutgreat3
+import momentsml
+import momentsmlgreat3
 
 import config
 import measfcts
@@ -29,10 +29,10 @@ for subfield in config.great3.subfields:
 
 	config.great3.mkdirs(subfield)
 
-	starcat = megalut.tools.io.readpickle(config.great3.subpath(subfield, "obs", "star_meascat.pkl"))
+	starcat = momentsml.tools.io.readpickle(config.great3.subpath(subfield, "obs", "star_meascat.pkl"))
 	#print starcat
 				
-	incat = megalutgreat3.io.readgalcat(config.great3, subfield)
+	incat = momentsmlgreat3.io.readgalcat(config.great3, subfield)
 	
 	
 	# We add PSF info to this field. PSFs are already measured, and we take a random one (among 9) for each galaxy.
@@ -53,7 +53,7 @@ for subfield in config.great3.subfields:
 	
 	# Add the reference to the img and psf stamps:
 	
-	incat.meta["img"] = megalut.tools.imageinfo.ImageInfo(
+	incat.meta["img"] = momentsml.tools.imageinfo.ImageInfo(
 		filepath=config.great3.galimgfilepath(subfield),
 		xname="x",
 		yname="y",
@@ -61,7 +61,7 @@ for subfield in config.great3.subfields:
 		workdir=config.great3.subpath(subfield, "obs", "img_measworkdir")
 		)
 
-	incat.meta["psf"] = megalut.tools.imageinfo.ImageInfo(
+	incat.meta["psf"] = momentsml.tools.imageinfo.ImageInfo(
 		filepath=config.great3.starimgfilepath(subfield),
 		xname="psfx",
 		yname="psfy",
@@ -71,7 +71,7 @@ for subfield in config.great3.subfields:
 
 	# Write the input catalog
 	incatfilepath = config.great3.subpath(subfield, "obs", "img_incat.pkl")
-	megalut.tools.io.writepickle(incat, incatfilepath)
+	momentsml.tools.io.writepickle(incat, incatfilepath)
 	incatfilepaths.append(incatfilepath)
 	
 	# Prepare the filepath for the output catalog
@@ -86,6 +86,6 @@ for subfield in config.great3.subfields:
 measfctkwargs = {"branch":config.great3}
 
 # And we run with ncpu
-megalut.meas.run.general(incatfilepaths, outcatfilepaths, measfcts.gal, measfctkwargs=measfctkwargs,
+momentsml.meas.run.general(incatfilepaths, outcatfilepaths, measfcts.gal, measfctkwargs=measfctkwargs,
 					ncpu=config.great3.ncpu, skipdone=config.great3.skipdone)
 

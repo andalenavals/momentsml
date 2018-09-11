@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.ticker as ticker
 import matplotlib.transforms as mtransforms
 
-import megalut.plot
+import momentsml.plot
 import matplotlib.pyplot as plt
 
 import logging
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 outdirplots = os.path.join('.', "plots")
 
-megalut.plot.figures.set_fancy(16)
+momentsml.plot.figures.set_fancy(16)
 
 metrics_12 = {
 	'fGC':{'m1':-1.50, 'm1err':2.78, 'm2':3.18, 'm2err':2.04, 'c1':0.02, 'c1err':0.08, 'c2':0.01, 'c2err':0.06},
@@ -120,5 +120,5 @@ for imet, metric in enumerate(metrics):
 		
 		plt.legend(loc="best", handletextpad=0.15,fontsize="small", framealpha=0.5, columnspacing=0.1, ncol=2, numpoints=1)
 		
-	megalut.plot.figures.savefig(os.path.join(outdirplots, "great3_cross_plot_{}".format(outname[imet])), fig, fancy=True, pdf_transparence=True)
+	momentsml.plot.figures.savefig(os.path.join(outdirplots, "great3_cross_plot_{}".format(outname[imet])), fig, fancy=True, pdf_transparence=True)
 plt.show()

@@ -7,7 +7,7 @@ logging.basicConfig(format='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcNam
 
 import numpy as np
 import astropy.table
-#import megalut
+#import momentsml
 
 
 print "Astropy version ", astropy.__version__

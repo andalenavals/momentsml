@@ -3,8 +3,8 @@ matplotlib.use("AGG")
 
 import os
 import simparamsec
-import megalut
-import megalut.meas
+import momentsml
+import momentsml.meas
 import numpy as np
 
 import logging
@@ -43,15 +43,15 @@ catpath = os.path.join(workdir, "cat.pkl")
 writecatpath = os.path.join(workdir, "writecat.txt")
 
 
-cat = megalut.sim.stampgrid.drawcat(sp, n=n*nrea, nc=nrea, stampsize=stampsize)
+cat = momentsml.sim.stampgrid.drawcat(sp, n=n*nrea, nc=nrea, stampsize=stampsize)
 
-megalut.sim.stampgrid.drawimg(cat, simgalimgfilepath=fitsimgpath, simtrugalimgfilepath=None, simpsfimgfilepath=None)
+momentsml.sim.stampgrid.drawimg(cat, simgalimgfilepath=fitsimgpath, simtrugalimgfilepath=None, simpsfimgfilepath=None)
 
 
 #print cat["y", "tru_cropper_snr"]
 
 
-cat.meta["img"] = megalut.tools.imageinfo.ImageInfo(
+cat.meta["img"] = momentsml.tools.imageinfo.ImageInfo(
 	fitsimgpath,
 	xname="x",
 	yname="y",
@@ -59,9 +59,9 @@ cat.meta["img"] = megalut.tools.imageinfo.ImageInfo(
 	pixelscale=1.0
 	)
 
-cat = megalut.meas.galsim_adamom.measfct(cat, stampsize=stampsize, variant="wider")
-cat = megalut.meas.skystats.measfct(cat, stampsize=stampsize)
-cat = megalut.meas.snr.measfct(cat, gain=gain)
+cat = momentsml.meas.galsim_adamom.measfct(cat, stampsize=stampsize, variant="wider")
+cat = momentsml.meas.skystats.measfct(cat, stampsize=stampsize)
+cat = momentsml.meas.snr.measfct(cat, gain=gain)
 
 
 # Now we run sextractor
@@ -72,23 +72,23 @@ params = ["VECTOR_ASSOC(3)", "XWIN_IMAGE", "YWIN_IMAGE", "AWIN_IMAGE", "BWIN_IMA
 	
 config = {"DETECT_MINAREA":5, "ASSOC_RADIUS":5, "GAIN":gain, "ASSOC_TYPE":"NEAREST"}
 		
-cat = megalut.meas.sewfunc.measfct(cat, params=params, config=config, sexpath=sexpath)
+cat = momentsml.meas.sewfunc.measfct(cat, params=params, config=config, sexpath=sexpath)
 
 cat["sex_snr_iso"] = cat["sewpy_FLUX_ISO"] / cat["sewpy_FLUXERR_ISO"]
 cat["sex_snr_auto"] = cat["sewpy_FLUX_AUTO"] / cat["sewpy_FLUXERR_AUTO"]
 
-cat = megalut.tools.table.groupreshape(cat, groupcolnames=["tru_mag", "zeropoint", "tru_flux", "tru_sigma"])
-megalut.tools.table.addstats(cat, "snr")
-megalut.tools.table.addstats(cat, "sex_snr_iso")
-megalut.tools.table.addstats(cat, "sex_snr_auto")
-megalut.tools.table.addstats(cat, "adamom_flux")
-megalut.tools.table.addstats(cat, "adamom_sigma")
-megalut.tools.table.addstats(cat, "skystd")
-megalut.tools.table.addstats(cat, "skymad")
+cat = momentsml.tools.table.groupreshape(cat, groupcolnames=["tru_mag", "zeropoint", "tru_flux", "tru_sigma"])
+momentsml.tools.table.addstats(cat, "snr")
+momentsml.tools.table.addstats(cat, "sex_snr_iso")
+momentsml.tools.table.addstats(cat, "sex_snr_auto")
+momentsml.tools.table.addstats(cat, "adamom_flux")
+momentsml.tools.table.addstats(cat, "adamom_sigma")
+momentsml.tools.table.addstats(cat, "skystd")
+momentsml.tools.table.addstats(cat, "skymad")
 
-megalut.tools.io.writepickle(cat, catpath)
+momentsml.tools.io.writepickle(cat, catpath)
 
-print megalut.tools.table.info(cat)
+print momentsml.tools.table.info(cat)
 
 print cat["tru_mag", "zeropoint", "snr_mean", "sex_snr_auto_mean", "tru_flux", "adamom_flux_mean", "tru_sigma", "adamom_sigma_mean", "skystd_mean", "skymad_mean"]
 

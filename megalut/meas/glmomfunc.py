@@ -90,7 +90,7 @@ def measure(img, catalog, xname="x", yname="y", prefix="glmom_", measuresky=True
 		                               # this converges better for size ~1 pixel
 
 		# We measure the moments... GLMoment may fail from time to time, hence the try:
-		#img.setOrigin(1,1)  # return to normal after megalut.gsutils
+		#img.setOrigin(1,1)  # return to normal after momentsml.gsutils
 		try:
 			res = fdnt.GLMoments(img, x, y, size, guess_g1g2=g1g2)
 

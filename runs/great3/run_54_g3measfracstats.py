@@ -3,9 +3,9 @@
 
 import matplotlib.pyplot as plt
 
-import megalut
-import megalut.tools
-import megalutgreat3
+import momentsml
+import momentsml.tools
+import momentsmlgreat3
 import astropy
 
 
@@ -27,9 +27,9 @@ nfails = []
 for subfield in config.great3.subfields:
 	
 	predcatpath = config.great3.subpath(subfield, "pred", "predcat_{}.pkl".format(config.predcode))
-	cat = megalut.tools.io.readpickle(predcatpath)
+	cat = momentsml.tools.io.readpickle(predcatpath)
 	
-	#print megalut.tools.table.info(cat)
+	#print momentsml.tools.table.info(cat)
 	#n = float(len(cat))
 	#print subfield, np.sum(cat["pre_s1"].mask), np.sum(cat["adamom_g1"].mask)
 	

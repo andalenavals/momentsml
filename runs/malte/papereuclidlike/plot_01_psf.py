@@ -1,4 +1,4 @@
-import megalut
+import momentsml
 import matplotlib.pyplot as plt 
 import numpy as np
 import config
@@ -8,7 +8,7 @@ import f2n
 
 filepath = os.path.join(config.workdir, "psf.fits")
 
-psf = megalut.tools.io.fromfits(filepath)
+psf = momentsml.tools.io.fromfits(filepath)
 
 
 print psf.shape

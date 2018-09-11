@@ -2,12 +2,12 @@ import os
 import numpy as np
 from scipy import stats
 
-import megalut.tools as tools
+import momentsml.tools as tools
 
 import config
 import pylab as plt
 
-import megalutgreat3 as mg3
+import momentsmlgreat3 as mg3
 import metrics.evaluate as evaluate
 
 import logging

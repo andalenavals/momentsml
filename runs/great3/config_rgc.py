@@ -2,7 +2,7 @@
 Configuration for the GREAT3 scripts.
 """
 
-import megalutgreat3 as mg3
+import momentsmlgreat3 as mg3
 
 loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;21m%(message)s\033[1;0m'
 

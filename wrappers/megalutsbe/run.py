@@ -2,8 +2,8 @@
 This defines classes useful for step-by-step / manual use of MomentsML on SBE data.
 """
 
-import megalut
-import megalut.meas
+import momentsml
+import momentsml.meas
 
 import numpy as np
 import os
@@ -26,7 +26,7 @@ class Run():
 	def __init__(self, sbedatadir, workdir, ncpu=4):
 		"""
 		:param sbedatadir: where the SBE data is
-		:param workdir: where megalut can write any intermediary files
+		:param workdir: where momentsml can write any intermediary files
 		:param ncpu: max number of CPU to use
 		"""
 		self.sbedatadir = sbedatadir
@@ -112,7 +112,7 @@ class Run():
 			cat["y"] = stampsize/2.0 + cat["yid"]*(stampsize + 1) + 0.5
 					
 			# We create the ImageInfo object
-			img = megalut.tools.imageinfo.ImageInfo(
+			img = momentsml.tools.imageinfo.ImageInfo(
 				filepath = imagefilepath,
 				xname = "x", yname = "y",
 				stampsize = stampsize,
@@ -121,7 +121,7 @@ class Run():
 			cat.meta["img"] = img
 			
 			# And save the catalog
-			megalut.tools.io.writepickle(cat, catfilepath)
+			momentsml.tools.io.writepickle(cat, catfilepath)
 		
 
 	def measobs(self, measfct, stampsize=200, skipdone=True):
@@ -136,7 +136,7 @@ class Run():
 	
 		measfctkwargs = {"stampsize":stampsize}
 	
-		megalut.meas.run.general(incatfilepaths, outcatfilepaths, measfct, measfctkwargs, ncpu=self.ncpu, skipdone=skipdone)
+		momentsml.meas.run.general(incatfilepaths, outcatfilepaths, measfct, measfctkwargs, ncpu=self.ncpu, skipdone=skipdone)
 		
 		
 		
@@ -151,7 +151,7 @@ class Run():
 #		for catfilepath in catfilepaths:#[:1]:
 #			
 #			
-#			cat = megalut.tools.io.readpickle(catfilepath)
+#			cat = momentsml.tools.io.readpickle(catfilepath)
 #			
 #			plotfilepath = os.path.join(self.workobsdir, cat.meta["workname"] + "-measobscheckplot.png")
 #			
@@ -170,13 +170,13 @@ class Run():
 		else:
 			somefiles = random.sample(catfilepaths, nfiles)
 		
-		somecats = [megalut.tools.io.readpickle(f) for f in somefiles]
+		somecats = [momentsml.tools.io.readpickle(f) for f in somefiles]
 		for cat in somecats:
 			cat.meta = {} # To avoid conflicts when stacking
 		
 		groupcat = astropy.table.vstack(somecats, join_type="exact", metadata_conflicts="error")
 		
-		megalut.tools.io.writepickle(groupcat, self.groupobspath)
+		momentsml.tools.io.writepickle(groupcat, self.groupobspath)
 		
 	
 	def showmeasobsfrac(self, fields = ["skystd", "adamom_flux"]):
@@ -184,7 +184,7 @@ class Run():
 		For testing purposes, computes measurement success fractions.
 		"""
 		
-		cat = megalut.tools.io.readpickle(self.groupobspath)
+		cat = momentsml.tools.io.readpickle(self.groupobspath)
 		#print cat.colnames
 				
 		for field in fields:
@@ -202,7 +202,7 @@ class Run():
 #		One checkplot mixing several SBE files.
 #		"""
 #		
-#		cat = megalut.tools.io.readpickle(self.groupobspath)
+#		cat = momentsml.tools.io.readpickle(self.groupobspath)
 #		plot.meascheck(cat, prefix=prefix, filepath=filepath)
 	
 	
@@ -218,7 +218,7 @@ class Run():
 		drawcatkwargs = {"n":n, "nc":nc, "stampsize":stampsize}
 		drawimgkwargs = {}
 		
-		megalut.sim.run.multi(self.worksimdir, simparams, drawcatkwargs, drawimgkwargs, 
+		momentsml.sim.run.multi(self.worksimdir, simparams, drawcatkwargs, drawimgkwargs, 
 			psfcat = None, ncat=ncat, nrea=nrea, ncpu=self.ncpu,
 			savepsfimg=False, savetrugalimg=False)
 
@@ -228,7 +228,7 @@ class Run():
 		Idem
 		"""
 		measfctkwargs = {"stampsize":stampsize}
-		megalut.meas.run.onsims(self.worksimdir, simparams, self.worksimdir, measfct, measfctkwargs, ncpu=self.ncpu, skipdone=True)
+		momentsml.meas.run.onsims(self.worksimdir, simparams, self.worksimdir, measfct, measfctkwargs, ncpu=self.ncpu, skipdone=True)
 		
 		
 
@@ -239,14 +239,14 @@ class Run():
 #		a single training catalog for the ML.
 #		"""	
 #	
-#		avgmeascat = megalut.meas.avg.onsims(self.worksimdir, simparams,
+#		avgmeascat = momentsml.meas.avg.onsims(self.worksimdir, simparams,
 #			groupcols=groupcols,
 #			removecols=removecols,
 #			removereas=False,
 #			keepfirstrea=True
 #		)
 #
-#		megalut.tools.io.writepickle(avgmeascat, os.path.join(self.worksimdir, simparams.name, "avgmeascat.pkl"))
+#		momentsml.tools.io.writepickle(avgmeascat, os.path.join(self.worksimdir, simparams.name, "avgmeascat.pkl"))
 
 	def groupsimmeas(self, simparams, groupcols, removecols):
 		"""
@@ -254,12 +254,12 @@ class Run():
 		Writes a single training catalog for the ML.
 		"""	
 	
-		groupmeascat = megalut.meas.avg.onsims(self.worksimdir, simparams, task="group",
+		groupmeascat = momentsml.meas.avg.onsims(self.worksimdir, simparams, task="group",
 			groupcols=groupcols,
 			removecols=removecols
 		)
 
-		megalut.tools.io.writepickle(groupmeascat, os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
+		momentsml.tools.io.writepickle(groupmeascat, os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
 
 		
 		
@@ -271,7 +271,7 @@ class Run():
 #		"""
 #		
 #		# We load the training catalog
-#		simcat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
+#		simcat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
 #		
 #		#print simcat.colnames
 #		#print simcat
@@ -290,9 +290,9 @@ class Run():
 #		#simcat = simcat[:100]
 #		#print "only training on 1000 gals hack"
 #		
-#		#megalut.tools.io.writepickle(simcat, os.path.join(traindir, simparams.name, "traincat.pkl"))
+#		#momentsml.tools.io.writepickle(simcat, os.path.join(traindir, simparams.name, "traincat.pkl"))
 #		
-#		megalut.learn.run.train(simcat, traindir, trainparamslist, ncpu=self.ncpu)
+#		momentsml.learn.run.train(simcat, traindir, trainparamslist, ncpu=self.ncpu)
 #
 
 
@@ -302,11 +302,11 @@ class Run():
 #		name = "with_" + simparams.name
 #		traindir = os.path.join(self.workmldir, name)
 #	
-#		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
+#		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
 #		
-#		cat = megalut.learn.run.predict(cat, traindir, trainparamslist)		
+#		cat = momentsml.learn.run.predict(cat, traindir, trainparamslist)		
 #		
-#		megalut.tools.io.writepickle(cat, os.path.join(traindir, "selfprecat.pkl"))
+#		momentsml.tools.io.writepickle(cat, os.path.join(traindir, "selfprecat.pkl"))
 #
 
 
@@ -319,20 +319,20 @@ class Run():
 #		name = "with_" + simparams.name
 #		traindir = os.path.join(self.workmldir, name)
 #
-#		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, othersimparams.name, "groupmeascat.pkl"))		
-#		cat = megalut.learn.run.predict(cat, traindir, trainparamslist)
+#		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, othersimparams.name, "groupmeascat.pkl"))		
+#		cat = momentsml.learn.run.predict(cat, traindir, trainparamslist)
 #
-#		megalut.tools.io.writepickle(cat, os.path.join(self.worksimdir, othersimparams.name, "groupmeascat_predshapes.pkl"))
+#		momentsml.tools.io.writepickle(cat, os.path.join(self.worksimdir, othersimparams.name, "groupmeascat_predshapes.pkl"))
 #
 
 
 	def inspect(self, simparams=None):
 		
 		
-		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
-		#cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_predshapes.pkl"))
+		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
+		#cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_predshapes.pkl"))
 		
-		out = megalut.learn.ml.get3Ddata(cat, ["adamom_g1", "adamom_g2", "adamom_sigma", "adamom_flux", "tru_psf_g1", "tru_psf_g2", "tru_psf_sigma"])
+		out = momentsml.learn.ml.get3Ddata(cat, ["adamom_g1", "adamom_g2", "adamom_sigma", "adamom_flux", "tru_psf_g1", "tru_psf_g2", "tru_psf_sigma"])
 		print out.shape
 		
 		
@@ -350,8 +350,8 @@ class Run():
 		
 		"""
 		
-		#cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_predshapes.pkl"))
-		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
+		#cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_predshapes.pkl"))
+		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
 		
 		logger.info("Preparing cases for catalog of length {}".format(len(cat)))
 		
@@ -372,27 +372,27 @@ class Run():
 		
 		logger.warning("If your sersic indices are not random, what I do here needs to be improved!")
 		
-		cat = megalut.tools.table.groupreshape(cat, groupcolnames = bincolnames + ["prepbatchtmp"])
+		cat = momentsml.tools.table.groupreshape(cat, groupcolnames = bincolnames + ["prepbatchtmp"])
 		
 		cat.remove_column("prepbatchtmp")
 		"""
 		
-		cat = megalut.tools.table.groupreshape(cat, groupcolnames = groupcolnames)
+		cat = momentsml.tools.table.groupreshape(cat, groupcolnames = groupcolnames)
 		
 		
-		megalut.tools.io.writepickle(cat, os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
+		momentsml.tools.io.writepickle(cat, os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
 
 
 	def addpreweights(self, simparams):
 		"""
 		
 		"""
-		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
+		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
 		
 		cat["pw"] = cat["snr"]**2
 		#cat["pw"] = np.clip(cat["snr"], 8.0, 10000.0) - 8.0
 		
-		megalut.tools.io.writepickle(cat, os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases_pw.pkl"))
+		momentsml.tools.io.writepickle(cat, os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases_pw.pkl"))
 
 		
 
@@ -404,13 +404,13 @@ class Run():
 		"""
 		
 		# We load the training catalog
-		#simcat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
-		simcat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases_pw.pkl"))
+		#simcat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
+		simcat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases_pw.pkl"))
 		
 		name = "with_" + simparams.name
 		traindir = os.path.join(self.workmldir, name)
 		
-		megalut.learn.run.train(simcat, traindir, trainparamslist, ncpu=self.ncpu)
+		momentsml.learn.run.train(simcat, traindir, trainparamslist, ncpu=self.ncpu)
 
 
 	def selfpredictshear(self, simparams, trainparamslist):
@@ -419,19 +419,19 @@ class Run():
 		name = "with_" + simparams.name
 		traindir = os.path.join(self.workmldir, name)
 		
-		#cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_predshapes.pkl"))
-		#cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
-		#cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
+		#cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_predshapes.pkl"))
+		#cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases.pkl"))
+		#cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
 		
-		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases_pw.pkl"))
+		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_cases_pw.pkl"))
 		
 		
-		cat = megalut.learn.run.predict(cat, traindir, trainparamslist)
+		cat = momentsml.learn.run.predict(cat, traindir, trainparamslist)
 		
 		#print cat.colnames
 		
-		megalut.tools.io.writepickle(cat, os.path.join(traindir, "selfprecat_shear.pkl"))
-		#megalut.tools.io.writepickle(cat, os.path.join(traindir, "selfprecat_shear_nocases.pkl"))
+		momentsml.tools.io.writepickle(cat, os.path.join(traindir, "selfprecat_shear.pkl"))
+		#momentsml.tools.io.writepickle(cat, os.path.join(traindir, "selfprecat_shear_nocases.pkl"))
 	
 	
 	
@@ -440,13 +440,13 @@ class Run():
 		
 		"""
 		
-		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, othersimname, "groupmeascat_cases.pkl"))		
+		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, othersimname, "groupmeascat_cases.pkl"))		
 		
 		name = "with_" + simparams.name
 		traindir = os.path.join(self.workmldir, name)
-		cat = megalut.learn.run.predict(cat, traindir, trainparamslist)
+		cat = momentsml.learn.run.predict(cat, traindir, trainparamslist)
 
-		megalut.tools.io.writepickle(cat, os.path.join(traindir, "otherprecat_shear.pkl"))
+		momentsml.tools.io.writepickle(cat, os.path.join(traindir, "otherprecat_shear.pkl"))
 	
 		
 	def traintenbilacweight(self, simparams, trainparamslist):
@@ -457,11 +457,11 @@ class Run():
 		# We load the shear-predicted catalog
 		
 		traindir = os.path.join(self.workmldir, "with_" + simparams.name)
-		#simcat = megalut.tools.io.readpickle(os.path.join(traindir, "selfprecat_shear.pkl"))
-		simcat = megalut.tools.io.readpickle(os.path.join(traindir, "otherprecat_shear.pkl"))
+		#simcat = momentsml.tools.io.readpickle(os.path.join(traindir, "selfprecat_shear.pkl"))
+		simcat = momentsml.tools.io.readpickle(os.path.join(traindir, "otherprecat_shear.pkl"))
 		
 		
-		megalut.learn.run.train(simcat, traindir, trainparamslist, ncpu=self.ncpu)
+		momentsml.learn.run.train(simcat, traindir, trainparamslist, ncpu=self.ncpu)
 
 		
 		
@@ -472,10 +472,10 @@ class Run():
 		name = "with_" + simparams.name
 		traindir = os.path.join(self.workmldir, name)
 	
-		cat = megalut.tools.io.readpickle(os.path.join(traindir, "selfprecat_shear.pkl"))
+		cat = momentsml.tools.io.readpickle(os.path.join(traindir, "selfprecat_shear.pkl"))
 	
 		
-		#data = megalut.learn.ml.get3Ddata(cat, ["pre_g1", "pre_g1_w3"])
+		#data = momentsml.learn.ml.get3Ddata(cat, ["pre_g1", "pre_g1_w3"])
 		
 		tru_s = cat["tru_s1"]
 		pre_g = cat["pre_g1"]
@@ -488,7 +488,7 @@ class Run():
 		
 		print np.mean(np.square(biases))
 			
-		ret = megalut.tools.calc.linreg(tru_s, wgs)
+		ret = momentsml.tools.calc.linreg(tru_s, wgs)
 		print ret
 		
 		#exit()
@@ -517,7 +517,7 @@ class Run():
 	
 	def predictsbe_v5(self, simparams, mlparams):
 	
-		cat = megalut.tools.io.readpickle(self.groupobspath)
+		cat = momentsml.tools.io.readpickle(self.groupobspath)
 		#print cat.colnames
 		#print len(cat)
 		#exit()
@@ -526,15 +526,15 @@ class Run():
 		
 		traindir = os.path.join(self.workmldir, "with_" + simparams.name)
 		
-		cat = megalut.learn.run.predict(cat, traindir, mlparams)
+		cat = momentsml.learn.run.predict(cat, traindir, mlparams)
 			
-		megalut.tools.io.writepickle(cat, os.path.join(self.workobsdir, "predgroupobs.pkl"))
+		momentsml.tools.io.writepickle(cat, os.path.join(self.workobsdir, "predgroupobs.pkl"))
 	
 	
 	
 #	def predictsbe(self, shapesimparams, shapeml, shearsimparams, shearml):
 #	
-#		cat = megalut.tools.io.readpickle(self.groupobspath)
+#		cat = momentsml.tools.io.readpickle(self.groupobspath)
 #		#print cat.colnames
 #		#print len(cat)
 #		
@@ -543,13 +543,13 @@ class Run():
 #		sheartraindir = os.path.join(self.workmldir, "with_" + shearsimparams.name)
 #		
 #		
-#		cat = megalut.learn.run.predict(cat, shapetraindir, shapeml)
-#		cat = megalut.learn.run.predict(cat, sheartraindir, shearml)
+#		cat = momentsml.learn.run.predict(cat, shapetraindir, shapeml)
+#		cat = momentsml.learn.run.predict(cat, sheartraindir, shearml)
 #		
 #		#print cat.colnames
 #		#exit()
 #		
-#		megalut.tools.io.writepickle(cat, os.path.join(self.workobsdir, "predgroupobs.pkl"))
+#		momentsml.tools.io.writepickle(cat, os.path.join(self.workobsdir, "predgroupobs.pkl"))
 
 	
 	def analysepredsbe(self):
@@ -557,7 +557,7 @@ class Run():
 		Measures m and c directly from the catalog, without having to write the ascii output files.
 		"""
 		
-		cat = megalut.tools.io.readpickle(os.path.join(self.workobsdir, "predgroupobs.pkl"))
+		cat = momentsml.tools.io.readpickle(os.path.join(self.workobsdir, "predgroupobs.pkl"))
 		
 		#cat["pre_s1"] = cat["pre_g1"] * 1.0*cat["pre_g1_w3"]
 		#cat["pre_s2"] = cat["pre_g2"] * 1.0*cat["pre_g2_w3"]
@@ -596,7 +596,7 @@ class Run():
 		
 		"""
 	
-		cat =  megalut.tools.io.readpickle(os.path.join(self.workobsdir, "predgroupobs.pkl"))
+		cat =  momentsml.tools.io.readpickle(os.path.join(self.workobsdir, "predgroupobs.pkl"))
 		
 		print cat.colnames
 		
@@ -630,7 +630,7 @@ class Run():
 		cat["GAL_G2_ERR"][mask] = -1e120
 		
 		
-		#maskremover = megalut.tools.table.Selector("maskremover", [("nomask", "GAL_G1"), ("nomask", "GAL_G2")])
+		#maskremover = momentsml.tools.table.Selector("maskremover", [("nomask", "GAL_G1"), ("nomask", "GAL_G2")])
 		#cat = maskremover.select(cat)
 		
 		cat.meta = {"SHE_FMT":"0.1"}
@@ -657,7 +657,7 @@ class Run():
 		
 		"""
 	
-		cat =  megalut.tools.io.readpickle(os.path.join(self.workobsdir, "predgroupobs.pkl"))
+		cat =  momentsml.tools.io.readpickle(os.path.join(self.workobsdir, "predgroupobs.pkl"))
 		
 		print cat.colnames
 		
@@ -715,42 +715,42 @@ class Run():
 #		"""
 #		
 #		# We load the training catalog
-#		simcat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "avgmeascat.pkl"))
+#		simcat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "avgmeascat.pkl"))
 #		
 #		# We reject crap ones
 #		ngroupstats = simcat.meta["ngroupstats"]
 #		simcat = simcat[simcat[prefix+"flux_n"] > float(ngroupstats)/2.0]
 #		logger.info("Keeping %i galaxies for training" % (len(simcat)))
 #		
-#		megalut.tools.io.writepickle(simcat, os.path.join(self.workmldir, "traincat.pkl"))
+#		momentsml.tools.io.writepickle(simcat, os.path.join(self.workmldir, "traincat.pkl"))
 #		#plot.simcheck(simcat)
 #		
 #		#print simcat.colnames
 #		#exit()
 #		
-#		megalut.learn.run.train(simcat, self.workmldir, trainparamslist, ncpu=self.ncpu)
+#		momentsml.learn.run.train(simcat, self.workmldir, trainparamslist, ncpu=self.ncpu)
 			
 		
 	
 #	def predictsims(self, simparams, trainparamslist):
 #		
-#		#cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "avgmeascat.pkl"))
-#		cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
-#		#cat = megalut.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_binreshape.pkl"))
+#		#cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "avgmeascat.pkl"))
+#		cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat.pkl"))
+#		#cat = momentsml.tools.io.readpickle(os.path.join(self.worksimdir, simparams.name, "groupmeascat_binreshape.pkl"))
 #		
 #		#print cat.colnames
 #		#exit()
 #		
 #		
-#		#cat = megalut.learn.run.predict(cat, self.workmldir, trainparamslist, tweakmode="all")
-#		#cat = megalut.learn.run.predict(cat, self.workmldir, trainparamslist, tweakmode="_rea0")
-#		cat = megalut.learn.run.predict(cat, self.workmldir, trainparamslist)
+#		#cat = momentsml.learn.run.predict(cat, self.workmldir, trainparamslist, tweakmode="all")
+#		#cat = momentsml.learn.run.predict(cat, self.workmldir, trainparamslist, tweakmode="_rea0")
+#		cat = momentsml.learn.run.predict(cat, self.workmldir, trainparamslist)
 #		
 #		#print cat.colnames
 #		#print cat["pre_sigma"]
 #		
-#		#megalut.tools.io.writepickle(cat, os.path.join(self.workmldir, "selfprecat_binreshape.pkl"))
-#		megalut.tools.io.writepickle(cat, os.path.join(self.workmldir, "selfprecat.pkl"))
+#		#momentsml.tools.io.writepickle(cat, os.path.join(self.workmldir, "selfprecat_binreshape.pkl"))
+#		momentsml.tools.io.writepickle(cat, os.path.join(self.workmldir, "selfprecat.pkl"))
 #	
 #
 #
@@ -761,14 +761,14 @@ class Run():
 #		Does not fully work as PSF_shape_2 is not present in the sims catalog. Easy to add, but do we need this ?
 #		"""
 #		
-#		cat =  megalut.tools.io.readpickle(os.path.join(self.workmldir, "selfprecat.pkl"))
+#		cat =  momentsml.tools.io.readpickle(os.path.join(self.workmldir, "selfprecat.pkl"))
 #		
 #		"""
 #		print len(cat)
 #		
 #		cat["tru_s"] = np.hypot(cat["tru_s1"], cat["tru_s2"])
 #		
-#		sel = megalut.tools.table.Selector("test",[
+#		sel = momentsml.tools.table.Selector("test",[
 #		("in", "tru_s", 0.01, 0.02)
 #		]) 
 #	
@@ -787,12 +787,12 @@ class Run():
 
 #	def predictobs(self, trainparamslist):
 #	
-#		cat = megalut.tools.io.readpickle(self.groupobspath)
+#		cat = momentsml.tools.io.readpickle(self.groupobspath)
 #		
-#		#cat = megalut.learn.run.predict(cat, self.workmldir, trainparamslist, tweakmode="") # Drop the "_mean" which does not exists for obs
-#		cat = megalut.learn.run.predict(cat, self.workmldir, trainparamslist)
+#		#cat = momentsml.learn.run.predict(cat, self.workmldir, trainparamslist, tweakmode="") # Drop the "_mean" which does not exists for obs
+#		cat = momentsml.learn.run.predict(cat, self.workmldir, trainparamslist)
 #		
-#		megalut.tools.io.writepickle(cat, os.path.join(self.workmldir, "obsprecat.pkl"))
+#		momentsml.tools.io.writepickle(cat, os.path.join(self.workmldir, "obsprecat.pkl"))
 #
 #
 #
@@ -817,7 +817,7 @@ class Run():
 #	
 #	
 #		
-#		cat =  megalut.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
+#		cat =  momentsml.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
 #		
 #		print cat.colnames
 #		
@@ -845,12 +845,12 @@ class Run():
 #
 #	def fakepredictobs(self):
 #		"""
-#		cat = megalut.tools.io.readpickle(self.groupobspath)
+#		cat = momentsml.tools.io.readpickle(self.groupobspath)
 #		
 #		cat["pre_g1"] = cat["Galaxy_g1"] + cat["Galaxy_e1"] + 0.01*np.random.randn(len(cat))
 #		cat["pre_g2"] = cat["Galaxy_g2"] + cat["Galaxy_e2"] + 0.01*np.random.randn(len(cat))
 #		
-#		megalut.tools.io.writepickle(cat, os.path.join(self.workmldir, "obsprecat.pkl"))
+#		momentsml.tools.io.writepickle(cat, os.path.join(self.workmldir, "obsprecat.pkl"))
 #		"""
 #		
 #		
@@ -861,7 +861,7 @@ class Run():
 #		Measures m and c directly from the catalog, without having to write the ascii output files.
 #		"""
 #		
-#		cat =  megalut.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
+#		cat =  momentsml.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
 #		
 #		print cat.colnames
 #		
@@ -877,7 +877,7 @@ class Run():
 
 #	def writepredsbe_single(self):
 #		
-#		cat =  megalut.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
+#		cat =  momentsml.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
 #		
 #		cat["PSF_shape_angle_degrees"] = cat["PSF_shape_2"]
 #		cat["e1_guess"] = cat["pre_g1"]
@@ -914,7 +914,7 @@ class Run():
 #		filenames = io.get_filenames(self.sbedatadir)
 #		#print "\n".join(filenames)
 #		
-#		cat = megalut.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
+#		cat = momentsml.tools.io.readpickle(os.path.join(self.workmldir, "obsprecat.pkl"))
 #		
 #		# As the SBE scripts are fully self-inconsistent, we have to rename even their own columns here...
 #		
@@ -963,15 +963,15 @@ class Run():
 #		for incatfilepath in incatfilepaths:
 #
 #			
-#			cat = megalut.tools.io.readpickle(incatfilepath)
+#			cat = momentsml.tools.io.readpickle(incatfilepath)
 #			outcatfilepath = os.path.join(self.workmldir, cat.meta["workname"] + "-precat.pkl")
 #
-#			cat = megalut.learn.run.predict(cat, self.workmldir, trainparamslist, totweak="_mean", tweakmode="")
+#			cat = momentsml.learn.run.predict(cat, self.workmldir, trainparamslist, totweak="_mean", tweakmode="")
 #		
 #			# The uncertainties:
-#			#cat = megalut.learn.run.predict(cat, self.mlworkdir, errtrainparamslist, totweak="_rea0", tweakmode="")
+#			#cat = momentsml.learn.run.predict(cat, self.mlworkdir, errtrainparamslist, totweak="_rea0", tweakmode="")
 #		
-#			megalut.tools.io.writepickle(cat, outcatfilepath)
+#			momentsml.tools.io.writepickle(cat, outcatfilepath)
 #		"""
 #		
 #
@@ -987,7 +987,7 @@ class Run():
 #		
 #		for catfilepath in catfilepaths:
 #			
-#			cat = megalut.tools.io.readpickle(catfilepath)
+#			cat = momentsml.tools.io.readpickle(catfilepath)
 #			
 #			resfilepath = cat.meta["workprefix"] + "-measobscheckplot.png"
 #			cat = 

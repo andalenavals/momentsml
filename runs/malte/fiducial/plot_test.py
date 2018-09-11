@@ -1,8 +1,8 @@
 
-import megalut
+import momentsml
 import os
 
-from megalut.tools.feature import Feature
+from momentsml.tools.feature import Feature
 import config
 
 import matplotlib
@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-cat = megalut.tools.io.readpickle(os.path.join(config.simmeasdir, config.datasets["vo"], "groupmeascat.pkl"))
+cat = momentsml.tools.io.readpickle(os.path.join(config.simmeasdir, config.datasets["vo"], "groupmeascat.pkl"))
 
 
 mask = np.array(cat["adamom_g1"].mask, dtype=bool) # This is 2D, 1 means "is masked"
@@ -53,7 +53,7 @@ fail_tru_flux = tru_flux[mask]
 fail_tru_rad = tru_rad[mask]
 
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 
 #exit()
 

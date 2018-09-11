@@ -7,7 +7,7 @@ import datetime
 import numpy as np
 import astropy.table
 
-import megalut
+import momentsml
 
 import config
 import measfcts
@@ -36,7 +36,7 @@ for subfield in config.great3.subfields:
 	
 	
 	# To measure the stars, we attach the image:
-	starcat.meta["img"] = megalut.tools.imageinfo.ImageInfo(
+	starcat.meta["img"] = momentsml.tools.imageinfo.ImageInfo(
 		filepath=config.great3.starimgfilepath(subfield),
 		xname="psfx",
 		yname="psfy",
@@ -48,6 +48,6 @@ for subfield in config.great3.subfields:
 	#print starcat[["psfx", "psfy", "psf_sewpy_XWIN_IMAGE", "psf_sewpy_YWIN_IMAGE", "psf_adamom_x", "psf_adamom_y"]]
 	#print starcat
 
-	megalut.tools.io.writepickle(starcat, config.great3.subpath(subfield, "obs", "star_meascat.pkl"))
+	momentsml.tools.io.writepickle(starcat, config.great3.subpath(subfield, "obs", "star_meascat.pkl"))
 	
 

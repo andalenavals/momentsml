@@ -1,18 +1,18 @@
-import megalut
+import momentsml
 import os
 import config
 import numpy as np
 
-from megalut.tools.feature import Feature
+from momentsml.tools.feature import Feature
 
 import matplotlib
 import matplotlib.pyplot as plt
 
 
 
-cat = megalut.tools.io.readpickle(os.path.join(config.workdir, "cat.pkl"))
+cat = momentsml.tools.io.readpickle(os.path.join(config.workdir, "cat.pkl"))
 
-print megalut.tools.table.info(cat)
+print momentsml.tools.table.info(cat)
 
 
 fig = plt.figure(figsize=(20, 13))
@@ -28,21 +28,21 @@ tru_sersicn = Feature("tru_sersicn")
 
 
 ax = fig.add_subplot(2, 3, 1)
-megalut.plot.scatter.scatter(ax, cat, tru_sersicn, tru_rad, sidehists=True, sidehistkwargs={"bins":20})
+momentsml.plot.scatter.scatter(ax, cat, tru_sersicn, tru_rad, sidehists=True, sidehistkwargs={"bins":20})
 ax = fig.add_subplot(2, 3, 2)
-megalut.plot.scatter.scatter(ax, cat, tru_mag,  tru_rad, sidehists=True, sidehistkwargs={"bins":20})
+momentsml.plot.scatter.scatter(ax, cat, tru_mag,  tru_rad, sidehists=True, sidehistkwargs={"bins":20})
 
 ax = fig.add_subplot(2, 3, 3)
-s = megalut.tools.table.Selector("select", [
+s = momentsml.tools.table.Selector("select", [
 		("in", "tru_mag", 24.25, 24.75),
 	])
 bincat = s.select(cat)
-megalut.plot.hist.hist(ax, bincat, tru_rad)
-s = megalut.tools.table.Selector("select", [
+momentsml.plot.hist.hist(ax, bincat, tru_rad)
+s = momentsml.tools.table.Selector("select", [
 		("in", "tru_mag", 22.75, 23.25),
 	])
 bincat = s.select(cat)
-megalut.plot.hist.hist(ax, bincat, tru_rad, color="blue")
+momentsml.plot.hist.hist(ax, bincat, tru_rad, color="blue")
 
 
 

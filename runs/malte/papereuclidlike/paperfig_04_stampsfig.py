@@ -10,7 +10,7 @@ from matplotlib import rc
 import matplotlib.pyplot as plt
 plt.rcParams['svg.fonttype'] = 'none'
 
-import megalut.sim
+import momentsml.sim
 import numpy as np
 import random # np.random.choice is only available for newer numpys...
 import scipy.stats
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 import f2n
 
 
-cat = megalut.tools.io.readpickle(os.path.join(config.simmeasdir, "figstamps", "groupmeascat.pkl"))
+cat = momentsml.tools.io.readpickle(os.path.join(config.simmeasdir, "figstamps", "groupmeascat.pkl"))
 
 fitspaths = glob.glob(os.path.join(config.simdir, "figstamps", "*", "*.fits"))
 assert len(fitspaths) == 1

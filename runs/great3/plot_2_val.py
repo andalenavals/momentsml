@@ -2,10 +2,10 @@
 Validation plot on training-like data structure, with one galaxy per case
 """
 
-import megalut
-import megalutgreat3
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml
+import momentsmlgreat3
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 import matplotlib.colors
 import numpy as np
@@ -45,9 +45,9 @@ def plot(cat, component, mode="s", filepath=None, select=None, withweights=False
 	
 	pre_maskedfrac = Feature("pre_maskedfrac")
 	
-	megalut.tools.table.addstats(cat, "adamom_flux")
-	megalut.tools.table.addstats(cat, "adamom_sigma")
-	megalut.tools.table.addstats(cat, "snr")
+	momentsml.tools.table.addstats(cat, "adamom_flux")
+	momentsml.tools.table.addstats(cat, "adamom_sigma")
+	momentsml.tools.table.addstats(cat, "snr")
 	snr_mean = Feature("snr_mean")
 
 	
@@ -59,10 +59,10 @@ def plot(cat, component, mode="s", filepath=None, select=None, withweights=False
 	#print min(cat["snr_mean"]), max(cat["snr_mean"]), np.median(cat["snr_mean"])
 	
 	
-	megalut.tools.table.addrmsd(cat, "pre_s{}".format(component), "tru_{}{}".format(mode, component))
+	momentsml.tools.table.addrmsd(cat, "pre_s{}".format(component), "tru_{}{}".format(mode, component))
 	
 	if withweights == False:
-		megalut.tools.table.addstats(cat, "pre_s{}".format(component))
+		momentsml.tools.table.addstats(cat, "pre_s{}".format(component))
 		pre_sc_bias = Feature("pre_s{}_bias".format(component))
 		pre_sc_mean = Feature("pre_s{}_mean".format(component))
 
@@ -73,7 +73,7 @@ def plot(cat, component, mode="s", filepath=None, select=None, withweights=False
 			logger.warning("No weights available, skipping")
 			return
 
-		megalut.tools.table.addstats(cat, "pre_s{}".format(component), wcol="pre_s{}w".format(component))
+		momentsml.tools.table.addstats(cat, "pre_s{}".format(component), wcol="pre_s{}w".format(component))
 		cat["pre_s{}_wbias".format(component)] = cat["pre_s{}_wmean".format(component)] - cat["tru_{}{}".format(mode, component)]
 		pre_sc_bias = Feature("pre_s{}_wbias".format(component))
 		pre_sc_mean = Feature("pre_s{}_wmean".format(component))
@@ -86,51 +86,51 @@ def plot(cat, component, mode="s", filepath=None, select=None, withweights=False
 	fig = plt.figure(figsize=(24, 12))
 
 	ax = fig.add_subplot(3, 5, 1)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc,  pre_sc_mean, featc=snr_mean, showidline=True, metrics=True)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc,  pre_sc_mean, featc=snr_mean, showidline=True, metrics=True)
 	
 	ax = fig.add_subplot(3, 5, 2)
-	#megalut.plot.scatter.scatter(ax, cat, tru_sc, Feature("snr_mean"), pre_sc_bias)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc, Feature("snr", rea=1), pre_sc_bias)
+	#momentsml.plot.scatter.scatter(ax, cat, tru_sc, Feature("snr_mean"), pre_sc_bias)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc, Feature("snr", rea=1), pre_sc_bias)
 	ax = fig.add_subplot(3, 5, 3)
 	cnorm = matplotlib.colors.SymLogNorm(linthresh=0.01)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc, Feature("tru_rad"), pre_sc_bias, norm=cnorm)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc, Feature("tru_rad"), pre_sc_bias, norm=cnorm)
 	ax = fig.add_subplot(3, 5, 4)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc, Feature("tru_sersicn"), pre_sc_bias)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc, Feature("tru_sersicn"), pre_sc_bias)
 	ax = fig.add_subplot(3, 5, 5)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc, Feature("tru_g"), pre_sc_bias)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc, Feature("tru_g"), pre_sc_bias)
 
 	
 	ax = fig.add_subplot(3, 5, 6)
-	megalut.plot.scatter.scatter(ax, cat, Feature("tru_flux"), pre_sc_bias, Feature("tru_rad"))
+	momentsml.plot.scatter.scatter(ax, cat, Feature("tru_flux"), pre_sc_bias, Feature("tru_rad"))
 	ax = fig.add_subplot(3, 5, 7)
-	#megalut.plot.scatter.scatter(ax, cat, tru_sc,  Feature("adamom_frac"), pre_sc_bias)
-	megalut.plot.scatter.scatter(ax, cat, pre_maskedfrac, pre_sc_bias, sidehists=True)
+	#momentsml.plot.scatter.scatter(ax, cat, tru_sc,  Feature("adamom_frac"), pre_sc_bias)
+	momentsml.plot.scatter.scatter(ax, cat, pre_maskedfrac, pre_sc_bias, sidehists=True)
 	#ax.set_xscale("log", nonposy='clip')
 	
 	
 	ax = fig.add_subplot(3, 5, 8)
-	#megalut.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_flux"), pre_sc_bias, norm=cnorm)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_rad"), pre_sc_bias)
+	#momentsml.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_flux"), pre_sc_bias, norm=cnorm)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_rad"), pre_sc_bias)
 	ax = fig.add_subplot(3, 5, 9)
-	#megalut.plot.scatter.scatter(ax, cat, Feature("tru_flux"), pre_sc_bias, Feature("tru_rad"))
-	#megalut.plot.scatter.scatter(ax, cat, tru_sc,  Feature("adamom_flux_mean"), pre_gc_bias)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_flux"), pre_sc_bias)
+	#momentsml.plot.scatter.scatter(ax, cat, Feature("tru_flux"), pre_sc_bias, Feature("tru_rad"))
+	#momentsml.plot.scatter.scatter(ax, cat, tru_sc,  Feature("adamom_flux_mean"), pre_gc_bias)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_flux"), pre_sc_bias)
 	ax = fig.add_subplot(3, 5, 10)
-	#megalut.plot.scatter.scatter(ax, cat, tru_sc,  Feature("adamom_sigma", rea=1), pre_sc_bias)
-	#megalut.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_sb"), pre_sc_bias)
-	megalut.plot.scatter.scatter(ax, cat, Feature("tru_flux"), Feature("pre_s{}".format(component), rea=1), Feature("tru_rad"))
+	#momentsml.plot.scatter.scatter(ax, cat, tru_sc,  Feature("adamom_sigma", rea=1), pre_sc_bias)
+	#momentsml.plot.scatter.scatter(ax, cat, tru_sc,  Feature("tru_sb"), pre_sc_bias)
+	momentsml.plot.scatter.scatter(ax, cat, Feature("tru_flux"), Feature("pre_s{}".format(component), rea=1), Feature("tru_rad"))
 	
 	
 	ax = fig.add_subplot(3, 5, 11)
-	megalut.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_sb"), ncbins=3, equalcount=True, ebarmode=ebarmode)
+	momentsml.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_sb"), ncbins=3, equalcount=True, ebarmode=ebarmode)
 	ax = fig.add_subplot(3, 5, 12)
-	megalut.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_flux"), ncbins=3, equalcount=True, ebarmode=ebarmode)
+	momentsml.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_flux"), ncbins=3, equalcount=True, ebarmode=ebarmode)
 	ax = fig.add_subplot(3, 5, 13)
-	megalut.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_rad"), ncbins=3, equalcount=True, ebarmode=ebarmode)
+	momentsml.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_rad"), ncbins=3, equalcount=True, ebarmode=ebarmode)
 	ax = fig.add_subplot(3, 5, 14)
-	megalut.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_sersicn"), ncbins=3, equalcount=True, ebarmode=ebarmode)
+	momentsml.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_sersicn"), ncbins=3, equalcount=True, ebarmode=ebarmode)
 	ax = fig.add_subplot(3, 5, 15)
-	megalut.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_g"), ncbins=3, equalcount=True, ebarmode=ebarmode)
+	momentsml.plot.bin.res(ax, cat, tru_sc, pre_sc_mean, Feature("tru_g"), ncbins=3, equalcount=True, ebarmode=ebarmode)
 
 	
 	

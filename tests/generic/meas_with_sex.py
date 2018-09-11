@@ -6,8 +6,8 @@ THIS IS OUTDATED, the SExctractor wrapper is now outsourced to sewpy
 import logging
 logging.basicConfig(level=logging.INFO)
 
-import megalut
-from megalut.meas.sextractor import SExtractor
+import momentsml
+from momentsml.meas.sextractor import SExtractor
 
 
 
@@ -48,7 +48,7 @@ print out["table"]
 
 # For this we need an existing catalog and a FITS image.
 
-inputcat = megalut.tools.io.readpickle("psfs/cat_psfgrid.pkl")
+inputcat = momentsml.tools.io.readpickle("psfs/cat_psfgrid.pkl")
 print inputcat[:5]
 
 params = ["VECTOR_ASSOC(3)", "X_IMAGE", "Y_IMAGE", "FWHM_IMAGE", "BACKGROUND", "FLAGS"]

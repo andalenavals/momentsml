@@ -1,9 +1,9 @@
 import matplotlib
 matplotlib.use("AGG")
 
-import megalut.tools
-import megalut.learn
-import megalut
+import momentsml.tools
+import momentsml.learn
+import momentsml
 
 import config
 import numpy as np
@@ -21,19 +21,19 @@ for subfield in config.great3.subfields:
 	logger.info("Working on subfield {}".format(subfield))
 
 	meascatpath = config.great3.subpath(subfield, "obs", "img_meascat.pkl")
-	cat = megalut.tools.io.readpickle(meascatpath)
+	cat = momentsml.tools.io.readpickle(meascatpath)
 	
 	# Predicting shear
 	traindir = config.great3.subpath(subfield, "ml", config.datasets["train-shear"])
-	cat = megalut.learn.tenbilacrun.predict(cat, config.shearconflist, traindir)
+	cat = momentsml.learn.tenbilacrun.predict(cat, config.shearconflist, traindir)
 
 	# Predicting weight
 	traindir = config.great3.subpath(subfield, "ml", config.datasets["train-weight"])
-	cat = megalut.learn.tenbilacrun.predict(cat, config.weightconflist, traindir)
+	cat = momentsml.learn.tenbilacrun.predict(cat, config.weightconflist, traindir)
 
 	
 	predcatpath = config.great3.subpath(subfield, "pred", "predcat_{}.pkl".format(config.predcode))
-	megalut.tools.io.writepickle(cat, predcatpath)
+	momentsml.tools.io.writepickle(cat, predcatpath)
 	
 
 	"""

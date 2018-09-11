@@ -1,4 +1,4 @@
-import megalut.sim
+import momentsml.sim
 import numpy as np
 import random # np.random.choice is only available for newer numpys...
 
@@ -15,7 +15,7 @@ def contracted_rayleigh(sigma, max_val, p):
 
 
 
-class Simple1(megalut.sim.params.Params):
+class Simple1(momentsml.sim.params.Params):
 	"""
 	Sersics with shear.
 	Single PSF.
@@ -23,7 +23,7 @@ class Simple1(megalut.sim.params.Params):
 	
 	
 	def __init__(self):
-		megalut.sim.params.Params.__init__(self)
+		momentsml.sim.params.Params.__init__(self)
 		self.snc_type = 100
 		self.sr = 0.10 # shear range
 

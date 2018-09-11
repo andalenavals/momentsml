@@ -6,9 +6,9 @@ script, so that it can be imported by the multiprocessing pool workers that will
 it without causing any trouble!
 """
 
-import megalut.meas
-import megalut.meas.sewfunc
-import megalut.meas.aperphot
+import momentsml.meas
+import momentsml.meas.sewfunc
+import momentsml.meas.aperphot
 import config
 
 
@@ -26,15 +26,15 @@ def psf(catalog, branch=None):
 #		"FLUX_WIN", "FLUXERR_WIN", "NITER_WIN", "FLAGS_WIN", "FLUX_AUTO", "FLUXERR_AUTO",
 #		"FWHM_IMAGE", "KRON_RADIUS", "FLUX_RADIUS(7)", "BACKGROUND", "FLAGS"]
 #	
-#	catalog = megalut.meas.sewfunc.measfct(catalog, runon="img", config=sewpy_config,
+#	catalog = momentsml.meas.sewfunc.measfct(catalog, runon="img", config=sewpy_config,
 #		params=sewpy_params, sexpath=config.sexpath,
 #		prefix="psf_sewpy_")
 	
 	# We run galsim_adamom :
-	catalog = megalut.meas.galsim_adamom.measfct(catalog, stampsize=branch.stampsize(), prefix="psf_adamom_", variant="wider")
+	catalog = momentsml.meas.galsim_adamom.measfct(catalog, stampsize=branch.stampsize(), prefix="psf_adamom_", variant="wider")
 	
 	# We run skystats:
-	catalog = megalut.meas.skystats.measfct(catalog, stampsize=branch.stampsize(), prefix="psf_")
+	catalog = momentsml.meas.skystats.measfct(catalog, stampsize=branch.stampsize(), prefix="psf_")
 			
 	return catalog
 
@@ -55,20 +55,20 @@ def gal(catalog, branch=None):
 #		"FLUX_WIN", "FLUXERR_WIN", "NITER_WIN", "FLAGS_WIN", "FLUX_AUTO", "FLUXERR_AUTO",
 #		"FWHM_IMAGE", "KRON_RADIUS", "FLUX_RADIUS(7)", "BACKGROUND", "FLAGS"]
 #	
-#	catalog = megalut.meas.sewfunc.measfct(catalog, runon="img", config=sewpy_config,
+#	catalog = momentsml.meas.sewfunc.measfct(catalog, runon="img", config=sewpy_config,
 #		params=sewpy_params, sexpath=config.sexpath)
 	
 	# We run galsim_adamom :
-	catalog = megalut.meas.galsim_adamom.measfct(catalog, stampsize=branch.stampsize(), variant="wider")
+	catalog = momentsml.meas.galsim_adamom.measfct(catalog, stampsize=branch.stampsize(), variant="wider")
 	
 	# We run skystats:
-	catalog = megalut.meas.skystats.measfct(catalog, stampsize=branch.stampsize())
+	catalog = momentsml.meas.skystats.measfct(catalog, stampsize=branch.stampsize())
 	
 	# aperphot:
-	catalog = megalut.meas.aperphot.measfct(catalog, radii=(2, 3, 5, 8))
+	catalog = momentsml.meas.aperphot.measfct(catalog, radii=(2, 3, 5, 8))
 	
 	# and snr
-	catalog = megalut.meas.snr.measfct(catalog, gain=1.0)
+	catalog = momentsml.meas.snr.measfct(catalog, gain=1.0)
 		
 	
 	return catalog

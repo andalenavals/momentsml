@@ -4,15 +4,15 @@ import os
 import numpy as np
 import matplotlib.ticker as ticker
 
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-#megalut.plot.figures.set_fancy(14)
+#momentsml.plot.figures.set_fancy(14)
 from matplotlib import rc
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
@@ -38,15 +38,15 @@ else:
 	select = False
 
 valcat = os.path.join(config.valdir, valname + ".pkl")
-cat = megalut.tools.io.readpickle(valcat)
-megalut.tools.table.addstats(cat, "snr") # We need this even without select, to show the snr_mean axis
+cat = momentsml.tools.io.readpickle(valcat)
+momentsml.tools.table.addstats(cat, "snr") # We need this even without select, to show the snr_mean axis
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 
 
 if select:
 	
-	s = megalut.tools.table.Selector("snr_mean > 10", [
+	s = momentsml.tools.table.Selector("snr_mean > 10", [
 		("min", "snr_mean", 10.0),
 	])
 	cat = s.select(cat)
@@ -89,10 +89,10 @@ def make_plot(ax, featbin, showlegend=False, sersic=False):
 		showbins = True
 		binlims = None
 	# The first component
-	megalut.plot.mcbin.mcbin(ax, cat, tru_s1, pre_s1, featbin, featprew=pre_s1w, comp=1, binlims=binlims, showbins=showbins, regressmethod=regressmethod)
+	momentsml.plot.mcbin.mcbin(ax, cat, tru_s1, pre_s1, featbin, featprew=pre_s1w, comp=1, binlims=binlims, showbins=showbins, regressmethod=regressmethod)
 	# For the second component, we do not overplot bins again, but we might show the legend
-	megalut.plot.mcbin.mcbin(ax, cat, tru_s2, pre_s2, featbin, featprew=pre_s2w, comp=2, binlims=binlims, showbins=False, showlegend=showlegend, regressmethod=regressmethod)
-	megalut.plot.mcbin.make_symlog(ax, featbin)
+	momentsml.plot.mcbin.mcbin(ax, cat, tru_s2, pre_s2, featbin, featprew=pre_s2w, comp=2, binlims=binlims, showbins=False, showlegend=showlegend, regressmethod=regressmethod)
+	momentsml.plot.mcbin.make_symlog(ax, featbin)
 	ax.set_xlabel(featbin.nicename)
 
 
@@ -125,7 +125,7 @@ make_plot(ax, tru_g)
 ax.set_yticklabels([])
 
 
-megalut.plot.figures.savefig(os.path.join(config.valdir, valname + "_cond_biases"), fig, fancy=True)
+momentsml.plot.figures.savefig(os.path.join(config.valdir, valname + "_cond_biases"), fig, fancy=True)
 plt.show()
 
 
@@ -149,8 +149,8 @@ for comp in ["1","2"]:
 		
 	cat["pre_s{}w_norm".format(comp)] = cat["pre_s{}w".format(comp)] / np.max(cat["pre_s{}w".format(comp)])
 
-	megalut.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
-	megalut.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
+	momentsml.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
+	momentsml.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
 	cat["pre_s{}_wbias".format(comp)] = cat["pre_s{}_wmean".format(comp)] - cat["tru_s{}".format(comp)]
 """
 
@@ -158,13 +158,13 @@ for comp in ["1","2"]:
 #for comp in ["1", "2"]:
 #	pass
 	#cat["pre_g{}".format(comp)] = cat["pre_g{}_adamom".format(comp)]
-	#megalut.tools.table.addstats(cat, "pre_g{}".format(comp))
-	#megalut.tools.table.addrmsd(cat, "pre_g{}".format(comp), "tru_s{}".format(comp))
+	#momentsml.tools.table.addstats(cat, "pre_g{}".format(comp))
+	#momentsml.tools.table.addrmsd(cat, "pre_g{}".format(comp), "tru_s{}".format(comp))
 """
 
 
 """
-s = megalut.tools.table.Selector("ok", [
+s = momentsml.tools.table.Selector("ok", [
 	("min", "snr_mean", 10),
 	#("in", "tru_rad", 0, 10.),
 	#("max", "adamom_frac", 0.005)
@@ -195,13 +195,13 @@ maxshear = 0.12
 ax = fig.add_subplot(1, 2, 1)
 ax.fill_between([-1, 1], -2e-3, 2e-3, alpha=0.2, facecolor='darkgrey')
 ax.axhline(0, ls='--', color='k')
-megalut.plot.scatter.scatter(ax, cat, main_feat,  Feature("pre_s{}_bias".format(component)), \
+momentsml.plot.scatter.scatter(ax, cat, main_feat,  Feature("pre_s{}_bias".format(component)), \
 	featc=Feature("snr_mean"), marker='.', cmap="plasma", hidecbar=True, vmin=minsnr, vmax=maxsnr)
 ax.set_xlabel(r"True shear $g_{%s}$" % component)
 ax.set_ylabel(r"Shear bias")
 
 
-metrics = megalut.tools.metrics.metrics(cat, main_feat,  Feature("pre_s{}_bias".format(component)), pre_is_res=True)
+metrics = momentsml.tools.metrics.metrics(cat, main_feat,  Feature("pre_s{}_bias".format(component)), pre_is_res=True)
 
 ax.annotate(r"$\mathrm{RMSD=%.5f}$" % metrics["rmsd"], xy=(0.0, 1.0), xycoords='axes fraction', xytext=(8, -4), textcoords='offset points', ha='left', va='top')
 ax.annotate(r"$10^3\mu=%.1f \pm %.1f;\,10^3c=%.1f \pm %.1f$" % (metrics["m"]*1000.0, metrics["merr"]*1000.0, \
@@ -215,10 +215,10 @@ ax.set_xlim([minshear, maxshear])
 ax = fig.add_subplot(1, 2, 2)
 ax.fill_between([-1, 1], -2e-3, 2e-3, alpha=0.2, facecolor='darkgrey')
 ax.axhline(0, ls='--', color='k')
-megalut.plot.scatter.scatter(ax, cat, main_feat,  Feature("pre_s{}_bias".format(component2)), 
+momentsml.plot.scatter.scatter(ax, cat, main_feat,  Feature("pre_s{}_bias".format(component2)), 
 	featc=Feature("snr_mean", nicename=r"S/N"), marker='.', cmap="plasma", vmin=minsnr, vmax=maxsnr)
 ax.set_xlabel(r"True shear $g_{%s}$" % component2)
-metrics = megalut.tools.metrics.metrics(cat, main_feat,  Feature("pre_s{}_bias".format(component2)), pre_is_res=True)
+metrics = momentsml.tools.metrics.metrics(cat, main_feat,  Feature("pre_s{}_bias".format(component2)), pre_is_res=True)
 
 ax.annotate(r"$\mathrm{RMSD=%.5f}$" % metrics["rmsd"], xy=(0.0, 1.0), xycoords='axes fraction', xytext=(8, -4), textcoords='offset points', ha='left', va='top')
 ax.annotate(r"$10^3\mu=%.1f \pm %.1f;\,10^3c=%.1f \pm %.1f$" % (metrics["m"]*1000.0, metrics["merr"]*1000.0, \
@@ -228,7 +228,7 @@ ax.set_xlim([minshear, maxshear])
 ax.set_yticklabels([])
 ax.set_ylabel("")
 
-megalut.plot.figures.savefig(os.path.join(config.valdir, valname + "_plot_6a"), fig, fancy=True, pdf_transparence=True)
+momentsml.plot.figures.savefig(os.path.join(config.valdir, valname + "_plot_6a"), fig, fancy=True, pdf_transparence=True)
 #------------------------------------------------------------
 """
 
@@ -270,10 +270,10 @@ for iplot, featc in enumerate(param_feats):
 	
 		cat["res"] = cat["pre_s{}_bias".format(comp)]
 		
-		#xbinrange = megalut.plot.utils.getrange(cat, featc)
-		#binsumma = megalut.plot.utils.summabin(cat[maincol], cat["res"], xbinrange=xbinrange, nbins=nbins)
+		#xbinrange = momentsml.plot.utils.getrange(cat, featc)
+		#binsumma = momentsml.plot.utils.summabin(cat[maincol], cat["res"], xbinrange=xbinrange, nbins=nbins)
 		
-		cbinrange = megalut.plot.utils.getrange(cat, featc)
+		cbinrange = momentsml.plot.utils.getrange(cat, featc)
 		
 		if featc.colname is "tru_sersicn":
 			cbinlims = np.linspace(1-0.1, 4+0.1, 11)	
@@ -302,7 +302,7 @@ for iplot, featc in enumerate(param_feats):
 			#offset = (i - float(ncbins)/2) * offsetscale
 			
 			# We build the subset of data that is in this color bin:
-			selcbin = megalut.tools.table.Selector(featc.colname, [("in", featc.colname, cbinlows[i], cbinhighs[i])])
+			selcbin = momentsml.tools.table.Selector(featc.colname, [("in", featc.colname, cbinlows[i], cbinhighs[i])])
 			cbindata = selcbin.select(cat)
 			
 			#if len(cbindata) == 0:
@@ -312,9 +312,9 @@ for iplot, featc in enumerate(param_feats):
 			cbinfrac = float(len(cbindata)) / float(len(cat))
 			
 			# And we perform the linear regression
-			md = megalut.tools.metrics.metrics(cbindata,
+			md = momentsml.tools.metrics.metrics(cbindata,
 				main_feat, # Redefining those to get rid of any rea settings that don't apply to cbindata
-				megalut.tools.feature.Feature("res"),
+				momentsml.tools.feature.Feature("res"),
 				pre_is_res=True)
 			
 			ms.append(md["m"])
@@ -329,7 +329,7 @@ for iplot, featc in enumerate(param_feats):
 			
 			
 			# And now bin this in x:
-			#cbinsumma = megalut.plot.utils.summabin(cbindata[maincol], cbindata["res"], xbinrange=xbinrange, nbins=nbins, equalcount=False)
+			#cbinsumma = momentsml.plot.utils.summabin(cbindata[maincol], cbindata["res"], xbinrange=xbinrange, nbins=nbins, equalcount=False)
 			
 		if icomp == 0:
 			markm = '*'
@@ -386,6 +386,6 @@ for iplot, featc in enumerate(param_feats):
 	if coln == ncol: coln = 0
 
 
-megalut.plot.figures.savefig(os.path.join(config.valdir, valname + "_condbias_b"), fig, fancy=True, pdf_transparence=True)
+momentsml.plot.figures.savefig(os.path.join(config.valdir, valname + "_condbias_b"), fig, fancy=True, pdf_transparence=True)
 plt.show()
 """

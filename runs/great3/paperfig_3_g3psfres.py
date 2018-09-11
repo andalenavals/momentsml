@@ -2,12 +2,12 @@ import matplotlib
 #matplotlib.use("AGG")
 matplotlib.use("pdf")
 
-import megalut
-import megalut.tools
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml
+import momentsml.tools
+import momentsml.plot
+from momentsml.tools.feature import Feature
 
-import megalutgreat3
+import momentsmlgreat3
 import astropy
 
 
@@ -78,7 +78,7 @@ catpath = config.great3.path("summary_{}.pkl".format(config.predcode))
 #catpath = config.great3.path("{}_summary_{}.pkl".format(config.datasets["mimic-great3"], config.predcode))
 
 
-cat = megalut.tools.io.readpickle(catpath)
+cat = momentsml.tools.io.readpickle(catpath)
 
 
 # Computing residuals
@@ -139,8 +139,8 @@ plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-#print megalut.tools.table.info(cat)
-#mets = megalutgreat3.utils.metrics(cat, ("tru_s1", "tru_s2"), ("pre_s1w", "pre_s2w"), psfgcols=("tru_psf_g1", "tru_psf_g2"))
+#print momentsml.tools.table.info(cat)
+#mets = momentsmlgreat3.utils.metrics(cat, ("tru_s1", "tru_s2"), ("pre_s1w", "pre_s2w"), psfgcols=("tru_psf_g1", "tru_psf_g2"))
 
 """
 featc = Feature("psf_adamom_sigma", nicename=r"PSF $\mathtt{adamom\_sigma}$ [pix]")
@@ -172,7 +172,7 @@ tickpos = np.array([0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.00
 minorlocator = FixedLocator(list(tickpos) + list(-tickpos))
 
 ax = fig.add_subplot(2, 2, 1)
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_psf_e1", -0.2, 0.15, nicename=r"True $e_{1, \mathrm{PSF}}$"), Feature("pre_s1_res", -0.2, 0.2, nicename=r"Predicted $g_1$ $-$ True $g_1$"), featc,
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_psf_e1", -0.2, 0.15, nicename=r"True $e_{1, \mathrm{PSF}}$"), Feature("pre_s1_res", -0.2, 0.2, nicename=r"Predicted $g_1$ $-$ True $g_1$"), featc,
 cmap=cmap, showidline=True, yisres=True)
 ax.set_yscale('symlog', linthreshy=symthres)
 ax.yaxis.set_minor_locator(minorlocator)
@@ -187,7 +187,7 @@ ticks = ax.yaxis.get_major_ticks()
 ticks[4].label1.set_visible(False)
 
 ax = fig.add_subplot(2, 2, 2)
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_psf_e1", -0.2, 0.15, nicename=r"True $e_{1, \mathrm{PSF}}$"), Feature("pre_s1w_res", -resr, resr, nicename=r"Predicted $g_1$ $-$ True $g_1$"), showidline=True, yisres=True,
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_psf_e1", -0.2, 0.15, nicename=r"True $e_{1, \mathrm{PSF}}$"), Feature("pre_s1w_res", -resr, resr, nicename=r"Predicted $g_1$ $-$ True $g_1$"), showidline=True, yisres=True,
 alpha=alpha)
 ax.fill_between([-1, 1], -symthres, symthres, alpha=0.2, facecolor='darkgrey')
 ax.set_title("With weights")
@@ -196,7 +196,7 @@ ax.xaxis.set_major_locator(majorLocator)
 
 
 ax = fig.add_subplot(2, 2, 3)
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_psf_e2", nicename=r"True $e_{2, \mathrm{PSF}}$"), Feature("pre_s2_res", -0.2, 0.2, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc,
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_psf_e2", nicename=r"True $e_{2, \mathrm{PSF}}$"), Feature("pre_s2_res", -0.2, 0.2, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc,
 cmap=cmap, showidline=True, yisres=True, hidecbar=True)
 ax.fill_between([-1, 1], -symthres, symthres, alpha=0.2, facecolor='darkgrey')
 ax.xaxis.set_major_locator(majorLocator)
@@ -208,7 +208,7 @@ ticks = ax.yaxis.get_major_ticks()
 ticks[4].label1.set_visible(False)
 
 ax = fig.add_subplot(2, 2, 4)
-megalut.plot.scatter.scatter(ax, cat, Feature("tru_psf_e2", nicename=r"True $e_{2, \mathrm{PSF}}$"), Feature("pre_s2w_res", -0.2, 0.2, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc,
+momentsml.plot.scatter.scatter(ax, cat, Feature("tru_psf_e2", nicename=r"True $e_{2, \mathrm{PSF}}$"), Feature("pre_s2w_res", -0.2, 0.2, nicename=r"Predicted $g_2$ $-$ True $g_2$"), featc,
 cmap=cmap, showidline=True, yisres=True, hidecbar=True)
 ax.set_yscale('symlog', linthreshy=symthres)
 ax.yaxis.set_minor_locator(minorlocator)

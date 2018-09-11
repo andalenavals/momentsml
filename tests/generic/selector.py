@@ -7,7 +7,7 @@ logging.basicConfig(format='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcNam
 
 import numpy as np
 import astropy.table
-import megalut
+import momentsml
 
 # We create a table
 
@@ -31,17 +31,17 @@ cat["d"].mask[3:8] = True
 print "Input catalog:"
 print cat
 
-sel1 = megalut.tools.table.Selector("foo", [("max", "b", 100.0), ("nomask", "c")])
+sel1 = momentsml.tools.table.Selector("foo", [("max", "b", 100.0), ("nomask", "c")])
 
-sel2 = megalut.tools.table.Selector("bar", [("in", "d", -1, 2)])
+sel2 = momentsml.tools.table.Selector("bar", [("in", "d", -1, 2)])
 # Tricky: this one used to be a bad bug. Do you want masked d values (which are zero) or not ?
 # This is now fixed, masked values are rejected.
 
-sel3 = megalut.tools.table.Selector("sel3", [("mask", "c")])
+sel3 = momentsml.tools.table.Selector("sel3", [("mask", "c")])
 
-sel4 = megalut.tools.table.Selector("sel4", [("is", "d", 0)])
+sel4 = momentsml.tools.table.Selector("sel4", [("is", "d", 0)])
 
-sel5 = megalut.tools.table.Selector("sel5", [])
+sel5 = momentsml.tools.table.Selector("sel5", [])
 
 
 print "Output catalog:"

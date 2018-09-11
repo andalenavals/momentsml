@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 try:
 	import sewpy
 except ImportError:
-	logger.warning("sewpy is not available, get it here: https://github.com/megalut/sewpy")
+	logger.warning("sewpy is not available, get it here: https://github.com/momentsml/sewpy")
 	raise
 
 import os
@@ -64,7 +64,7 @@ def measure(img, catalog, xname="x", yname="y",
 	:param config: sewpy config. If ``None``, a reasonable (?) default is used.
 	:param workdir: path where all SExtractor files, settings, and **logs** are kept.
 	
-	When this function is passed to megalut.meas.run(), the suggested workdir location is, e.g.,::
+	When this function is passed to momentsml.meas.run(), the suggested workdir location is, e.g.,::
 	
 		os.path.join(measdir, "sewpy")
 	

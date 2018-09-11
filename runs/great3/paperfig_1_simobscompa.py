@@ -5,14 +5,14 @@ import matplotlib
 #matplotlib.use("AGG")
 matplotlib.use("pdf")
 
-import megalut
-import megalutgreat3
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml
+import momentsmlgreat3
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 import numpy as np
 
-from megalut import tools
+from momentsml import tools
 
 import config
 
@@ -212,13 +212,13 @@ def main():
 		
 	measdir = config.great3.subpath(subfield, "simmeas")
 
-	simcatg3 = megalut.tools.io.readpickle(os.path.join(measdir, "simobscompa-G3", "groupmeascat.pkl"))
-	#print megalut.tools.table.info(simcat)
-	simcattrain = megalut.tools.io.readpickle(os.path.join(measdir, "simobscompa-train", "groupmeascat.pkl"))
-	#print megalut.tools.table.info(simcat)
+	simcatg3 = momentsml.tools.io.readpickle(os.path.join(measdir, "simobscompa-G3", "groupmeascat.pkl"))
+	#print momentsml.tools.table.info(simcat)
+	simcattrain = momentsml.tools.io.readpickle(os.path.join(measdir, "simobscompa-train", "groupmeascat.pkl"))
+	#print momentsml.tools.table.info(simcat)
 
-	obscat = megalut.tools.io.readpickle(config.great3.subpath(subfield, "obs", "img_meascat.pkl"))
-	#print megalut.tools.table.info(obscat)
+	obscat = momentsml.tools.io.readpickle(config.great3.subpath(subfield, "obs", "img_meascat.pkl"))
+	#print momentsml.tools.table.info(obscat)
 	#obscat = obscat[:1000]
 			
 	for cat in [simcatg3, simcattrain, obscat]:

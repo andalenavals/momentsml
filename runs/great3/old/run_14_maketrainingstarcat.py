@@ -11,9 +11,9 @@ import astropy.table
 
 from astropy.io import fits
 
-import megalut
+import momentsml
 
-import megalutgreat3
+import momentsmlgreat3
 
 import config
 import measfcts
@@ -35,10 +35,10 @@ stararray = np.zeros((sfside, sfside*len(config.subfields)))
 for (i, subfield) in enumerate(config.subfields):
 
 	# We read in the FITS image
-	startile = megalut.tools.io.fromfits(great3.starimgfilepath(subfield))
+	startile = momentsml.tools.io.fromfits(great3.starimgfilepath(subfield))
 	stararray[:, i*sfside:(i+1)*sfside] = startile # So the bottom 9 stars get the first subfield number.
 	
-megalut.tools.io.tofits(stararray, great3.path("obs", "allstars.fits"))
+momentsml.tools.io.tofits(stararray, great3.path("obs", "allstars.fits"))
 
 
 
@@ -56,7 +56,7 @@ starcat = astropy.table.Table([stars[:,0], stars[:,1], stars[:,2]], names=('psfx
 	
 
 # We attach the image:
-starcat.meta["img"] = megalut.tools.imageinfo.ImageInfo(
+starcat.meta["img"] = momentsml.tools.imageinfo.ImageInfo(
 	filepath=great3.path("obs", "allstars.fits"),
 	xname="psfx",
 	yname="psfy",
@@ -72,7 +72,7 @@ starcat = measfcts.psf(starcat, branch=great3)
 
 
 # And save the catalog
-megalut.tools.io.writepickle(starcat, great3.path("obs", "allstars_meascat.pkl"))
+momentsml.tools.io.writepickle(starcat, great3.path("obs", "allstars_meascat.pkl"))
 
 
 

@@ -9,7 +9,7 @@ from astropy.table import Table
 import os
 
 import utils
-from megalut import tools
+from momentsml import tools
 
 
 

@@ -1,9 +1,9 @@
 import matplotlib
 matplotlib.use("AGG")
 
-import megalut.tools
-import megalut.learn
-import megalut
+import momentsml.tools
+import momentsml.learn
+import momentsml
 
 import config
 import numpy as np
@@ -28,23 +28,23 @@ for subfield in config.great3.subfields:
 	skip = False # Set to true to just make the plot without recomputing predictions
 	if skip == False:
 		catpath = config.great3.subpath(subfield, "simmeas", config.datasets["valid-overall"], "groupmeascat.pkl")
-		cat = megalut.tools.io.readpickle(catpath)
-		#print megalut.tools.table.info(cat)
+		cat = momentsml.tools.io.readpickle(catpath)
+		#print momentsml.tools.table.info(cat)
 	
 	
 		sheartraindir = config.great3.subpath(subfield, "ml", config.datasets["train-shear"])
-		predcat = megalut.learn.tenbilacrun.predict(cat, config.shearconflist , sheartraindir)
+		predcat = momentsml.learn.tenbilacrun.predict(cat, config.shearconflist , sheartraindir)
 	
 		if len(config.weightconflist) > 0:
 		
 			weighttraindir = config.great3.subpath(subfield, "ml", config.datasets["train-weight"])
-			predcat = megalut.learn.tenbilacrun.predict(predcat, config.weightconflist , weighttraindir)
+			predcat = momentsml.learn.tenbilacrun.predict(predcat, config.weightconflist , weighttraindir)
 		
-		megalut.tools.io.writepickle(predcat, predcatpath)
+		momentsml.tools.io.writepickle(predcat, predcatpath)
 	else:
-		predcat = megalut.tools.io.readpickle(predcatpath)
+		predcat = momentsml.tools.io.readpickle(predcatpath)
 
-	shearconfnames = megalut.learn.tenbilacrun.confnames(config.shearconflist)
+	shearconfnames = momentsml.learn.tenbilacrun.confnames(config.shearconflist)
 	for (confname, conf) in zip(shearconfnames, config.shearconflist):
 
 		predcatcopy = predcat.copy() # As plots modifies it.

@@ -24,14 +24,14 @@ For the machine learning, options are
 Download
 --------
 
-The code is hosted on `<https://github.com/megalut/megalut/>`_
+The code is hosted on `<https://github.com/momentsml/momentsml/>`_
 
 
 Installation
 ------------
 
 
-First, the longer answer: especially if you want to tweak/read the code and do frequent commits or updates, just add the directory containing ``megalut`` to your ``PYTHONPATH``.
+First, the longer answer: especially if you want to tweak/read the code and do frequent commits or updates, just add the directory containing ``momentsml`` to your ``PYTHONPATH``.
 That way you can keep MomentsML in any convenient place on your system, and modify it on the fly, without having to ``python setup.py install`` after any modification.
 
 For tcsh, add for instance something like this to your .tcshrc ::
@@ -46,12 +46,12 @@ or, if you use bash, to your .bash_profile or equivalent::
 
 	export PYTHONPATH=${PYTHONPATH}:/path/to/MomentsML/
 
-... and then from any python you can simply ``import megalut``.
+... and then from any python you can simply ``import momentsml``.
 
 
 .. warning:: the following is not yet implemented!
 
-The easy answer, if you do not plan to tweak the code : cd into the ``megalut`` directory, and::
+The easy answer, if you do not plan to tweak the code : cd into the ``momentsml`` directory, and::
 
 	python setup.py install
 

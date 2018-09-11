@@ -23,8 +23,8 @@ import numpy as np
 from . import io
 from . import autoanalysis
 
-import megalut
-import megalut.learn
+import momentsml
+import momentsml.learn
 
 import logging
 logger = logging.getLogger(__name__)
@@ -202,7 +202,7 @@ class Worker():
  		cat["Galaxy_g2"] = cat["Galaxy_shear_1"] * np.sin(2.0*cat["Galaxy_shear_2"]*np.pi/180)
 							
 		# We create the ImageInfo object
-		img = megalut.tools.imageinfo.ImageInfo(
+		img = momentsml.tools.imageinfo.ImageInfo(
 			filepath = self.sbeimagepath,
 			xname = "x", yname = "y",
 			stampsize = stampsize,
@@ -211,7 +211,7 @@ class Worker():
 		cat.meta["img"] = img
 			
 		# And save the catalog
-		megalut.tools.io.writepickle(cat, self.incatfilepath)
+		momentsml.tools.io.writepickle(cat, self.incatfilepath)
 
 
 	def measobs(self):
@@ -225,7 +225,7 @@ class Worker():
 		execfile(os.path.join(self.configdir, "measfct.py"), measfct)
 		measfctkwargs = {}
 	
-		megalut.meas.run.general([self.incatfilepath], [self.meascatfilepath], measfct["default"], measfctkwargs, ncpu=1, skipdone=False)
+		momentsml.meas.run.general([self.incatfilepath], [self.meascatfilepath], measfct["default"], measfctkwargs, ncpu=1, skipdone=False)
 
 	
 	
@@ -237,7 +237,7 @@ class Worker():
 		logger.info("{}: starting predictions...".format(self))
 		
 		# We read the catalog
-		cat = megalut.tools.io.readpickle(self.meascatfilepath)
+		cat = momentsml.tools.io.readpickle(self.meascatfilepath)
 		#print cat.colnames
 		#print len(cat)
 		#exit()
@@ -247,17 +247,17 @@ class Worker():
 		execfile(os.path.join(self.configdir, "mlparams.py"), mlparams)
 	
 		# Run MomentsML
-		cat = megalut.learn.run.predict(cat, self.configdir, mlparams["trainparamslist"])
+		cat = momentsml.learn.run.predict(cat, self.configdir, mlparams["trainparamslist"])
 			
 		# And write the output
-		megalut.tools.io.writepickle(cat, self.predcatfilepath)
+		momentsml.tools.io.writepickle(cat, self.predcatfilepath)
 
 	
 	def testpred(self):
 	
 		logger.info("{}: quickly testing the predictions...".format(self))
 	
-		cat = megalut.tools.io.readpickle(self.predcatfilepath)
+		cat = momentsml.tools.io.readpickle(self.predcatfilepath)
 		autoanalysis.quicktest(cat)
 
 
@@ -269,7 +269,7 @@ class Worker():
 		
 		logger.info("{}: writing output catalog...".format(self))
 		
-		cat =  megalut.tools.io.readpickle(self.predcatfilepath)
+		cat =  momentsml.tools.io.readpickle(self.predcatfilepath)
 		
 		cat["GAL_ID"] = cat["ID"]
 		cat["GAL_G1"] = cat["pre_s1"]

@@ -6,9 +6,9 @@ This time we use PSFs provided in psfs/
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-import megalut
-import megalut.sim
-import megalut.meas
+import momentsml
+import momentsml.sim
+import momentsml.meas
 
 import numpy as np
 import astropy
@@ -22,14 +22,14 @@ import astropy
 
 # As before, we first set the desired distributions of parameters:
 
-class Flux600(megalut.sim.params.Params):
+class Flux600(momentsml.sim.params.Params):
 	def get_flux(self):
 		return 600.0
 mysimparams = Flux600()
 
 # And we prepare a catalog of 20 x 20 simulated galaxies:
 
-galcat = megalut.sim.stampgrid.drawcat(mysimparams, n=400, stampsize=48)
+galcat = momentsml.sim.stampgrid.drawcat(mysimparams, n=400, stampsize=48)
 
 print galcat[:5]
 
@@ -41,10 +41,10 @@ print galcat[:5]
 # (After all, that's what we want to demo here.)
 # So let's first have a look:
 
-psfcat = megalut.tools.io.readpickle("psfs/cat_psfgrid.pkl")
+psfcat = momentsml.tools.io.readpickle("psfs/cat_psfgrid.pkl")
 
 # Now we can prepare the ImageInfo object from scratch, and already attach it to the galcat.
-galcat.meta["psf"] = megalut.tools.imageinfo.ImageInfo("psfs/psfgrid.fits", xname="psfx", yname="psfy", stampsize=32)
+galcat.meta["psf"] = momentsml.tools.imageinfo.ImageInfo("psfs/psfgrid.fits", xname="psfx", yname="psfy", stampsize=32)
 
 # Now we have to add "psfx" and "psfy" columns to our galcat, and fill in a value for each row.
 # Oops, this catalog has only 100 PSFs, but we want to simulate 400 galaxies !
@@ -68,7 +68,7 @@ print galcat[:5]
 
 # We are now ready to feed this into drawimg :
 
-megalut.sim.stampgrid.drawimg(galcat,
+momentsml.sim.stampgrid.drawimg(galcat,
 	simgalimgfilepath="simgalimg.fits",
 	simtrugalimgfilepath="simtrugalimg.fits",
 	simpsfimgfilepath="simpsfimg.fits"
@@ -76,14 +76,14 @@ megalut.sim.stampgrid.drawimg(galcat,
 
 # We can directly proceed by measuring the images
 
-gridimg = megalut.tools.image.loadimg("simgalimg.fits")
-meascat = megalut.meas.galsim_adamom.measure(gridimg, galcat, stampsize=48, prefix="mes_")
+gridimg = momentsml.tools.image.loadimg("simgalimg.fits")
+meascat = momentsml.meas.galsim_adamom.measure(gridimg, galcat, stampsize=48, prefix="mes_")
 
 # meascat is the output catalog, it contains the measured features:
 print meascat[:5]
 
 # We save it into a pickle
-megalut.tools.io.writepickle(meascat, "meascat.pkl")
+momentsml.tools.io.writepickle(meascat, "meascat.pkl")
 
 print "If you see masked values here, despite the fact that mes_flag is 0, update your numpy !"
 

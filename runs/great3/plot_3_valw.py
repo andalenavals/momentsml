@@ -2,10 +2,10 @@
 Validation plot on mixed-galaxies data, with optional weights
 """
 
-import megalut
-import megalutgreat3
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml
+import momentsmlgreat3
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -39,25 +39,25 @@ def plot(cat, component, filepath=None, title=None):
 		
 		"""
 		# Keeping only the best half of SNR
-		megalut.tools.table.addstats(cat, "snr")
+		momentsml.tools.table.addstats(cat, "snr")
 		for row in cat:
 			row["pre_s{}w".format(component)] = np.array(row["snr"] > row["snr_med"], dtype=np.float)
 		"""
 		
 		# Keeping the best half of sigma
-		megalut.tools.table.addstats(cat, "adamom_sigma")
+		momentsml.tools.table.addstats(cat, "adamom_sigma")
 		for row in cat:
 			row["pre_s{}w".format(component)] = np.array(row["adamom_sigma"] > row["adamom_sigma_med"], dtype=np.float)
 		
 		
 		
-		#print megalut.tools.table.info(cat)
+		#print momentsml.tools.table.info(cat)
 		
 		cat["pre_s{}w_norm".format(component)] = cat["pre_s{}w".format(component)] / np.max(cat["pre_s{}w".format(component)])
 	
-	megalut.tools.table.addrmsd(cat, "pre_s{}".format(component), "tru_s{}".format(component))
+	momentsml.tools.table.addrmsd(cat, "pre_s{}".format(component), "tru_s{}".format(component))
 
-	megalut.tools.table.addstats(cat, "pre_s{}".format(component), "pre_s{}w".format(component))
+	momentsml.tools.table.addstats(cat, "pre_s{}".format(component), "pre_s{}w".format(component))
 	cat["pre_s{}_wbias".format(component)] = cat["pre_s{}_wmean".format(component)] - cat["tru_s{}".format(component)]
 	
 	pre_scw = Feature("pre_s{}w".format(component), rea=rea)
@@ -80,40 +80,40 @@ def plot(cat, component, filepath=None, title=None):
 		fig.suptitle(title)
 
 	ax = fig.add_subplot(3, 4, 1)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc, pre_sc, pre_scw)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc, pre_sc, pre_scw)
 	
 	ax = fig.add_subplot(3, 4, 5)
 	if component ==1:
 		theother=Feature("tru_g2", rea=rea)
 	else:
 		theother=Feature("tru_g1", rea=rea)
-	megalut.plot.scatter.scatter(ax, cat, Feature("snr", rea=rea), pre_scw, theother)
+	momentsml.plot.scatter.scatter(ax, cat, Feature("snr", rea=rea), pre_scw, theother)
 	
 	ax = fig.add_subplot(3, 4, 6)
-	megalut.plot.hist.hist(ax, cat, pre_scw)
+	momentsml.plot.hist.hist(ax, cat, pre_scw)
 
 	ax = fig.add_subplot(3, 4, 7)
-	megalut.plot.scatter.scatter(ax, cat, Feature("adamom_sigma", rea=rea), Feature("adamom_flux", rea=rea), featc=pre_scw)
+	momentsml.plot.scatter.scatter(ax, cat, Feature("adamom_sigma", rea=rea), Feature("adamom_flux", rea=rea), featc=pre_scw)
 	
 	ax = fig.add_subplot(3, 4, 8)
-	megalut.plot.scatter.scatter(ax, cat, Feature("tru_rad", rea=rea), Feature("tru_flux", rea=rea), featc=pre_scw)
+	momentsml.plot.scatter.scatter(ax, cat, Feature("tru_rad", rea=rea), Feature("tru_flux", rea=rea), featc=pre_scw)
 
 
 
 	ax = fig.add_subplot(3, 4, 9)
-	megalut.plot.bin.bin(ax, cat, tru_sc, pre_sc_bias, showidline=True,  metrics=True, yisres=True)
+	momentsml.plot.bin.bin(ax, cat, tru_sc, pre_sc_bias, showidline=True,  metrics=True, yisres=True)
 	ax.set_title("Without weights")
 
 	ax = fig.add_subplot(3, 4, 10)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc, pre_sc_bias, showidline=True, metrics=True, yisres=True)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc, pre_sc_bias, showidline=True, metrics=True, yisres=True)
 	ax.set_title("Without weights")
 	
 	ax = fig.add_subplot(3, 4, 11)
-	megalut.plot.bin.bin(ax, cat, tru_sc, pre_sc_wbias, showidline=True, metrics=True, yisres=True)
+	momentsml.plot.bin.bin(ax, cat, tru_sc, pre_sc_wbias, showidline=True, metrics=True, yisres=True)
 	ax.set_title("With weights")
 
 	ax = fig.add_subplot(3, 4, 12)
-	megalut.plot.scatter.scatter(ax, cat, tru_sc, pre_sc_wbias, showidline=True, metrics=True, yisres=True)
+	momentsml.plot.scatter.scatter(ax, cat, tru_sc, pre_sc_wbias, showidline=True, metrics=True, yisres=True)
 	ax.set_title("With weights")
 
 	

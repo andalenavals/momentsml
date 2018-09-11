@@ -7,10 +7,10 @@ the training set to see if it worked.
 import logging
 logging.basicConfig(level=logging.INFO)
 
-import megalut
-import megalut.learn
+import momentsml
+import momentsml.learn
 
-inputcat = megalut.tools.io.readpickle("meascat.pkl")
+inputcat = momentsml.tools.io.readpickle("meascat.pkl")
 
 # Important: we don't want to train on badly measured data!
 
@@ -20,16 +20,16 @@ inputcat = inputcat[inputcat["mes_flag"] == 0]
 #print inputcat.colnames
 
 # What to train:
-mymlparams = megalut.learn.MLParams(name = "foo", inputs = ["mes_g1", "mes_g2"],
+mymlparams = momentsml.learn.MLParams(name = "foo", inputs = ["mes_g1", "mes_g2"],
                                     targets = ["tru_g1", "tru_g2"], predictions = ["pre_g1", "pre_g2"])
 
 # How to train:
-myfannparams = megalut.learn.fannwrapper.FANNParams(name = "bar", hidden_nodes = [6, 6],
+myfannparams = momentsml.learn.fannwrapper.FANNParams(name = "bar", hidden_nodes = [6, 6],
                                                     max_iterations = 1000)
 
 
 # Here we go:
-myml = megalut.learn.ML(mymlparams, myfannparams)
+myml = momentsml.learn.ML(mymlparams, myfannparams)
 
 myml.train(inputcat)
 
@@ -51,16 +51,16 @@ plt.ylabel("pre_g1")
 plt.show()
 """
 
-# Alternative to demonstrate the use of megalut.plot:
+# Alternative to demonstrate the use of momentsml.plot:
 
 import matplotlib.pyplot as plt
-import megalut.plot
+import momentsml.plot
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
-tru_g1 = megalut.tools.feature.Feature("tru_g1", -0.6, 0.6, "Nice label for true g1")
-pre_g1 = megalut.tools.feature.Feature("pre_g1") # Minimal call, just to highlight the default behavior.
+tru_g1 = momentsml.tools.feature.Feature("tru_g1", -0.6, 0.6, "Nice label for true g1")
+pre_g1 = momentsml.tools.feature.Feature("pre_g1") # Minimal call, just to highlight the default behavior.
 
-megalut.plot.scatter.scatter(ax, outputcat, tru_g1, pre_g1, color="green")
+momentsml.plot.scatter.scatter(ax, outputcat, tru_g1, pre_g1, color="green")
 plt.show()

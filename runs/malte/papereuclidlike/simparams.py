@@ -2,7 +2,7 @@
 Feads a catalog at import and draws from it
 """
 
-import megalut.sim
+import momentsml.sim
 import numpy as np
 import random # np.random.choice is only available for newer numpys...
 import scipy.stats
@@ -35,10 +35,10 @@ def trunc_gaussian(m, s, minval, maxval):
 
 # Loading the GEMS catalog:
 
-sourcecat = megalut.tools.io.readpickle(config.sourcecat)
+sourcecat = momentsml.tools.io.readpickle(config.sourcecat)
 
 # Selections
-#sel = megalut.tools.table.Selector("draw", [
+#sel = momentsml.tools.table.Selector("draw", [
 #		("in", "tru_mag", 20.5, 24.0),
 #	])
 #sourcecat = sel.select(sourcecat)
@@ -56,7 +56,7 @@ skyback = 22.35 # mag per arcsec2, dominated by zodiacal light
 zeropoint = 24.6 # mag, VIS instrumental
 
 
-class EuclidLike(megalut.sim.params.Params):
+class EuclidLike(momentsml.sim.params.Params):
 
 	
 	def __init__(self, name=None, snc_type=1, shear=0, noise_level=1.0, dist_type="gems"):
@@ -66,7 +66,7 @@ class EuclidLike(megalut.sim.params.Params):
 		- noise_level 1.0 means that the fiducial noise level will be used, 0 means no noise
 		"""
 		
-		megalut.sim.params.Params.__init__(self)
+		momentsml.sim.params.Params.__init__(self)
 		if name is not None:
 			self.name = name
 		self.snc_type = snc_type

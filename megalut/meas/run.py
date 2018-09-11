@@ -4,7 +4,7 @@ High-level functionality to measure features on several images using multiproces
 We have two public functions:
 
 - a onsims() which is specialised in exploring the file structure made by
-  megalut.sim.run.multi(), and run on them by calling
+  momentsml.sim.run.multi(), and run on them by calling
 - general(), which can be used for any images.
 
 Behind the scenes, the approach taken by general() is the following:
@@ -250,8 +250,8 @@ def _run(wslist, ncpu):
 		return
 
 	# We do not want to see the log from the low-level stuff:
-	mutemodules = ["megalut.meas.galsim_adamom", "megalut.meas.sewfunc",
-			"sewpy.sewpy", "megalut.tools.io", "megalut.tools.image"]
+	mutemodules = ["momentsml.meas.galsim_adamom", "momentsml.meas.sewfunc",
+			"sewpy.sewpy", "momentsml.tools.io", "momentsml.tools.image"]
 	for modulename in mutemodules:
 		lowlevellogger = logging.getLogger(modulename)
 		#lowlevellogger.propagate = False

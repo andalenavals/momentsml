@@ -31,7 +31,7 @@ presubdir = "/home/kuntzer/workspace/MomentsML/MomentsML-github/presubmission_sc
 
 # And now some frequently used functions related to this configuration:
 
-import megalutgreat3 as mg3
+import momentsmlgreat3 as mg3
 import logging
 logger = logging.getLogger(__name__)
 

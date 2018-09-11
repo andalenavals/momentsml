@@ -1,21 +1,21 @@
-import megalut
+import momentsml
 import os
 import config
 import numpy as np
 
-from megalut.tools.feature import Feature
+from momentsml.tools.feature import Feature
 
 import matplotlib
 import matplotlib.pyplot as plt
 
 
 
-cat = megalut.tools.io.readpickle(os.path.join(config.simmeasdir, "tp-1-pretrain", "groupmeascat.pkl"))
+cat = momentsml.tools.io.readpickle(os.path.join(config.simmeasdir, "tp-1-pretrain", "groupmeascat.pkl"))
 
 
-megalut.tools.table.addstats(cat, "snr")
+momentsml.tools.table.addstats(cat, "snr")
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 #exit()
 
 fig = plt.figure(figsize=(20, 13))
@@ -40,19 +40,19 @@ adamom_rho4 = Feature("adamom_rho4")
 
 
 ax = fig.add_subplot(2, 3, 1)
-megalut.plot.scatter.scatter(ax, cat, tru_mag,  tru_rad, sidehists=True, sidehistkwargs={"bins":20})
+momentsml.plot.scatter.scatter(ax, cat, tru_mag,  tru_rad, sidehists=True, sidehistkwargs={"bins":20})
 
 ax = fig.add_subplot(2, 3, 2)
-megalut.plot.scatter.scatter(ax, cat, tru_mag,  snr_mean, tru_rad)
+momentsml.plot.scatter.scatter(ax, cat, tru_mag,  snr_mean, tru_rad)
 
 ax = fig.add_subplot(2, 3, 3)
-megalut.plot.scatter.scatter(ax, cat, tru_rad,  snr_mean, tru_mag)
+momentsml.plot.scatter.scatter(ax, cat, tru_rad,  snr_mean, tru_mag)
 
 ax = fig.add_subplot(2, 3, 4)
-megalut.plot.scatter.scatter(ax, cat, tru_rad, tru_mag, snr_mean)
+momentsml.plot.scatter.scatter(ax, cat, tru_rad, tru_mag, snr_mean)
 
 ax = fig.add_subplot(2, 3, 5)
-megalut.plot.scatter.scatter(ax, cat, tru_rad, tru_sersicn, sidehists=True, sidehistkwargs={"bins":100})
+momentsml.plot.scatter.scatter(ax, cat, tru_rad, tru_sersicn, sidehists=True, sidehistkwargs={"bins":100})
 
 plt.tight_layout()
 plt.show()

@@ -1,9 +1,9 @@
 
 import os
-import megalut
+import momentsml
 import config
 import matplotlib.pyplot as plt
-from megalut.tools.feature import Feature
+from momentsml.tools.feature import Feature
 
 
 
@@ -28,7 +28,7 @@ cat.keep_columns(['ST_FLUX_RADIUS', 'ST_N_GALFIT', 'ST_MAG_GALFIT', 'ST_RE_GALFI
 cat["magdiff"] = np.fabs(cat["ST_MAG_BEST"] - cat["ST_MAG_GALFIT"])
 
 # We select galaxies
-s = megalut.tools.table.Selector("select", [
+s = momentsml.tools.table.Selector("select", [
 		("is", "GEMS_FLAG", 4),
 		("max", "magdiff", 0.5),
 		("in", "ST_MAG_GALFIT", 20.5, 25.0),
@@ -44,7 +44,7 @@ cat["tru_mag"] = cat["ST_MAG_GALFIT"]
 cat["tru_sersicn"] = cat["ST_N_GALFIT"]
 
 # We reject any nans in the field that we want
-s = megalut.tools.table.Selector("nonan", [
+s = momentsml.tools.table.Selector("nonan", [
 		("nomask", "tru_rad"),
 		("nomask", "tru_mag"),
 		("nomask", "tru_sersicn"),
@@ -70,13 +70,13 @@ tru_sersicn = Feature("tru_sersicn", nicename="Sersic index")
 
 
 ax = fig.add_subplot(2, 4, 1)
-megalut.plot.scatter.scatter(ax, cat, magsex,  maggal, radsex, sidehists=True)
+momentsml.plot.scatter.scatter(ax, cat, magsex,  maggal, radsex, sidehists=True)
 
 ax = fig.add_subplot(2, 4, 2)
-megalut.plot.scatter.scatter(ax, cat, radsex,  radgal, maggal)
+momentsml.plot.scatter.scatter(ax, cat, radsex,  radgal, maggal)
 
 ax = fig.add_subplot(2, 4, 3)
-megalut.plot.scatter.scatter(ax, cat, maggal,  radgal, sidehists=True)
+momentsml.plot.scatter.scatter(ax, cat, maggal,  radgal, sidehists=True)
 
 ax = fig.add_subplot(2, 4, 4)
 magbinlims = np.arange(np.min(cat["tru_mag"]), np.max(cat["tru_mag"])+0.1, 0.5)
@@ -91,20 +91,20 @@ ax.legend()
 
 
 ax = fig.add_subplot(2, 4, 5)
-megalut.plot.hist.hist(ax, cat, tru_sersicn)
+momentsml.plot.hist.hist(ax, cat, tru_sersicn)
 
 ax = fig.add_subplot(2, 4, 6)
-megalut.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, tru_sersicn)
+momentsml.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, tru_sersicn)
 
 ax = fig.add_subplot(2, 4, 7)
-megalut.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, sidehists=True)
+momentsml.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, sidehists=True)
 
 
 plt.tight_layout()
 plt.show()
 plt.close(fig) # Helps releasing memory when calling in large loops.
 
-megalut.tools.io.writepickle(cat, catpath)
+momentsml.tools.io.writepickle(cat, catpath)
 
 
 

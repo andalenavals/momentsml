@@ -8,7 +8,7 @@ You can test the safety checks by tweaking the tables:
 import logging
 logging.basicConfig(level=logging.INFO)
 
-import megalut.tools
+import momentsml.tools
 import astropy.table
 
 
@@ -41,7 +41,7 @@ print astropy.table.join(cat1, cat2, keys="myid", join_type='left')
 
 print "-" * 100
 print "hjoin:"
-print megalut.tools.table.hjoin(cat1, cat2, "myid")
+print momentsml.tools.table.hjoin(cat1, cat2, "myid")
 
 
 

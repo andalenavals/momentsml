@@ -1,9 +1,9 @@
 """
 Adds further predictions to an existing predicted validation catalog (to avoid running long preds again and again)
 """
-import megalut.tools
-import megalut.learn
-import megalut
+import momentsml.tools
+import momentsml.learn
+import momentsml
 
 import config
 import numpy as np
@@ -26,8 +26,8 @@ for subfield in config.great3.subfields:
 	logger.info("Working on subfield {}".format(subfield))
 
 	catpath = config.great3.path("ml", "%03i" % subfield, "predcat_{}.pkl".format(predname))
-	cat = megalut.tools.io.readpickle(catpath)
-	#print megalut.tools.table.info(cat)
+	cat = momentsml.tools.io.readpickle(catpath)
+	#print momentsml.tools.table.info(cat)
 	
 	removes = ["pre_g1w", "pre_g2w"]
 	for remove in removes:
@@ -38,8 +38,8 @@ for subfield in config.great3.subfields:
 		("mlconfig/ada2g1w.cfg", config.great3.path("ml", "%03i" % subfield, "ada2g1w_sum33w")),
 	]
 	
-	predcat = megalut.learn.tenbilacrun.predict(cat, conflist)
+	predcat = momentsml.learn.tenbilacrun.predict(cat, conflist)
 
-	megalut.tools.io.writepickle(predcat, catpath)
+	momentsml.tools.io.writepickle(predcat, catpath)
 	
 	

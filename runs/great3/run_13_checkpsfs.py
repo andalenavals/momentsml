@@ -7,8 +7,8 @@ and create a single star catalog.
 import numpy as np
 import astropy.table
 
-import megalut
-import megalutgreat3
+import momentsml
+import momentsmlgreat3
 import config
 
 import logging
@@ -24,8 +24,8 @@ psf_adamom_sigmas = []
 for (i, subfield) in enumerate(config.great3.subfields):
 
 	catpath = config.great3.subpath(subfield, "obs", "star_meascat.pkl")
-	cat = megalut.tools.io.readpickle(catpath)
-	#print megalut.tools.table.info(cat)
+	cat = momentsml.tools.io.readpickle(catpath)
+	#print momentsml.tools.table.info(cat)
 	
 	subfields.append(subfield)
 	psf_adamom_g1s.append(np.mean(cat["psf_adamom_g1"])) # measurements of 9 stars

@@ -1,7 +1,7 @@
 About
 -----
 
-This is a simple demo in "script style". It does not have a "run" class or a complicated configuration system, but instead just plainly calls megalut top-level functions.
+This is a simple demo in "script style". It does not have a "run" class or a complicated configuration system, but instead just plainly calls momentsml top-level functions.
 
 It uses very simply simulations (Sersic galaxies and Gaussian PSFs).
 

@@ -1,9 +1,9 @@
 import matplotlib
 matplotlib.use("AGG")
 
-import megalut.tools
-import megalut.learn
-import megalut
+import momentsml.tools
+import momentsml.learn
+import momentsml
 
 import config
 import numpy as np
@@ -25,11 +25,11 @@ predcatpath = os.path.join(config.valdir, config.valname + ".pkl")
 
 # The prediction:
 
-cat = megalut.tools.io.readpickle(valcatpath)
+cat = momentsml.tools.io.readpickle(valcatpath)
 
 
-predcat = megalut.learn.tenbilacrun.predict(cat, config.shearconflist, traindir)
+predcat = momentsml.learn.tenbilacrun.predict(cat, config.shearconflist, traindir)
 
-megalut.tools.io.writepickle(predcat, predcatpath)
+momentsml.tools.io.writepickle(predcat, predcatpath)
 
 

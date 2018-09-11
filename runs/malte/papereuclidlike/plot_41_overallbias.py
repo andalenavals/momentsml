@@ -8,8 +8,8 @@ import os
 import numpy as np
 import matplotlib.ticker as ticker
 
-import megalut.plot
-from megalut.tools.feature import Feature
+import momentsml.plot
+from momentsml.tools.feature import Feature
 import matplotlib.pyplot as plt
 
 import logging
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 
-#megalut.plot.figures.set_fancy(14)
+#momentsml.plot.figures.set_fancy(14)
 from matplotlib import rc
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
@@ -36,7 +36,7 @@ elif mode == "vo":
 	valname = config.wvalname
 
 valcatpath = os.path.join(config.valdir, valname + ".pkl")
-cat = megalut.tools.io.readpickle(valcatpath)
+cat = momentsml.tools.io.readpickle(valcatpath)
 
 
 """
@@ -52,7 +52,7 @@ cat["pre_s2w"].mask = combimask
 """
 
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 
 for comp in ["1","2"]:
 
@@ -71,8 +71,8 @@ for comp in ["1","2"]:
 	
 	cat["pre_s{}w_norm".format(comp)] = cat["pre_s{}w".format(comp)] / np.max(cat["pre_s{}w".format(comp)])
 
-	megalut.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
-	megalut.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
+	momentsml.tools.table.addrmsd(cat, "pre_s{}".format(comp), "tru_s{}".format(comp))
+	momentsml.tools.table.addstats(cat, "pre_s{}".format(comp), "pre_s{}w".format(comp))
 	cat["pre_s{}_wbias".format(comp)] = cat["pre_s{}_wmean".format(comp)] - cat["tru_s{}".format(comp)]
 
 
@@ -109,7 +109,7 @@ pre_s2_wbias = Feature("pre_s2_wbias", -resr, resr, nicename=r"$\left(\sum\hat{g
 
 
 def addmetrics(ax, xfeat, yfeat):
-	metrics = megalut.tools.metrics.metrics(cat, xfeat, yfeat, pre_is_res=True)
+	metrics = momentsml.tools.metrics.metrics(cat, xfeat, yfeat, pre_is_res=True)
 	line1 = r"$\mathrm{RMSD} = %.5f $" % (metrics["rmsd"])
 	#line2 = r"$m: %.1f +/- %.1f; c: %.1f +/- %.1f$" % (metrics["m"]*1000.0, metrics["merr"]*1000.0, metrics["c"]*1000.0, metrics["cerr"]*1000.0)
 	#line2 = r"$m=%.1f \pm %.1f; c=%.1f \pm %.1f \, [10^{-3}]$" % (metrics["m"]*1000.0, metrics["merr"]*1000.0, metrics["c"]*1000.0, metrics["cerr"]*1000.0)
@@ -138,7 +138,7 @@ idlinekwargs = {"color":"black", "ls":"-"}
 #==================================================================================================
 
 ax = fig.add_subplot(2, 3, 1)
-megalut.plot.scatter.scatter(ax, cat, tru_s1, pre_s1_bias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
+momentsml.plot.scatter.scatter(ax, cat, tru_s1, pre_s1_bias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
 #ax.fill_between([-1, 1], -symthres, symthres, alpha=0.2, facecolor='darkgrey')
 addmetrics(ax, tru_s1, pre_s1_bias)
 ax.set_title("Without weights")
@@ -148,7 +148,7 @@ ax.title.set_position([.5, 1.1])
 
 
 ax = fig.add_subplot(2, 3, 2)
-megalut.plot.scatter.scatter(ax, cat, tru_s1, pre_s1_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
+momentsml.plot.scatter.scatter(ax, cat, tru_s1, pre_s1_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
 #ax.fill_between([-1, 1], -symthres, symthres, alpha=0.2, facecolor='darkgrey')
 ax.set_title("With weights")
 ax.title.set_position([.5, 1.1])
@@ -163,20 +163,20 @@ ax = fig.add_subplot(2, 3, 3)
 pos1 = ax.get_position() # get the original position 
 pos2 = [pos1.x0 + 0.05, pos1.y0,  pos1.width, pos1.height] 
 ax.set_position(pos2)
-megalut.plot.scatter.scatter(ax, cat, adamom_flux, adamom_sigma, featc=Feature("pre_s1w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_1$"), cmap="plasma_r", rasterized = True)
-#megalut.plot.scatter.scatter(ax, cat, tru_sb, tru_rad, featc=Feature("pre_s1w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_1$"), cmap="plasma_r", rasterized = True)
+momentsml.plot.scatter.scatter(ax, cat, adamom_flux, adamom_sigma, featc=Feature("pre_s1w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_1$"), cmap="plasma_r", rasterized = True)
+#momentsml.plot.scatter.scatter(ax, cat, tru_sb, tru_rad, featc=Feature("pre_s1w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_1$"), cmap="plasma_r", rasterized = True)
 
 
 #==================================================================================================
 
 ax = fig.add_subplot(2, 3, 4)
-megalut.plot.scatter.scatter(ax, cat, tru_s2, pre_s2_bias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
+momentsml.plot.scatter.scatter(ax, cat, tru_s2, pre_s2_bias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
 #ax.fill_between([-1, 1], -symthres, symthres, alpha=0.2, facecolor='darkgrey')
 addmetrics(ax, tru_s2, pre_s2_bias)
 
 
 ax = fig.add_subplot(2, 3, 5)
-megalut.plot.scatter.scatter(ax, cat, tru_s2, pre_s2_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
+momentsml.plot.scatter.scatter(ax, cat, tru_s2, pre_s2_wbias, showidline=True, idlinekwargs=idlinekwargs, yisres=True)
 #ax.fill_between([-1, 1], -symthres, symthres, alpha=0.2, facecolor='darkgrey')
 addmetrics(ax, tru_s2, pre_s2_wbias)
 #ax.set_ylabel("")
@@ -187,15 +187,15 @@ ax = fig.add_subplot(2, 3, 6)
 pos1 = ax.get_position() # get the original position 
 pos2 = [pos1.x0 + 0.05, pos1.y0,  pos1.width, pos1.height] 
 ax.set_position(pos2)
-#megalut.plot.scatter.scatter(ax, cat, adamom_flux, adamom_sigma, featc=Feature("pre_s2w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_2$"), cmap="plasma_r", rasterized = True)
-megalut.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, featc=Feature("pre_s2w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_2$"), cmap="plasma_r", rasterized = True)
+#momentsml.plot.scatter.scatter(ax, cat, adamom_flux, adamom_sigma, featc=Feature("pre_s2w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_2$"), cmap="plasma_r", rasterized = True)
+momentsml.plot.scatter.scatter(ax, cat, tru_mag, tru_rad, featc=Feature("pre_s2w_norm", 0, 1, rea=wplotrea, nicename=r"Weight $w_2$"), cmap="plasma_r", rasterized = True)
 
 
 #==================================================================================================
 
 #plt.tight_layout()
 
-megalut.plot.figures.savefig(os.path.join(config.valdir, valname + "_wstudy"), fig, fancy=True, pdf_transparence=True)
+momentsml.plot.figures.savefig(os.path.join(config.valdir, valname + "_wstudy"), fig, fancy=True, pdf_transparence=True)
 plt.show()
 
 

@@ -333,7 +333,7 @@ def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
 	logger.info("Start drawing %i images using %i CPUs" % (len(wslist), ncpu))
 
 	# Suppress the info-or-lower-level logging from the low-level functions:
-	#stampgridlogger = logging.getLogger("megalut.sim.stampgrid")
+	#stampgridlogger = logging.getLogger("momentsml.sim.stampgrid")
 	#stampgridlogger.setLevel(logging.WARNING)
 	
 	if ncpu == 1:
@@ -360,7 +360,7 @@ def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
 	logger.debug("Now writing logfile...")
 	logfilepath = os.path.join(workdir, prefix + "log.txt")
 	logfile = open(logfilepath, "w")
-	logfile.write("Logfile of megalut.sim.run.multi, written to %s\n\n" % (logfilepath))
+	logfile.write("Logfile of momentsml.sim.run.multi, written to %s\n\n" % (logfilepath))
 	logfile.write(str(simparams) + "\n")
 	logfile.write("drawcatkwargs: " + repr(drawcatkwargs) + "\n")
 	logfile.write("drawimgkwargs: " + repr(drawimgkwargs) + "\n")

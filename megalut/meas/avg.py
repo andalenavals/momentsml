@@ -17,16 +17,16 @@ logger = logging.getLogger(__name__)
 
 def onsims(measdir, simparams, task="groupstats", **kwargs):
 	"""
-	Top-level function to group measurements as obtained from :func:`megalut.meas.run.onsims`.
+	Top-level function to group measurements as obtained from :func:`momentsml.meas.run.onsims`.
 	
 	This function first explores the files in your measdir using :func:`simmeasdict`,
 	then uses :func:`groupstats` or :func:`group` to "hstack" the different realizations catalog by catalog (and maybe compute some statistics),
 	and finally it "vstacks" all your catalogs to return a single output table.
 
-	:param measdir: See :func:`megalut.meas.run.onsims`
+	:param measdir: See :func:`momentsml.meas.run.onsims`
 	:param simparams: idem
 	:param task: either "groupstats" or "group", depending on what you want to do.
-	:param kwargs: any further keyword arguments are passed to :func:`megalut.tools.table.groupstats` or :func:`megalut.tools.table.group`
+	:param kwargs: any further keyword arguments are passed to :func:`momentsml.tools.table.groupstats` or :func:`momentsml.tools.table.group`
 	
 	To learn about the output, see the latter.
 	

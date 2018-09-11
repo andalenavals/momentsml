@@ -1,9 +1,9 @@
 #import matplotlib
 #matplotlib.use("AGG")
 
-import megalut
-import megalut.tools
-import megalutgreat3
+import momentsml
+import momentsml.tools
+import momentsmlgreat3
 import astropy
 
 
@@ -41,14 +41,14 @@ for subfield in config.great3.subfields:
 
 	# Reading truth
 	trushearpath = config.great3.trushearfilepath(subfield)
-	trushear = megalutgreat3.io.readshear(trushearpath)
+	trushear = momentsmlgreat3.io.readshear(trushearpath)
 	assert len(trushear) == 2
 	tru_s1s.append(trushear[0])
 	tru_s2s.append(trushear[1])
 	
 	# We also need to read in the true PSF orientations (as measurements fail, sometimes)
 	trustarpath = config.great3.trustarfilepath(subfield)
-	trustar = megalutgreat3.io.readshear(trustarpath)
+	trustar = momentsmlgreat3.io.readshear(trustarpath)
 	assert len(trustar) == 4 # epoch_index psf_g1 psf_g2 subfield_index 
 	assert int(subfield) == int(trustar[3])
 	
@@ -64,9 +64,9 @@ for subfield in config.great3.subfields:
 	
 	# Reading estimate catalogs
 	predcatpath = config.great3.subpath(subfield, "pred", "predcat_{}.pkl".format(config.predcode))
-	cat = megalut.tools.io.readpickle(predcatpath)
+	cat = momentsml.tools.io.readpickle(predcatpath)
 	
-	#print megalut.tools.table.info(cat)
+	#print momentsml.tools.table.info(cat)
 	#exit()
 	
 	pre_s1s.append(np.mean(cat["pre_s1"]))
@@ -95,6 +95,6 @@ cat = astropy.table.Table([
 	)
 
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 catpath = config.great3.path("summary_{}.pkl".format(config.predcode))
-cat = megalut.tools.io.writepickle(cat, catpath)
+cat = momentsml.tools.io.writepickle(cat, catpath)

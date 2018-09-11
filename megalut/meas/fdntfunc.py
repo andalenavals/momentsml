@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 from datetime import datetime
 import copy
 import astropy.table
-from megalut import tools
+from momentsml import tools
 
-from megalut.meas import galsim_adamom
+from momentsml.meas import galsim_adamom
 
-from megalut.meas import utils
+from momentsml.meas import utils
 from .. import tools
 
 
@@ -50,11 +50,11 @@ def measfct(catalog, runon="img", psf_from=None, stampsize=None, se_config_filep
         In other words, this is a function that you could pass to meas.run.general() etc.
 
         If you want to combine several shape measurement algorithms into one shot, you would
-	define such a function yourself (not here in megalut, but somewhere in your scripts).
+	define such a function yourself (not here in momentsml, but somewhere in your scripts).
         The present measfct serves as an example and is a bit long. It could be kept very short.
 
         :param catalog: an astropy table, which, in this case, is expected to have
-	                catalog.meta["img"] set to be a megalut.tools.imageinfo.ImageInfo object.
+	                catalog.meta["img"] set to be a momentsml.tools.imageinfo.ImageInfo object.
         :param kwargs: keyword arguments that will be passed to the lower-level measure() function.
                        These set parameters of the shape measurement, but they do not pass any data.
 		       Do not try to specify "img" or "xname" here, it will fail! Set the catalog's
@@ -95,7 +95,7 @@ def measfct(catalog, runon="img", psf_from=None, stampsize=None, se_config_filep
 			only_one_psf = False
 			psfimg = SBE_make_psf_image(psf_sigma_as[0], psf_shear[0], psf_stampsize)
 
-	elif psf_from == "megalut_sim":  # XXX TODO XXX  Generalize
+	elif psf_from == "momentsml_sim":  # XXX TODO XXX  Generalize
 
 		only_one_psf = False
 		psf_g1 = catalog["tru_psf_g1"]
@@ -224,7 +224,7 @@ def measure(img, psfimg, catalog, only_one_psf=None, psf_from=None, stampsize=No
 			logger.info("%6.2f%% done (%i/%i) " % (100.0*float(obj.index)/float(n),
 							       obj.index, n))
                 # get PSF info
-		if psf_from == "megalut_sim":   # XXX TODO XXX generalize
+		if psf_from == "momentsml_sim":   # XXX TODO XXX generalize
 			psf_g1 = obj["tru_psf_g1"]
 			psf_g2 = obj["tru_psf_g2"]
 			psf_shear = galsim.Shear(g1=psf_g1, g2=psf_g2)
@@ -232,7 +232,7 @@ def measure(img, psfimg, catalog, only_one_psf=None, psf_from=None, stampsize=No
 			psfimg = SBE_make_psf_image(psf_sigma, psf_shear, psf_stampsize,
                                                     subsample_scale = 1.0)  # sigma is in pixel units
 
-		if only_one_psf or psf_from=="megalut_sim":
+		if only_one_psf or psf_from=="momentsml_sim":
 			# the central pixel of the postage stamp
 			(psfx, psfy) = (psfimg.center().x, psfimg.center().y)
 		else:
@@ -249,7 +249,7 @@ def measure(img, psfimg, catalog, only_one_psf=None, psf_from=None, stampsize=No
 			continue  # do nothing, this will "mask" value out from astropy table
 		if psf_from == 'SBE_cat':
 			psf_size = obj['PSF_sigma_arcsec'] / subsample_scale  # in pixel units
-		elif psf_from == 'megalut_sim':
+		elif psf_from == 'momentsml_sim':
 			psf_size = obj['tru_psf_sigma']   # in pixel units
 		else:
 			#psf_size = obj['PSF_sigma_arcsec']  # psf_FLUX_RADIUS == psfEE50
@@ -261,8 +261,8 @@ def measure(img, psfimg, catalog, only_one_psf=None, psf_from=None, stampsize=No
 			continue
 
 		# get the PSF postage stamp image
-		# according to megalut.sim.stampgrid, the xy coords are the same as that of galaxies
-		if only_one_psf or psf_from=='megalut_sim':
+		# according to momentsml.sim.stampgrid, the xy coords are the same as that of galaxies
+		if only_one_psf or psf_from=='momentsml_sim':
 			psfstamp = psfimg
 			flag = 0
 		else:

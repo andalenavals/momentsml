@@ -1,9 +1,9 @@
 import matplotlib
 matplotlib.use("AGG")
 
-import megalut.tools
-import megalut.learn
-import megalut
+import momentsml.tools
+import momentsml.learn
+import momentsml
 
 import config
 import numpy as np
@@ -27,11 +27,11 @@ for subfield in config.great3.subfields:
 	for conf in config.shearconflist: # We go through them one by one here.
 
 		catpath = config.great3.subpath(subfield, "simmeas", config.datasets["valid-shear"], "groupmeascat.pkl")
-		cat = megalut.tools.io.readpickle(catpath)
+		cat = momentsml.tools.io.readpickle(catpath)
 		traindir = config.great3.subpath(subfield, "ml", config.datasets["train-shear"])
 
-		confname = megalut.learn.tenbilacrun.confnames([conf])[0]
-		predcat = megalut.learn.tenbilacrun.predict(cat, [conf], traindir)
+		confname = momentsml.learn.tenbilacrun.confnames([conf])[0]
+		predcat = momentsml.learn.tenbilacrun.predict(cat, [conf], traindir)
 
 		valname = "pred_{}_with_{}_{}".format(config.datasets["valid-shear"], config.datasets["train-shear"], confname)	
 
@@ -41,7 +41,7 @@ for subfield in config.great3.subfields:
 		figgoodpredcatpath = config.great3.subpath(subfield, "val", valname + "_good.png")
 		predcat2 = predcat.copy()
 			
-		megalut.tools.io.writepickle(predcat, predcatpath)
+		momentsml.tools.io.writepickle(predcat, predcatpath)
 	
 		# And make the plot	
 		if "s2" in conf[0] or "g2" in conf[0]:
@@ -50,7 +50,7 @@ for subfield in config.great3.subfields:
 			component = 1
 		plot_2_val.plot(predcat, component, mode="s", filepath=figpredcatpath)
 		
-		s = megalut.tools.table.Selector("good", [
+		s = momentsml.tools.table.Selector("good", [
 			("max", "pre_maskedfrac", 0.1),
 		])
 		plot_2_val.plot(predcat2, component, mode="s", select=s, filepath=figgoodpredcatpath)

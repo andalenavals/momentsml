@@ -10,7 +10,7 @@ import numpy as np
 import scipy.stats
 import scipy.optimize
 
-from megalut import tools
+from momentsml import tools
 
 import logging
 logger = logging.getLogger(__name__)

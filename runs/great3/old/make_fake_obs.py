@@ -5,9 +5,9 @@ from scipy import stats
 import config
 import pylab as plt
 
-import megalut.tools as tools
+import momentsml.tools as tools
 
-import megalutgreat3 as mg3
+import momentsmlgreat3 as mg3
 import metrics.evaluate as evaluate
 
 import logging

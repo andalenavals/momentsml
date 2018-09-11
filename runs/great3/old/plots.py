@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import megalut
-import megalut.plot
+import momentsml
+import momentsml.plot
 
 import os
 
@@ -27,26 +27,26 @@ def simobscompa(run, simparams):
 	In feature space
 	"""
 			
-	flux = megalut.tools.feature.Feature("adamom_flux", 0.1, 150, "Some flux")
-	tru_flux = megalut.tools.feature.Feature("tru_flux", 0.1, 150, "True flux")
+	flux = momentsml.tools.feature.Feature("adamom_flux", 0.1, 150, "Some flux")
+	tru_flux = momentsml.tools.feature.Feature("tru_flux", 0.1, 150, "True flux")
 	
 	
-	sigma = megalut.tools.feature.Feature("adamom_sigma", 0.1, 11, "Some measured width")
-	rho4 = megalut.tools.feature.Feature("adamom_rho4", 1.6, 2.8, "Some measured concentration")
-	g1 = megalut.tools.feature.Feature("adamom_g1", -0.6, 0.6, "HSM g1")
-	g2 = megalut.tools.feature.Feature("adamom_g2", -0.6, 0.6, "HSM g2")
-	skymad = megalut.tools.feature.Feature("adamom_skymad", 0.01, 0.07)
-	skystd = megalut.tools.feature.Feature("adamom_skystd", 0.01, 0.07)
-	skymed = megalut.tools.feature.Feature("adamom_skymed", -0.05, 0.05)
-	skymean = megalut.tools.feature.Feature("adamom_skymean", -0.05, 0.05)
+	sigma = momentsml.tools.feature.Feature("adamom_sigma", 0.1, 11, "Some measured width")
+	rho4 = momentsml.tools.feature.Feature("adamom_rho4", 1.6, 2.8, "Some measured concentration")
+	g1 = momentsml.tools.feature.Feature("adamom_g1", -0.6, 0.6, "HSM g1")
+	g2 = momentsml.tools.feature.Feature("adamom_g2", -0.6, 0.6, "HSM g2")
+	skymad = momentsml.tools.feature.Feature("adamom_skymad", 0.01, 0.07)
+	skystd = momentsml.tools.feature.Feature("adamom_skystd", 0.01, 0.07)
+	skymed = momentsml.tools.feature.Feature("adamom_skymed", -0.05, 0.05)
+	skymean = momentsml.tools.feature.Feature("adamom_skymean", -0.05, 0.05)
 	
-	snr = megalut.tools.feature.Feature("snr", 0.1, 150, "SExtractor SNR")
-	snr_narrow = megalut.tools.feature.Feature("snr", 0.1, 60, "SExtractor SNR")
+	snr = momentsml.tools.feature.Feature("snr", 0.1, 150, "SExtractor SNR")
+	snr_narrow = momentsml.tools.feature.Feature("snr", 0.1, 60, "SExtractor SNR")
 	
 	for subfield in run.subfields:
 	
-		simcat = megalut.tools.io.readpickle(run._get_path("simmeas", "%03i" % subfield, simparams.name, "rea0cat.pkl"))
-		obscat = megalut.tools.io.readpickle(run._get_path("obs", "img_%i_meascat.pkl" % subfield))
+		simcat = momentsml.tools.io.readpickle(run._get_path("simmeas", "%03i" % subfield, simparams.name, "rea0cat.pkl"))
+		obscat = momentsml.tools.io.readpickle(run._get_path("obs", "img_%i_meascat.pkl" % subfield))
 		
 		compute_snr(simcat)
 		compute_snr(obscat)
@@ -61,27 +61,27 @@ def simobscompa(run, simparams):
 		fig.text(0.05, 0.95, txt, {"fontsize":15})
 		
 		ax1 = fig.add_subplot(231)
-		megalut.plot.scatter.simobs(ax1, simcat, obscat, snr, sigma, legend=True)
+		momentsml.plot.scatter.simobs(ax1, simcat, obscat, snr, sigma, legend=True)
 
 		ax2 = fig.add_subplot(232)
-		megalut.plot.scatter.simobs(ax2, simcat, obscat, sigma, rho4)
+		momentsml.plot.scatter.simobs(ax2, simcat, obscat, sigma, rho4)
 
 		ax3 = fig.add_subplot(233)
-		megalut.plot.scatter.simobs(ax3, simcat, obscat, g1, g2)
+		momentsml.plot.scatter.simobs(ax3, simcat, obscat, g1, g2)
 		
 		
 		ax4 = fig.add_subplot(234)
-		megalut.plot.scatter.simobs(ax4, simcat, obscat, snr_narrow, rho4)
+		momentsml.plot.scatter.simobs(ax4, simcat, obscat, snr_narrow, rho4)
 	
 		
 		ax5 = fig.add_subplot(235)
-		megalut.plot.scatter.simobs(ax5, simcat, obscat, skymad, skystd)
+		momentsml.plot.scatter.simobs(ax5, simcat, obscat, skymad, skystd)
 	
 		#ax5 = fig.add_subplot(235)
-		#megalut.plot.scatter.simobs(ax5, simcat, obscat, skymed, skymean)
+		#momentsml.plot.scatter.simobs(ax5, simcat, obscat, skymed, skymean)
 		
 		#ax6 = fig.add_subplot(236)
-		#megalut.plot.scatter.scatter(ax6, simcat, tru_flux, flux_, sidehists=True, text="Simulations")
+		#momentsml.plot.scatter.scatter(ax6, simcat, tru_flux, flux_, sidehists=True, text="Simulations")
 		
 		#plt.tight_layout()
 		plt.show()	
@@ -99,11 +99,11 @@ def show_selfpredict(subfields, mldir, trainname, simname, xfeat, yfeat, outdir=
 	for subfield in subfields:
 	
 		traindir = os.path.join(mldir, "%03i" % subfield, trainname, simname)
-		cat = megalut.tools.io.readpickle(os.path.join(traindir, "predtraincat.pkl"))
+		cat = momentsml.tools.io.readpickle(os.path.join(traindir, "predtraincat.pkl"))
 		
 		cat["snr"] = cat["sewpy_FLUX_AUTO"] / cat["sewpy_FLUXERR_AUTO"]
-		snr = megalut.tools.feature.Feature("snr", 0.1, 150, "SExtractor SNR")
-		snr_narrow = megalut.tools.feature.Feature("snr", 10, 60, "SExtractor SNR", rea='all')
+		snr = momentsml.tools.feature.Feature("snr", 0.1, 150, "SExtractor SNR")
+		snr_narrow = momentsml.tools.feature.Feature("snr", 10, 60, "SExtractor SNR", rea='all')
 		
 		txt = "Subfield %i, sim '%s', train '%s', " % (subfield, simname, trainname)
 	
@@ -114,10 +114,10 @@ def show_selfpredict(subfields, mldir, trainname, simname, xfeat, yfeat, outdir=
 		
 		for jj in range(nplt):
 			ax = fig.add_subplot(2, nplt, jj+1)	
-			megalut.plot.scatter.scatter(ax, cat, xfeat[jj], yfeat[jj], showidline=True, idlinekwargs={"color":"red", "lw":2}, sidehists=True, ms=3)
+			momentsml.plot.scatter.scatter(ax, cat, xfeat[jj], yfeat[jj], showidline=True, idlinekwargs={"color":"red", "lw":2}, sidehists=True, ms=3)
 
 			ax = fig.add_subplot(2, nplt, nplt+jj+1)	
-			megalut.plot.scatter.scatter(ax, cat, xfeat[jj], yfeat[jj], snr_narrow, s=5, metrics=True)
+			momentsml.plot.scatter.scatter(ax, cat, xfeat[jj], yfeat[jj], snr_narrow, s=5, metrics=True)
 		
 		if not outdir is None:
 			fig.savefig(os.path.join(outdir,'selfpredict_shear_%03i.pdf' % subfield),transparent=True)

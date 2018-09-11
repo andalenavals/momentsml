@@ -75,7 +75,7 @@ def datafile(filename):
 
 def workname(filename):
 	"""
-	Returns a name ("thread_0-sample_image_3") to be used to identify SBE images in megalut-internal files
+	Returns a name ("thread_0-sample_image_3") to be used to identify SBE images in momentsml-internal files
 	"""
 	return "-".join(filename.split("/")[-2:])
 	

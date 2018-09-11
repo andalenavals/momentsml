@@ -1,9 +1,9 @@
 #import matplotlib
 #matplotlib.use("AGG")
 
-import megalut
-import megalut.tools
-import megalutgreat3
+import momentsml
+import momentsml.tools
+import momentsmlgreat3
 import astropy
 
 
@@ -44,7 +44,7 @@ for subfield in config.great3.subfields:
 		continue
 
 	subfields.append(subfield)
-	cat = megalut.tools.io.readpickle(predpath)
+	cat = momentsml.tools.io.readpickle(predpath)
 	
 	
 	tru_s1s.append(cat["tru_s1"][0])
@@ -64,7 +64,7 @@ for subfield in config.great3.subfields:
 
 	# We also need to read in the true PSF orientations (as measurements fail, sometimes)
 	trustarpath = config.great3.trustarfilepath(subfield)
-	trustar = megalutgreat3.io.readshear(trustarpath)
+	trustar = momentsmlgreat3.io.readshear(trustarpath)
 	assert len(trustar) == 4 # epoch_index psf_g1 psf_g2 subfield_index 
 	assert int(subfield) == int(trustar[3])
 	
@@ -93,6 +93,6 @@ cat = astropy.table.Table([
 	)
 
 
-#print megalut.tools.table.info(cat)
+#print momentsml.tools.table.info(cat)
 catpath = config.great3.path("{}_summary_{}.pkl".format(config.datasets["mimic-great3"], config.predcode))
-cat = megalut.tools.io.writepickle(cat, catpath)
+cat = momentsml.tools.io.writepickle(cat, catpath)

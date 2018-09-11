@@ -3,9 +3,9 @@ matplotlib.use("AGG")
 
 import argparse
 
-import megalut.tools
-import megalut.learn
-import megalut
+import momentsml.tools
+import momentsml.learn
+import momentsml
 import tenbilac
 
 import config
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 wtraindir = os.path.join(config.traindir, config.datasets["tw"] + "_with_" + config.datasets["ts"] + "_" + config.sconfname)
 catpath = os.path.join(wtraindir, "groupmeascat_predforw.pkl")
 
-cat = megalut.tools.io.readpickle(catpath)
+cat = momentsml.tools.io.readpickle(catpath)
 
 		
 """
@@ -34,7 +34,7 @@ cat = megalut.tools.io.readpickle(catpath)
 if args.startfrom is not None:
 	logger.info("Copying existing training from {}...".format(args.startfrom))
 
-	dirnames = megalut.learn.tenbilacrun.confnames(config.weightconflist)
+	dirnames = momentsml.learn.tenbilacrun.confnames(config.weightconflist)
 	for (dirname, conf) in zip(dirnames, config.weightconflist):
 		newtraindirpath = os.path.join(traindir, dirname)
 		if os.path.isdir(newtraindirpath):
@@ -54,7 +54,7 @@ if args.startfrom is not None:
 
 	
 # Running the training	
-dirnames = megalut.learn.tenbilacrun.train(cat, config.weightconflist, wtraindir)
+dirnames = momentsml.learn.tenbilacrun.train(cat, config.weightconflist, wtraindir)
 
 print dirnames
 
@@ -69,13 +69,13 @@ for dirname in dirnames:
 	tenbilac.plot.summaryerrevo(ten.committee, filepath=os.path.join(traindir, "{}_summary.png".format(dirname)))
 
 
-	cat = megalut.tools.io.readpickle(catpath) # To get the full catalog with all cases	
+	cat = momentsml.tools.io.readpickle(catpath) # To get the full catalog with all cases	
 	
 	for (dirname, conf) in zip(dirnames, config.weightconflist):
 
-		predcat = megalut.learn.tenbilacrun.predict(cat, [conf], traindir)
+		predcat = momentsml.learn.tenbilacrun.predict(cat, [conf], traindir)
 		predcatpath = os.path.join(traindir, "{}_selfpred.pkl".format(dirname))
-		megalut.tools.io.writepickle(predcat, predcatpath)
+		momentsml.tools.io.writepickle(predcat, predcatpath)
 		figpredcatpath = os.path.join(traindir, "{}_selfpred.png".format(dirname))
 		
 		if "s2" in conf[0] or "g2" in conf[0]:

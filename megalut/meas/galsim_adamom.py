@@ -28,11 +28,11 @@ def measfct(catalog, runon="img", stampsize=None, **kwargs):
 	to take only one catalog (astropy table) object containing -- or link to -- all the required data.
 	In other words, this is a function that you could pass to meas.run.general() etc.
 	If you want to combine several shape measurement algorithms into one shot, you would define such a function yourself (not here
-	in megalut, but somewhere in your scripts).
+	in momentsml, but somewhere in your scripts).
 	The present measfct serves as an example and is a bit long. It could be kept very short.
 	
 	:param catalog: an astropy table, which, in this case, is expected to have catalog.meta["img"] set
-		to be a megalut.tools.imageinfo.ImageInfo object.
+		to be a momentsml.tools.imageinfo.ImageInfo object.
 	:param runon: "img" or "psf" or other ImageInfo names to run on.
 	:param kwargs: keyword arguments that will be passed to the lower-level measure() function.
 		These set parameters of the shape measurement, but they do not pass any data.
