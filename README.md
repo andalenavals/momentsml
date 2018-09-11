@@ -11,9 +11,9 @@ Dependencies
 The code depends on:
 
  * python 2.7, with the usual numpy, scipy, and matplotlib
- * GalSim
- * astropy
- * [[tenbilac|https://github.com/mtewes/tenbilac]] (for the Machine Learning part)
+ * [GalSim](https://github.com/GalSim-developers/GalSim)
+ * [Astropy](http://www.astropy.org)
+ * [tenbilac](https://github.com/mtewes/tenbilac) (for the Machine Learning part)
 
 
 Installation
