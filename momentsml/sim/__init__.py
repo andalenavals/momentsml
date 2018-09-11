@@ -1,5 +1,5 @@
 """
-This package is for code to generate simulated galaxy stamps, so basically some kind of wrappers around galsim.
+Subpackage to generate galaxy images with GalSim
 """
 
 import params

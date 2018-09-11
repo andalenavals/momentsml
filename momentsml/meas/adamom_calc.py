@@ -1,5 +1,5 @@
 """
-Compute some handy derived quantities from adamom measurements.
+Compute derived quantities from adamom measurements.
 """
 
 import astropy.table

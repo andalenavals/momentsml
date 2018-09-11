@@ -1,5 +1,5 @@
 """
-This subpackage holds commonly used helper functions.
+Subpackage for helper functions (table manipulations, metrics, ...)
 """
 
 

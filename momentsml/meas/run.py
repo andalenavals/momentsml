@@ -7,7 +7,7 @@ We have two public functions:
   momentsml.sim.run.multi(), and run on them by calling
 - general(), which can be used for any images.
 
-Behind the scenes, the approach taken by general() is the following:
+The approach taken by general() is the following:
 
 - make a list of _WorkerSetting objects, each of them describing the elementary task of
   measuring shapes on one single image.
