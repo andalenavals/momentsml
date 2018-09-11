@@ -1,16 +1,12 @@
-About
-=====
+Scripts
+=======
 
-This is a place to keep actual scripts and settings to run stuff.
+These directories contain the scripts and configuration files reproducing the results and figures from our paper:
 
-To use it without interfering with the momentsml package development (e.g., despite switching branches for the main code), you might want to **clone a second copy** of the momentsml repo on your system without adding it to your pythonpath, keep this second copy on the master branch, and run/modify scripts within this second copy.
+- **fiducial**: Sects. 6 and 7,
+- **euclidlike**: Sect. 8, and
+- **great3**: Sect. 9.
 
-
-Contents
---------
-
-- **demo**: scripts testing and demonstrating parts of momentsml. 
-- **great3**: latest application to GREAT3, using the momentsmlgreat3 wrapper, should evolve into the scripts that we release together with the paper.
-- **malte**: Runs and scripts by Malte, see included README.
-
+The structure of the scripts inside these directories is very similar.
+**To reproduce our results, start with the simplest case, "fiducial".**
 
