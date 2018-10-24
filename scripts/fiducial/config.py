@@ -7,14 +7,18 @@ import os
 import numpy as np
 
 import logging
-loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;21m%(message)s\033[1;0m'
-#loggerformat='PID %(process)06d | %(asctime)s | %(levelname)s: %(name)s(%(funcName)s): %(message)s'
+
+
+# A simple logger format:
+loggerformat='PID %(process)06d | %(asctime)s | %(levelname)s: %(name)s(%(funcName)s): %(message)s'
+# Try this one, it's colorful:
+#loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;21m%(message)s\033[1;0m'
+
 logging.basicConfig(format=loggerformat,level=logging.INFO)
 
-#workdir = "/vol/fohlen11/fohlen11_1/mtewes/MomentsML/fiducial"
-#workdir = "/vol/euclid5/euclid5_raid3/mtewes/MomentsML_fiducial" # <--- used for constant PSF
-#workdir = "/vol/fohlen11/fohlen11_1/mtewes/MomentsML/new_fiducial" # <--- used for vp
-workdir = "/vol/fohlen12/data1/mtewes/MomentsML/fiducial" # <-- for weights vp
+# Give a path to an existing directory in which everything can be written (will get large!)
+
+workdir = "/vol/fohlen11/fohlen11_1/mtewes/MomentsML/fiducial"
 
 simdir = os.path.join(workdir, "sim")
 simmeasdir = os.path.join(workdir, "simmeas")
@@ -81,88 +85,49 @@ datasets = {
 	"si":"si-vp-1",
 }
 
-
+# Configuration of the point-estimates
 
 shearconflist = [
-	
-	#("mlconfig/ada5s1f.cfg", "mlconfig/sum55.cfg"), # <--- We use those
-	#("mlconfig/ada5s2f.cfg", "mlconfig/sum55.cfg")
-	
-	
-	# vp: (disregarded for paper)
-	#("mlconfig/ada7s1f-vp-pos.cfg", "mlconfig/sum77.cfg"),
-	#("mlconfig/ada7s2f-vp-pos.cfg", "mlconfig/sum77.cfg")
-	#("mlconfig/ada8s1f-vp-mom.cfg", "mlconfig/sum88.cfg"),
-	#("mlconfig/ada8s2f-vp-mom.cfg", "mlconfig/sum88.cfg")
+	# Typically uncomment a single line at a time to train a component,
+	# and then uncomment the 2 lines of both components for the predictions.
 	
 	
-	# large vp (maybe overkill ?)
+	# For constant PSF experiements:
+	("mlconfig/ada5s1f.cfg", "mlconfig/sum55.cfg"), # <--- We use those
+	("mlconfig/ada5s2f.cfg", "mlconfig/sum55.cfg")
 	
-	("mlconfig/ada7s1f-vp-pos.cfg", "mlconfig/sum1010pos.cfg"),
-	("mlconfig/ada7s2f-vp-pos.cfg", "mlconfig/sum1010pos.cfg")
+		
+	# For the variable PSF experiments:
 	
+	#    Using the field position as features:
+	#("mlconfig/ada7s1f-vp-pos.cfg", "mlconfig/sum1010pos.cfg"),
+	#("mlconfig/ada7s2f-vp-pos.cfg", "mlconfig/sum1010pos.cfg")
+	
+	#    Using size and ellipticity of the PSF as features:
 	#("mlconfig/ada8s1f-vp-mom.cfg", "mlconfig/sum1010mom.cfg"),
 	#("mlconfig/ada8s2f-vp-mom.cfg", "mlconfig/sum1010mom.cfg")
 	
-	
-	# Old experiemtns:
-	
-	#("mlconfig/ada5s1.cfg", "mlconfig/sum55.cfg"),
-	#("mlconfig/ada5s2.cfg", "mlconfig/sum55.cfg")
-	
-	#("mlconfig/ada4s1.cfg", "mlconfig/sum55.cfg"), # Uncomment a line to run on only one component
-	#("mlconfig/ada4s2.cfg", "mlconfig/sum55.cfg")
-
-	#("mlconfig/ada4s1.cfg", "mlconfig/sum5.cfg"),
-	#("mlconfig/ada4s2.cfg", "mlconfig/sum5.cfg")
-	
-	#("mlconfig/ada5s1.cfg", "mlconfig/sum5.cfg"),
-	#("mlconfig/ada5s2.cfg", "mlconfig/sum5.cfg")
-
-	
 ]
 
-weightconflist = [
-	#("mlconfig/ada5s1wf.cfg", "mlconfig/sum5w.cfg"), # <--- We use those
-	#("mlconfig/ada5s2wf.cfg", "mlconfig/sum5w.cfg")
+# Similar configuration for the weight estimator:
 
-	#("mlconfig/ada5s1wf.cfg", "mlconfig/sum55w.cfg"), # Does not improve things
-	#("mlconfig/ada5s2wf.cfg", "mlconfig/sum55w.cfg")
+weightconflist = [
+	("mlconfig/ada5s1wf.cfg", "mlconfig/sum5w.cfg"),
+	("mlconfig/ada5s2wf.cfg", "mlconfig/sum5w.cfg")
 	
-	
-	# vp
-	
-	#("mlconfig/ada7s1wf-vp-pos.cfg", "mlconfig/sum7w.cfg"),
-	#("mlconfig/ada7s2wf-vp-pos.cfg", "mlconfig/sum7w.cfg")
-	
-	#("mlconfig/ada8s1wf-vp-mom.cfg", "mlconfig/sum8w.cfg"),
-	#("mlconfig/ada8s2wf-vp-mom.cfg", "mlconfig/sum8w.cfg")
-	
-	# large vp
-	
-	("mlconfig/ada7s1wf-vp-pos.cfg", "mlconfig/sum10w.cfg"),
-	("mlconfig/ada7s2wf-vp-pos.cfg", "mlconfig/sum10w.cfg")
+	#("mlconfig/ada7s1wf-vp-pos.cfg", "mlconfig/sum10w.cfg"),
+	#("mlconfig/ada7s2wf-vp-pos.cfg", "mlconfig/sum10w.cfg")
 	
 	#("mlconfig/ada8s1wf-vp-mom.cfg", "mlconfig/sum10w.cfg"),
 	#("mlconfig/ada8s2wf-vp-mom.cfg", "mlconfig/sum10w.cfg")
-	
-	# large vp 1010 test (no, does not work better it seems)
-	
-	#("mlconfig/ada7s1wf-vp-pos.cfg", "mlconfig/sum1010w.cfg"),
-	#("mlconfig/ada7s2wf-vp-pos.cfg", "mlconfig/sum1010w.cfg")
-	
-	#("mlconfig/ada8s1wf-vp-mom.cfg", "mlconfig/sum1010w.cfg"),
-	#("mlconfig/ada8s2wf-vp-mom.cfg", "mlconfig/sum1010w.cfg")
-	
-	
-	
+
 ]
 
 
 #######################################################################################################################################
 
 # Some automatically generated names, used for saving figures etc depending on your above settings.
-# Not meant to be changed by the user...
+# Not meant to be changed.
 
 sconfname = os.path.splitext(os.path.basename(shearconflist[0][1]))[0] # extracts e.g. "sum55"
 valname = "{}_with_{}_on_{}".format(datasets["ts"], sconfname, datasets["vs"])
