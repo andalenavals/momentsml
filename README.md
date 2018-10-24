@@ -53,4 +53,4 @@ You could check that ``import momentsml`` and ``import tenbilac`` succeed.
 
 The scripts and configuration files for the different sections of the paper are in [scripts/](scripts/) (click to see an overview). The structure of these scripts for the different sections is very similar, but we strongly suggest to start with the "fiducial" scripts, as those are the most documented.
 
-Copy the directory ``scripts/fiducial/`` somewhere else on your system, and proceed by following the included README. 
+Make a personal copy of the directory ``scripts/fiducial/`` somewhere else on your system (so that you can adapt paths and settings), and proceed by following the included [scripts/fiducial/README.md](included README).
