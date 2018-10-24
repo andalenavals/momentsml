@@ -31,7 +31,7 @@ Directory structure
 
 - **momentsml**: the python package
 - **scripts**: scripts and configurations to reproduce the results from our paper
-- **wrappers**: standalone packages providing interfaces to specific datasets (see tutorial)
+- **wrappers**: standalone packages providing interfaces to specific datasets
 - **other**: additional figures and demonstration scripts
 
 
