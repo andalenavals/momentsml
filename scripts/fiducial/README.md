@@ -1,3 +1,76 @@
+Application to the fiducial simulations
+=======================================
+
+These scripts implement the application on the "fiducial" simulations, as discussed in Section 6 of the paper.
+They all rely on high-level functions of MomentsML, so that rather complicated tasks can be accomplished by little code: most of the content of these scripts is about adjusting settings. 
+
+The general idea is to run the processing scripts (``run_X_blabla.py``) in the order given by their numbers, and to generate test plots with the plotting scripts (``plot_*.py``) or acutal paper figures (``paperfig_*.py``).
+While some of these scripts take command line arguments, they are in general meant to be "edited": especially for the plots, some settings need to be changed directly in the scripts to produce the desired figures.
+
+Before describing these scripts and the workflow in more detail, we look at the configuration.
+
+
+Overview of the configuration
+-----------------------------
+
+We suggest that you have a look at the following files, to get a feeling of what's in there:
+
+  - config.py:
+  	This is the top-level configuration file. It contains:
+  	- paths to the GREAT3 data, what branch and what subfields to process
+	- which datasets (defined by "simnames") to use for training and validation (those are defined in run_21_sim.py and simparams.py, described below)
+	- which configuration-files to use for the machine learning
+
+	The contents of this config.py will depend on your environment. To get startet, copy one of our configs (e.g., config_cgc.py) into
+	config.py and edit the various paths as needed.
+
+  - measfcts.py :
+    - settings related to the feature measurements, in particular what should get measured
+
+  - simparams.py :
+    - description of the simulations, galaxy parameter distributions 
+
+  - run_21_sim.py :
+  	Hardcoded in this script are the descriptions of the structures and sizes of the datasets to be simulated, i.e.
+	the definition of the names encountered in config.py.
+
+  - mlconfig/
+  	Files in here are configurations for the machine learning with Tenbilac.
+	There are two kinds of files:
+	- ada*.cfg tell MomentsML what features and inputs should be fed into Tenbilac, and how the predicted output data should be named.
+	- sum*.cfg are actual Tenbilac configuration files, with all the Tenbilac settings.
+
+
+
+Workflow
+--------
+
+
+
+Tutorial
+--------
+
+
+
+
+
+To train:
+- uncomment a single 
+
+
+To make the condbias plot with weights:
+This plot is made on a "vs"-like data structure.
+
+- set the config.dataset "vo" to the "vs" that you want to use
+- set the desired shearconflist and weightconflist
+- run valw
+- make the condbias plot, with useweights=True
+
+
+
+
+
+
 Nov 2017
 ========
 
