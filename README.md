@@ -1,7 +1,7 @@
 MomentsML
 =========
 
-This repository contains a python package and scripts accompanying the paper "Weak-lensing shear measurement with machine learning: Teaching artificial neural networks about feature noise" (Tewes et al. 2018, [arXiv:1807.02120](https://arxiv.org/abs/1807.02120), [paper website](https://astro.uni-bonn.de/~mtewes/ml-shear-meas/)). Together with the neural network package [tenbilac](https://github.com/mtewes/tenbilac) (and a decent computing server) this code allows to reproduce all results from the paper.
+This repository contains a python package and scripts accompanying the paper "Weak-lensing shear measurement with machine learning: Teaching artificial neural networks about feature noise" (Tewes et al. 2018, [arXiv:1807.02120](https://arxiv.org/abs/1807.02120), [paper website](https://astro.uni-bonn.de/~mtewes/ml-shear-meas/)). Together with the neural network package [tenbilac](https://github.com/mtewes/tenbilac) (and a decent computing server) this code allows to reproduce the results from our paper. Note that to experiement with MomentsML on your own data or simulations, much more coding would certainly be required, as the present software really is a demonstration toolbox and not a pipeline.
 
 Dependencies
 ------------
@@ -38,11 +38,19 @@ Directory structure
 Getting started
 ---------------
 
-In the following, we give some instructions on how to reproduce the results from the paper. Note that to experiement with MomentsML on your own data or simulations, much more coding would certainly be required, as the present software really is a demonstration toolbox and not a pipeline.
+In the following, we give some instructions on how to reproduce the results from the paper.
 
 ### Setup
 
-The CPU and disk space requirements vary widely between the different applications described in the paper. For first experiments similar to what is shown in Section 6 of the paper, a server with 16 or more cores and a few hundred GB of disk space should be sufficient.
+The CPU and disk space requirements vary widely between the different applications described in the paper. For first experiments similar to what is shown in Section 6 of the paper, a machine with 16 or more cores and a few hundred GB of disk space should be sufficient.
 
 To begin, add the tenbilac and momentsml packages to your PYTHONPATH as described above (for momentsml) and [here](https://github.com/mtewes/tenbilac) (for tenbilac).
 If you plan to process GREAT3 data, do the same with the momentsmlgreat3 wrapper, as described in [wrappers/](wrappers/).
+
+You could check that ``import momentsml`` and ``import tenbilac`` succeed.
+
+### Scripts
+
+The scripts and configuration files for the different sections of the paper are in [scripts/](scripts/) (click to see an overview). The structure of these scripts for the different sections is very similar, but we strongly suggest to start with the "fiducial" scripts, as those are the most documented.
+
+Copy the directory ``scripts/fiducial/`` somewhere else on your system, and proceed by following the included README. 
