@@ -38,8 +38,6 @@ Directory structure
 Getting started
 ---------------
 
-In the following, we give some instructions on how to reproduce the results from the paper.
-
 ### Setup
 
 The CPU and disk space requirements vary widely between the different applications described in the paper. For first experiments similar to what is shown in Section 6 of the paper, a machine with 16 or more cores and a few hundred GB of disk space should be sufficient.
