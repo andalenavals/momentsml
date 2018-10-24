@@ -17,12 +17,13 @@ The code depends on:
 Installation
 ------------
 
-We recommend to simply add the location of your clone of this directory to your PYTHONPATH.
+After installing the above dependencies, we recommend to simply add the location of your clone of this directory to your PYTHONPATH.
 
 To do so, if you use bash, add this line to your ``.bash_profile`` or ``.profile`` or equivalent file:
 
 	export PYTHONPATH=${PYTHONPATH}:/path/to/momentsml/
 
+You should then be able to ``import momentsml``.
 
 
 Directory structure
@@ -37,9 +38,11 @@ Directory structure
 Getting started
 ---------------
 
+In the following, we give some instructions on how to reproduce the results from the paper. Note that to experiement with MomentsML on your own data or simulations, much more coding would certainly be required, as the present software really is a demonstration toolbox and not a pipeline.
+
 ### Setup
 
-The CPU and disk space requirements vary widely between the different applications described in the paper. For first experiments similar to what is shown in Section 6 of the paper, a server with at least 16 cores and a few hundred GB of disk space should be sufficient.
+The CPU and disk space requirements vary widely between the different applications described in the paper. For first experiments similar to what is shown in Section 6 of the paper, a server with 16 or more cores and a few hundred GB of disk space should be sufficient.
 
 To begin, add the tenbilac and momentsml packages to your PYTHONPATH as described above (for momentsml) and [here](https://github.com/mtewes/tenbilac) (for tenbilac).
 If you plan to process GREAT3 data, do the same with the momentsmlgreat3 wrapper, as described in [wrappers/](wrappers/).
