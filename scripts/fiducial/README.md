@@ -7,39 +7,33 @@ They all rely on high-level functions of MomentsML, so that rather complicated t
 The general idea is to run the processing scripts (``run_X_blabla.py``) in the order given by their numbers, and to generate test plots with the plotting scripts (``plot_*.py``) or acutal paper figures (``paperfig_*.py``).
 While some of these scripts take command line arguments, they are in general meant to be "edited": especially for the plots, some settings need to be changed directly in the scripts to produce the desired figures.
 
-Before describing these scripts and the workflow in more detail, we look at the configuration.
+Before describing these scripts and the workflow in more detail, its good to get a first...
 
 
 Overview of the configuration
 -----------------------------
 
-We suggest that you have a look at the following files, to get a feeling of what's in there:
+The following files contain most of the configurable aspects (everything else is hard-coded). We suggest that you have a look a them, to get a first idea of what's in there.
 
-  - config.py:
-  	This is the top-level configuration file. It contains:
-  	- paths to the GREAT3 data, what branch and what subfields to process
-	- which datasets (defined by "simnames") to use for training and validation (those are defined in run_21_sim.py and simparams.py, described below)
+  - ``config.py``:
+  	This is the top-level configuration file. It defines
+  	- path to a workdir in which all the produced files will be organized
+	- names of the various datasets (for training and validation) on which the scripts should run
 	- which configuration-files to use for the machine learning
 
-	The contents of this config.py will depend on your environment. To get startet, copy one of our configs (e.g., config_cgc.py) into
-	config.py and edit the various paths as needed.
 
-  - measfcts.py :
-    - settings related to the feature measurements, in particular what should get measured
-
-  - simparams.py :
-    - description of the simulations, galaxy parameter distributions 
-
-  - run_21_sim.py :
-  	Hardcoded in this script are the descriptions of the structures and sizes of the datasets to be simulated, i.e.
-	the definition of the names encountered in config.py.
-
-  - mlconfig/
-  	Files in here are configurations for the machine learning with Tenbilac.
+  - ``measfcts.py`` :
+    - defines the feature measurement function that will be run on the datasets. 
+	
+  - ``simparams.py`` :
+    - description of the simulation parameters, in particular of the galaxy parameter distributions.
+	 
+  - ``mlconfig/``
+  	Files in here are configurations for the machine learning with tenbilac.
 	There are two kinds of files:
-	- ada*.cfg tell MomentsML what features and inputs should be fed into Tenbilac, and how the predicted output data should be named.
-	- sum*.cfg are actual Tenbilac configuration files, with all the Tenbilac settings.
-
+	- ``ada*.cfg`` tell MomentsML what features and inputs should be fed into tenbilac, and how the predicted output data should be named.
+	- ``sum*.cfg`` are actual Tenbilac configuration files, with all the tenbilac settings (network architecture, cost functions, committees, etc).
+	Open ``ada5s1f.cfg`` and ``sum55.cfg`` to see two relevant examples.
 
 
 Workflow
