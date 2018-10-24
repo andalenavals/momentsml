@@ -4,36 +4,8 @@ About
 =====
 
 
-This code illustrates the use of MomentsML on GREAT3 data and reproduces the related figures from our paper. The scripts might be useful to play with GREAT3, but are not meant and do not have the quality to be reused for other purposes or surveys.
-
-We focus on the constant-shear single-epoch constant-PSF branches, but running on the corresponding variable-shear branches is equally simple.
-
-A goal of this "pipeline" is to remain flexible enough to allow for easy experimentation. It should be relatively easy to test and compare different settings. 
-
-
-
-Installation
-============
-
-The pipeline uses python 2.7 and the usual "scipy stack" (numpy, scipy, matplotlib). In addition, you will need:
-
-- GalSim (1.4 or above) https://github.com/GalSim-developers/GalSim
-- astropy (1.1 or above)
-- Tenbilac
-	- ADD INFO HERE
-- MomentsML
-	- ADD INFO HERE
-- MomentsML-GREAT3 wrapper
-	- ADD INFO HERE
-
-
-
-Tutorial
-========
-
-In principle, we'll run the scripts one after the other, in there alphabetical order (given by the numbers in their filenames). A description of the workflow will be given below. But before describing the scripts, here is a first overview of the configuration.
-
-Note: in the following, we use the wording "shear estimator" even for ellipticity estimators. Regarding the code, the difference is very small.
+In principle, as for the fiducial experiments, we'll run the scripts one after the other, in there alphabetical order (given by the numbers in their filenames).
+Before describing the scripts, here is a first overview of the configuration.
 
 
 Overview of the configuration
