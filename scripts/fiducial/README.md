@@ -40,18 +40,31 @@ The following files contain most of the configurable aspects (everything else is
 Workflow
 --------
 
-### Simulations
+Set the workdir path in ``config.py`` to an empty directory.
 
-Dataset categories:
+
+### Simulations, with ``run_11_sim.py``
+
+The first step is the generation of data. This involves the use of GalSim to create images, the feature measurement on these images, and the structuring of these features into an astropy Table. All these steps are done by one single script, ``run_11_sim.py``, on each individual data set. In other words, one call to ``run_11_sim.py`` will generate the data to train the point estimator, another call to ``run_11_sim.py`` the data to train the weights, and so on.
+
+The final product of this ``run_11_sim.py`` scirpt is a pickle file containing an astropy Table. This table is structured so that each row corresponds to one _case_. Some columns are multi-dimensional, with the second index pointing at all the _realizations_ of a case. 
+
+When running this script, the generated images will be organized inside ``workdir/sim`` (in a structure involving timestamps), while the final Table is written in ``workdir/simmeas/dataset_name/groupmeascat.pkl``.
+
+Before describing the use of ``run_11_sim.py``, we introduce some abbreviations we use for dataset categories:
 
   * si : "simulation inspection" : a small set of galaxies drawn from the parameter distributions, to test feature measurements etc.
-  * ts : "train shear" : cases contain always the same galaxy, rotated on a ring
-  * vs : "validate shear" : same structure as ts, to probe (conditional) biases of the shear point estimate
+  * tp : "train point-estimator" : cases contain always the same galaxy, rotated on a ring
+  * vp : "validate point-estimator" : same structure as ts, to probe (conditional) biases of the shear point estimate
   * tw : "train weights" : cases contain different galaxies
   * vo : "validate overall" : same as tw, cases contain different galaxies, for an overall validation.
 
+Furthermore, we will use the code "varpsf" for datasets related to the variable psf experiements.
+
+As ``run_11_sim.py`` involves the content of ``simparams.py``
 
 
+I AM HERE
 
 
 Key sets (constant PSF)
