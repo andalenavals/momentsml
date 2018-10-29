@@ -61,11 +61,49 @@ Before describing the use of ``run_11_sim.py``, we introduce some abbreviations 
 
 Furthermore, we will use the code "varpsf" for datasets related to the variable psf experiements.
 
+
+The contents contributing to the configuration of ``run_11_sim.py`` are distributed. They involve the distribution of galaxy parameters from ``simparams.py``, the definition of the features to measure provided via ``measfcts.py``, general settings in ``config.py``, as well as some settings hard-coded in ``run_11_sim.py``.
+
+You will find inside ``run_11_sim.py`` definitions of datasets that group and organize all these configuration.
+For instance, as default configuration for _tp_, there is "tp-1".
+These "codes" are the only command-line arguments to ``run_11_sim.py``.
+
+You could therefore now proceed by creating all the required datasets for the fiducial experiment (Section 6), by executing
+
+  * ``python run_11_sim.py si-1`` (this is a fast one, while the others will take several hours)
+  * ``python run_11_sim.py tp-1``
+  * ``python run_11_sim.py vp-1`` (this one is particularly massive, with 50 million galaxies)
+  * ``python run_11_sim.py tw-1``
+  * ``python run_11_sim.py vo-1``
+
+Note that for each set, the number of CPUs to use can be set in the corresponding drawconf variable.
+
+The idea of these _code-named_ dataset definitions is that one can add alternative datasets to ``run_11_sim.py`` (all parameters can change: galaxy parameter distributions, dataset sizes and structures, etc) for experimentations.
+
+For all further steps (e.g., training, validation, plots) only the _code_ in ``config.py`` has to be properly set to point to the right dataset to use.
+
+As a first test, start by creating the simulation inspection set using ``python run_11_sim.py si-1``, and then check the results with ``python plot_1_siminspect.py``. This last script provides a simple first example for how data is plotted with MomentsML. All the other scripts generating checkplots or figures follow the same ideas and use the same tools.
+
+If the dataset "vp-1" is available, the figure ``python paperfig_6_snr_failfrac.py`` can be generated, to reproduce Fig. 5 of the paper. Note that the numbering of these scripts is not related to the number of the paper Figures.
+
+### Training the point estimates, with ``run_21_train.py``
+
+
+
+### Validating the point estimates, with ``run_22_val.py``
+
+
+
+
+ of settings 
+
+
 As ``run_11_sim.py`` involves the content of ``simparams.py``
 
 
 I AM HERE
 
+``python run_11_sim.py si-1``
 
 Key sets (constant PSF)
 
