@@ -84,7 +84,7 @@ For all further steps (e.g., training, validation, plots) only the _code_ in ``c
 
 As a first test, start by creating the simulation inspection set using ``python run_11_sim.py si-1``, and then check the results with ``python plot_1_siminspect.py``. This last script provides a simple first example for how data is plotted with MomentsML. All the other scripts generating checkplots or figures follow the same ideas and use the same tools.
 
-As next test, you could try to play with a copy of tp-1 (named for example tp-1-small), for which you set ncat to 10 (instead of 4000) and snc_type to 100, to get an example of the generated file structure and of the computational time required on your machine.
+As next test, you could try to play with a copy of tp-1 (named for example tp-1-small), for which you set ncat to 50 (instead of 4000) and snc_type to 100 (instead of 2000), to get an example of the generated file structure and of the computational time required on your machine.
 
 If the dataset "vp-1" is available, the figure ``python paperfig_6_snr_failfrac.py`` can be generated, to reproduce Fig. 5 of the paper. Note that the numbering of these scripts is not related to the number of the paper Figures.
 
