@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-cat = momentsml.tools.io.readpickle(os.path.join(config.simmeasdir, config.datasets["ts"], "groupmeascat.pkl"))
+cat = momentsml.tools.io.readpickle(os.path.join(config.simmeasdir, config.datasets["tp"], "groupmeascat.pkl"))
 #print momentsml.tools.table.info(cat)
 
 fig = plt.figure(figsize=(8, 8))

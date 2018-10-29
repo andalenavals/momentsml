@@ -30,7 +30,7 @@ mode = "vo"
 
 
 
-if mode == "vs":
+if mode == "vp":
 	valname = config.valname
 elif mode == "vo":
 	valname = config.wvalname

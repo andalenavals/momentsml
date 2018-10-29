@@ -22,7 +22,7 @@ netid = 0 # id of the network to show
 
 
 if mode is "s":
-	workbasedir = os.path.join(config.traindir, config.datasets["ts"])
+	workbasedir = os.path.join(config.traindir, config.datasets["tp"])
 	conflist = config.shearconflist
 elif mode is "w":
 	workbasedir = os.path.join(config.traindir, "{}_with_{}".format(config.datasets["tw"], config.datasets["ts"]))

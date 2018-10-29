@@ -24,7 +24,7 @@ rc('text', usetex=True)
 
 rasterized=True
 
-valcat = os.path.join(config.simmeasdir, config.datasets["vs"], "groupmeascat.pkl")
+valcat = os.path.join(config.simmeasdir, config.datasets["vp"], "groupmeascat.pkl")
 cat = momentsml.tools.io.readpickle(valcat)
 
 #print momentsml.tools.table.info(cat)

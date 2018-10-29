@@ -22,7 +22,7 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex=True)
 
 
-workbasedir = os.path.join(config.traindir, config.datasets["ts"])
+workbasedir = os.path.join(config.traindir, config.datasets["tp"])
 
 
 for (dataconfpath, toolconfpath) in config.shearconflist:
