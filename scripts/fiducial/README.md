@@ -88,81 +88,48 @@ If the dataset "vp-1" is available, the figure ``python paperfig_6_snr_failfrac.
 
 ### Training the point estimates, with ``run_21_train.py``
 
+First, set the config.shearconflist to have a single uncommented line, as for now we don't want the trainings to run one after the other automatically.
+To give an example, the file ``mlconfig/ada5s1f.cfg`` describes the features to use for the training of the first component of the shear. In combination with the code of the tp-dataset (and the name of the tenbilac settings), this string "ada5s1f" will define a name for the training:
+
+  * ada5 stands for 5 adamom (adaptive moments) features
+  * s1 for the first component of the shear (s1w for the corresponding weight)
+  * f for using the flux (and not the log(flux)) as input feature.
+  
+Other potential training settings are available in ``mlconfig/``.
+
+The script ``run_21_train.py`` itself takes 2 command line arguments: the <S/N> cut, and a character "s" (use this when aiming at shear predictions) or "e" (use this when aiming at the ellipticity predictions).
+
+To train the point estimates as described in Section 6, run this script twice (once for each shear component) using the line ``python run_21_train.py 10 s``.
+The network-committees are saved in a structured way within the workdir, including some checkplots and snapshots.
 
 
 ### Validating the point estimates, with ``run_22_val.py``
 
+Following the same logic of using the settings in config.shearconflist, this predicts the shear point estimates on the vp catalog, and saves them into a new catalog.
+As we want both predictions of s1 and s2 in the same catalog, uncomment both lines in config.shearconflist, and run this script only once.
+
+The script ``paperfig_1_condbias.py`` can now be used to generate Fig. 9 of the paper.
 
 
+### Training the weights estimates, with ``run_31_pred_for_w.py`` and ``run_32_train_w.py``
 
- of settings 
+Before training the weights, the shear point estimates must be computed on the tw set.
+This is done with ``run_31_pred_for_w.py``. Keep both lines in config.shearconflist uncommented, to get both point estimates in one catalog.
 
-
-As ``run_11_sim.py`` involves the content of ``simparams.py``
-
-
-I AM HERE
-
-``python run_11_sim.py si-1``
-
-Key sets (constant PSF)
+The script ``run_32_train_w.py`` can then be used to train the weights, using only one line of config.weightconflist at a time.
+The committees are saved following the same structure as for the point estimates, and using a directory name that combines the names of the training sets and the point estimates, so that several settings can be kept and compared.
 
 
-ts-2-faint-ln
-ts-2-faint-p1 = sims "ts-2-faint-d1" + initial training on ts-2-faint-ln
-
-vs-3-faint
-
-tw-5-faint (with point estimates from ts-2-faint-p1)
-
-vo-3-faint-nosnc
-
-
-
-Key sets (variable PSF)
-
-ts-vp-1-ln :
-ts-vp-1 : to be done
-
-vs-vp-1 (50 M)
-
-
-
-
-### Trainings
-
-
-To train:
-- uncomment a single 
-
+### Overall validation, with ``run_33_val_w.py``
 
 To make the condbias plot with weights:
 This plot is made on a "vs"-like data structure.
 
 - set the config.dataset "vo" to the "vs" that you want to use
 - set the desired shearconflist and weightconflist
-- run valw
+- run val_w
 - make the condbias plot, with useweights=True
 
-
-
-
-To experiment with other training parameters for the shear point estimates (but the same training data), make a simlink of the groupmeascat.pkl in another directory within simmeas.
-
-
-ts-2 sum55 : 12 hours for 1000 iterations
-ts-2 sum5
-
-
-
-ts-e-1 sum55 : 3:44 for 1000 iterations 
-
-
-tw-1 sum55w : 100 its on 1Mgal take 30 min
-tw-1 sum55w : 1000 its take 4:40
-
-
-### Validation and plots
 
 
 
