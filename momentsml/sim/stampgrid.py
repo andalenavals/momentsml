@@ -246,7 +246,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
 			profile_type = params.profile_types[row["tru_type"]]
 			
 			if profile_type == "Sersic":
-				if sersiccut is False:
+				if sersiccut is None:
 					trunc = 0
 				else:
 					trunc = float(row["tru_rad"]) * sersiccut
