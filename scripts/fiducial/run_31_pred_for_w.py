@@ -23,13 +23,13 @@ cat = momentsml.tools.io.readpickle(catpath)
 #print momentsml.tools.table.info(cat)
 #exit()
 
-wtraindir = os.path.join(config.traindir, config.datasets["tw"] + "_with_" + config.datasets["ts"] + "_" + config.sconfname)
+wtraindir = os.path.join(config.traindir, config.datasets["tw"] + "_with_" + config.datasets["tp"] + "_" + config.sconfname)
 os.makedirs(wtraindir)
 
 predcatpath = os.path.join(wtraindir, "groupmeascat_predforw.pkl")
 
 
-traindir = os.path.join(config.traindir, config.datasets["ts"])
+traindir = os.path.join(config.traindir, config.datasets["tp"])
 
 	
 predcat = momentsml.learn.tenbilacrun.predict(cat, config.shearconflist, traindir)

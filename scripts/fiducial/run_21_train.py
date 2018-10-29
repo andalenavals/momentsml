@@ -21,8 +21,8 @@ logger.info("Recieved arguments snrcut:{} and target:{}".format(args.snrcut, arg
 	
 
 # Getting the path to the correct directories
-measdir = os.path.join(config.simmeasdir, config.datasets["ts"])
-traindir = os.path.join(config.traindir, config.datasets["ts"])
+measdir = os.path.join(config.simmeasdir, config.datasets["tp"])
+traindir = os.path.join(config.traindir, config.datasets["tp"])
 	
 # And to the catalogue
 traincatpath = os.path.join(measdir, "groupmeascat.pkl")

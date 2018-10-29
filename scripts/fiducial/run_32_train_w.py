@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 
-wtraindir = os.path.join(config.traindir, config.datasets["tw"] + "_with_" + config.datasets["ts"] + "_" + config.sconfname)
+wtraindir = os.path.join(config.traindir, config.datasets["tw"] + "_with_" + config.datasets["tp"] + "_" + config.sconfname)
 catpath = os.path.join(wtraindir, "groupmeascat_predforw.pkl")
 
 cat = momentsml.tools.io.readpickle(catpath)

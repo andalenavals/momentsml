@@ -30,12 +30,12 @@ cat = momentsml.tools.io.readpickle(catpath)
 
 # Predict point estimates:
 
-traindir = os.path.join(config.traindir, config.datasets["ts"])
+traindir = os.path.join(config.traindir, config.datasets["tp"])
 predcat = momentsml.learn.tenbilacrun.predict(cat, config.shearconflist, traindir)
 
 
 # Predict weights:
-wtraindir = os.path.join(config.traindir, config.datasets["tw"] + "_with_" + config.datasets["ts"] + "_" + config.sconfname)
+wtraindir = os.path.join(config.traindir, config.datasets["tw"] + "_with_" + config.datasets["tp"] + "_" + config.sconfname)
 predcat = momentsml.learn.tenbilacrun.predict(predcat, config.weightconflist, wtraindir)
 
 

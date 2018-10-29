@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 
 	
 # Getting the path to the correct directories
-traindir = os.path.join(config.traindir, config.datasets["ts"])
+traindir = os.path.join(config.traindir, config.datasets["tp"])
 	
 # And to the validation catalogue
-valcatpath = os.path.join(config.simmeasdir, config.datasets["vs"], "groupmeascat.pkl")
+valcatpath = os.path.join(config.simmeasdir, config.datasets["vp"], "groupmeascat.pkl")
 predcatpath = os.path.join(config.valdir, config.valname + ".pkl")
 
 
