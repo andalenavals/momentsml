@@ -122,14 +122,15 @@ The committees are saved following the same structure as for the point estimates
 
 ### Overall validation, with ``run_33_val_w.py``
 
-To make the condbias plot with weights:
-This plot is made on a "vs"-like data structure.
+All the relavant lines in config.shearconflist and config.weightconflist can now be uncommented, so that  ``run_33_val_w.py`` creates a single catalog with all predictions. ``paperfig_2_overallbias.py`` can be used to generate Fig. 11 of the paper.
 
-- set the config.dataset "vo" to the "vs" that you want to use
-- set the desired shearconflist and weightconflist
-- run val_w
-- make the condbias plot, with useweights=True
 
+To make the condbias plot with weights (Fig. 12 of the paper), use again ``paperfig_1_condbias.py``. Note however that this plot is made using a "vp"-like data structure. Therefore, you'll have to:
+
+  - set the config.dataset "vo" to the "vp" that you want to use
+  - set the desired shearconflist and weightconflist
+  - run val_w to get the predictions
+  - make the condbias plot, with useweights=True
 
 
 
