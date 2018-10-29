@@ -84,7 +84,7 @@ def configure(args):
 			"nc":1,
 			"nrea":1,
 			"ncat":5000,
-			"ncpu":50,
+			"ncpu":10,
 			"groupmode":"shear",
 			"skipdone":False	
 		}
@@ -122,7 +122,7 @@ def configure(args):
 			"nc":100,
 			"nrea":1,
 			"ncat":200,
-			"ncpu":50,
+			"ncpu":10,
 			"groupmode":"shear",
 			"skipdone":False	
 		}
