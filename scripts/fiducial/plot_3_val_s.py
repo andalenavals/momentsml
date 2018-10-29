@@ -3,6 +3,7 @@ Validation plot on training-like data structure, with one galaxy per case
 """
 
 import momentsml
+
 import momentsmlgreat3
 import momentsml.plot
 from momentsml.tools.feature import Feature

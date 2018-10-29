@@ -1,4 +1,6 @@
 import momentsml
+import momentsml.plot
+
 import os
 import config
 import numpy as np

@@ -1,5 +1,7 @@
 
 import momentsml
+import momentsml.plot
+
 import os
 
 from momentsml.tools.feature import Feature
