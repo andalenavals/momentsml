@@ -3,9 +3,9 @@ Modules for metrics computations, using astropy tables as input.
 """
 import numpy as np
 
-import calc
-import table
-import feature
+from . import calc
+from . import table
+from . import feature
 
 try:
 	import statsmodels.api as sm

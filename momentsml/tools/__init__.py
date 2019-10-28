@@ -3,12 +3,12 @@ Subpackage for helper functions (table manipulations, metrics, ...)
 """
 
 
-import io
-import table
-import feature
-import image
-import calc
-import metrics
-import dirs
-import imageinfo
+from . import io
+from . import table
+from . import feature
+from . import image
+from . import calc
+from . import metrics
+from . import dirs
+from . import imageinfo
 

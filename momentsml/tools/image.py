@@ -74,7 +74,7 @@ def getstamp(x, y, img, stampsize, getfrom=None):
 	
 	# If the stamp is from galsim:
 	if getfrom=="gs":
-		assert img.origin().x == 0 and img.origin().y == 0
+		assert img.origin.x == 0 and img.origin.y == 0
 		assert img.xmin == 0 and img.ymin == 0
 		
 		xmin = int(np.round(x - 0.5)) - int(stampsize)/2
@@ -86,7 +86,7 @@ def getstamp(x, y, img, stampsize, getfrom=None):
 		assert xmax - xmin == stampsize - 1
 		
 		# We check that these bounds are fully within the image
-		if xmin < img.getXMin() or xmax > img.getXMax() or ymin < img.getYMin() or ymax > img.getYMax():
+		if xmin < img.xmin or xmax > img.xmax or ymin < img.ymin or ymax > img.ymax:
 			error=True
 		else:			
 			# We prepare the stamp

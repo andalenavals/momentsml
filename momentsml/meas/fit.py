@@ -18,7 +18,7 @@ from astropy.stats import sigma_clip
 from astropy.modeling import Fittable2DModel, Parameter
 from scipy.special import gamma, gammaincinv
 
-import utils
+from . import utils
 from .. import tools
 
 

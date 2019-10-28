@@ -448,8 +448,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
 			gal = gal.shift(xjitter,yjitter)
 
 			final = galsim.Convolve([psf, gal])
-
- 			final.drawImage(gal_stamp)
+			final.drawImage(gal_stamp)
 
  			# And add noise to the convolved galaxy:
 			gal_stamp.addNoise(galsim.CCDNoise(rng, sky_level=float(row["tru_sky_level"]), gain=float(row["tru_gain"]), read_noise=float(row["tru_read_noise"])))

@@ -3,7 +3,7 @@ In/out functions
 """
 
 import os
-import cPickle as pickle
+import pickle
 import astropy.io.fits
 import gzip
 

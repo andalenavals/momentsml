@@ -10,7 +10,7 @@ import numpy as np
 import datetime
 
 from .. import tools
-import utils
+from . import utils
 
 import logging
 logger = logging.getLogger(__name__)

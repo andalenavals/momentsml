@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 import astropy.table
 import galsim
 
-import utils
+from . import utils
 from .. import tools
 
 try:

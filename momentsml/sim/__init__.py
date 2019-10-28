@@ -2,7 +2,7 @@
 Subpackage to generate galaxy images with GalSim
 """
 
-import params
-import stampgrid
-import run
+from . import params
+from . import stampgrid
+from . import run
 

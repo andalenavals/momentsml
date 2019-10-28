@@ -5,14 +5,14 @@ The modules in this subpackage typically define functions that plot something on
 """
 __all__ = []
 
-import utils
-import scatter
-import hist
-import hexbin
-import contour
-import bin
-import mcbin
-import figures
-import exp
+from . import utils
+from . import scatter
+from . import hist
+from . import hexbin
+from . import contour
+from . import bin
+from . import mcbin
+from . import figures
+from . import exp
 
 

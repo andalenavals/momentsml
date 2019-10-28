@@ -5,5 +5,5 @@ MomentsML toolbox for exeperimenting with shear measurements and machine learnin
 __all__ = ["learn", "meas", "plot", "sim", "tools"]
 
 
-import tools
+from . import tools
 

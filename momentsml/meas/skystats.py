@@ -10,7 +10,7 @@ import astropy.table
 import logging
 logger = logging.getLogger(__name__)
 
-import utils
+from . import utils
 from .. import tools
 
 

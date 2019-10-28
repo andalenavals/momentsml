@@ -12,7 +12,7 @@ import astropy
 import copy
 
 import os
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 from .. import tools
 
 import tenbilac
@@ -206,7 +206,7 @@ def readconfig(configpath):
     """
     Reads in a config file
     """
-    config = SafeConfigParser(allow_no_value=True)
+    config = ConfigParser(allow_no_value=True)
     
     if not os.path.exists(configpath):
         raise RuntimeError("Config file '{}' does not exist!".format(configpath))

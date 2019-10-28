@@ -9,10 +9,10 @@ import numpy as np
 import logging
 loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;21m%(message)s\033[1;0m'
 #loggerformat='PID %(process)06d | %(asctime)s | %(levelname)s: %(name)s(%(funcName)s): %(message)s'
-logging.basicConfig(format=loggerformat,level=logging.INFO)
+logging.basicConfig(format=loggerformat,level=logging.DEBUG)
 
 workdir = "/vol/euclid5/euclid5_raid3/mtewes/MomentsML_featurefit2019"
-#gemsdir = "/vol/fohlen12/data1/mtewes/GEMS"
+gemsdir = "/vol/euclid5/euclid5_raid3/mtewes/GEMS"
 #spectrumpath = "/vol/fohlen12/data1/mtewes/Pickles_spectra/pickles_uk_27.fits"
 
 

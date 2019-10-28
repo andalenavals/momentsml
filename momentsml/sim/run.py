@@ -12,15 +12,15 @@ import sys
 import glob
 import datetime
 import tempfile
-import cPickle as pickle
+import pickle
 import numpy as np
 import copy
 import shutil
 import multiprocessing
 import astropy.table
 
-import stampgrid
-import inspect
+from . import stampgrid
+#from . import inspect
 
 from .. import tools
 
@@ -339,7 +339,7 @@ def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
 	if ncpu == 1:
 		# The single-processing version (not using multiprocessing to keep it easier to debug):
 		logger.debug("Not using multiprocessing")
-		map(_worker, wslist)
+		list(map(_worker, wslist))
 
 	else:
 		# multiprocessing map:

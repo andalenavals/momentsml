@@ -2,7 +2,7 @@
 Histogram helper functions
 """
 
-import utils
+from . import utils
 from .. import tools
 
 import numpy as np

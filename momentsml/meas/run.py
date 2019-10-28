@@ -270,7 +270,7 @@ def _run(wslist, ncpu):
 	logger.info("Starting the measurement on %i images using %i CPUs" % (len(wslist), ncpu))
 	
 	if ncpu == 1: # The single process way (MUCH MUCH EASIER TO DEBUG...)
-		map(_worker, wslist)
+		list(map(_worker, wslist))
 	
 	else:
 		pool = multiprocessing.Pool(processes=ncpu)

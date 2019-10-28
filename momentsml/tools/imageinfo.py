@@ -5,7 +5,7 @@ The ImageInfo class
 import sys
 import os
 
-import image
+from . import image
 
 import logging
 logger = logging.getLogger(__name__)
