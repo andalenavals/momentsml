@@ -16,11 +16,20 @@ import astropy.table
 import galsim
 from datetime import datetime
 
-from momentsml import tools
-from momentsml.sim import params
-from simparams_d import trunc_rayleigh
+from .. import tools
+from . import params
+
 import yaml
 
+def trunc_rayleigh(sigma, max_val):
+        """
+        A truncated Rayleigh distribution
+        """
+        assert max_val > sigma
+        tmp = max_val + 1.0
+        while tmp > max_val:
+                tmp = np.random.rayleigh(sigma)
+        return tmp
 
 def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", metadict=None):
         """
