@@ -375,7 +375,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                         #Add neighbors to each galaxy in a stamp
                         if neighbors is not None:
                                 doc = neighbors
-                                logger.info("Drawing image with neighbors")
+                                #logger.info("Drawing image with neighbors")
                                 neighs = drawneigh( doc=doc, psf=psf)
                                 conv = doc['Convolve']
                                 for nei in neighs:
@@ -641,7 +641,7 @@ def drawneigh(doc=None, psf=None):
 
                 gals.append(gal) 
                  
-        logger.info("Drawing, %i neighbors"%(nn))
+        #logger.info("Drawing, %i neighbors"%(nn))
         return gals
 
 

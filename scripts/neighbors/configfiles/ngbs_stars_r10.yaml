@@ -1,6 +1,6 @@
 name: ngbs-stars_r10 #name of this particular config file
 profile_type: Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
-nn: 1
+nn: 0
 tru_g1: 0.0 #ellipticity
 tru_g2: 0.0 #ellipticity
 Convolve: False #set to false when using stars, i.e, PSF profiles
