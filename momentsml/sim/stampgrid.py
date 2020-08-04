@@ -19,7 +19,6 @@ from datetime import datetime
 from .. import tools
 from . import params
 
-import yaml
 
 def trunc_rayleigh(sigma, max_val):
         """
@@ -375,12 +374,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
 
                         #Add neighbors to each galaxy in a stamp
                         if neighbors is not None:
-                                try:
-                                        with open(neighbors) as file:
-                                                doc = yaml.load(file, Loader=yaml.FullLoader)          
-                                except OSError as err:
-                                        print("OS error: {0}".format(err))
-                                        
+                                doc = neighbors
                                 logger.info("Drawing image with neighbors")
                                 neighs = drawneigh( doc=doc, psf=psf)
                                 conv = doc['Convolve']
@@ -392,7 +386,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                                         else:
                                                 placer(nei , gal_stamp, doc=doc )
                                                 if simtrugalimgfilepath != None:
-                                                        placer(nei , trugal_stamp,doc=doc )  
+                                                        placer(nei , trugal_stamp,doc=doc )   
                                                 
                                         
                         # And add noise to the convolved galaxy:

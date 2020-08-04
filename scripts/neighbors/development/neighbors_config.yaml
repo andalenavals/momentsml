@@ -1,3 +1,4 @@
+name: ngbs-r10 #name of this particular config file
 profile_type: Sersic #Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
 nn: 40
 tru_g1: 0.2 #ellipticity
@@ -42,8 +43,8 @@ random_box: # units in stamp fractional pixels (0,1.0) where 1.0 is the stampsiz
     y:
 
 random_ring:
-   rmin: 16 #pixels
-   rmax: 20 #pixels
+   rmin: 16 #pixels from center stamp
+   rmax: 20 #pixels from center stamp
    theta_min:  #angle in np.pi units
    theta_max:  #angle in np.pi units
    r:

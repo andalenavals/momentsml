@@ -12,6 +12,7 @@ import numpy as np
 import argparse
 import logging
 logger = logging.getLogger(__name__)
+import yaml
 
 class _WorkerSettings():
 	"""
@@ -64,10 +65,15 @@ def parse_args():
 
 def main():
     args = parse_args()
+    try:
+        with open(args.neighbors_config) as file:
+            doc = yaml.load(file, Loader=yaml.FullLoader)
+    except OSError :
+            with open(args.neighbors_config) as file: raise
     
     #"tp-1-small"
     sp = simparams_d.Fiducial_statshear(
-            name = "tp-1-small",
+            name = doc['name'],
             snc_type = 5, 
             shear = 0.1, 
             noise_level = 1.0, 
@@ -87,14 +93,18 @@ def main():
     workdir = os.path.join(simdir, sp.name)
     if not os.path.exists(workdir):
         os.makedirs(workdir)
-
+        
     stampsize = 64 #64
     print( args.neighbors_config)
     ncat = drawconf["ncat"]
     nrea = drawconf["nrea"]
     ncpu=drawconf["ncpu"]
     drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":stampsize}
-    drawimgkwargs={"neighbors":args.neighbors_config}
+
+
+    
+            
+    drawimgkwargs={"neighbors":doc}
     #drawimgkwargs={}
     psfcat=None; psfselect="random"
     savetrugalimg=True; savepsfimg=False

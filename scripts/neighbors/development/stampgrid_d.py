@@ -19,7 +19,6 @@ from datetime import datetime
 from momentsml import tools
 from momentsml.sim import params
 from simparams_d import trunc_rayleigh
-import yaml
 
 
 def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", metadict=None):
@@ -366,12 +365,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
 
                         #Add neighbors to each galaxy in a stamp
                         if neighbors is not None:
-                                try:
-                                        with open(neighbors) as file:
-                                                doc = yaml.load(file, Loader=yaml.FullLoader)          
-                                except OSError as err:
-                                        print("OS error: {0}".format(err))
-                                        
+                                doc = neighbors
                                 logger.info("Drawing image with neighbors")
                                 neighs = drawneigh( doc=doc, psf=psf)
                                 conv = doc['Convolve']
