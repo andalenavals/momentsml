@@ -1,0 +1,19 @@
+name: ngbs-stars_r20 #name of this particular config file
+profile_type: Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
+nn: 1
+tru_g1: 0.0 #ellipticity
+tru_g2: 0.0 #ellipticity
+Convolve: False #set to false when using stars, i.e, PSF profiles
+placer_method: random_ring #random_box #random_ring
+
+Gaussian_PSF: #for stars not randomes in case not defined
+    flux: 1.0 #1.0
+    sigma: 2.0 #2.0
+
+random_ring:
+   rmin: #pixels from center stamp
+   rmax: #pixels from center stamp
+   theta_min:  #angle in np.pi units
+   theta_max:  #angle in np.pi units
+   r: 20
+   theta:  #angle in np.pi units

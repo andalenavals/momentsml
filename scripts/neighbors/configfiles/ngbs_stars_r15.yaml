@@ -1,4 +1,4 @@
-name: ngbs-stars_r10 #name of this particular config file
+name: ngbs-stars_r15 #name of this particular config file
 profile_type: Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
 nn: 1
 tru_g1: 0.0 #ellipticity
@@ -15,5 +15,5 @@ random_ring:
    rmax: #pixels from center stamp
    theta_min:  #angle in np.pi units
    theta_max:  #angle in np.pi units
-   r: 16
-   theta: 1.5 #angle in np.pi units
+   r: 15
+   theta: #angle in np.pi units
