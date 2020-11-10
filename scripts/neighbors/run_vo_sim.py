@@ -29,17 +29,17 @@ def configure(doc):
     
     sp = simparams.Fiducial_statshear(
             name = doc['name'],
-            snc_type = 5, 
+            snc_type = 0, 
             shear = 0.1, 
             noise_level = 1.0, 
             min_tru_sb = 1.0,
         )
     drawconf = {
-            "n":1,
-            "nc":1,
+            "n":100000,
+            "nc":100,
             "nrea":1,
-            "ncat":1,
-            "ncpu":2,
+            "ncat":200,
+            "ncpu":8,
             "groupmode":"shear",
             "skipdone":False    
         }
@@ -71,7 +71,7 @@ def run(configuration):
         drawimgkwargs={"neighbors":doc}, 
         psfcat=None, psfselect="random",
         ncat=drawconf["ncat"], nrea=drawconf["nrea"], ncpu=drawconf["ncpu"],
-        savepsfimg=False, savetrugalimg=True
+        savepsfimg=False, savetrugalimg=False
     )
 
     # Measuring the newly drawn images
