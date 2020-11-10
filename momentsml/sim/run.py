@@ -211,7 +211,7 @@ def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
 				
 				else:
 					assert len(catalog) % catalog.meta["nsnc"] == 0
-					nsncblocks = len(catalog) / catalog.meta["nsnc"] # The number of different PSFs that we need.
+					nsncblocks = len(catalog) // catalog.meta["nsnc"] # The number of different PSFs that we need.
 					randompsfcatindices = np.repeat(np.random.randint(low=0, high=len(psfcat), size=nsncblocks), catalog.meta["nsnc"])
 					assert randompsfcatindices.ndim == 1
 					assert len(randompsfcatindices) == len(catalog)
