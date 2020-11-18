@@ -4,26 +4,26 @@ name: ngbs-nearest-nn #name of this particular config file
 snc_neighbors: True #rotate neighbors in shape noise cancellation
 polar_translation: False #Translate neighbor around central galaxy
 profile_type: Sersic #Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
-tru_g1: 0.5 ## ellipticity tru_s1 means shear
-tru_g2: 0.0
+tru_g1:  ## ellipticity tru_s1 means shear
+tru_g2: 
 tru_g_min: 0.3
 tru_g_max: 0.6
 placer_method: random_ring #random_box 
 
 ##Neighbors Features (fixed by case)
 nn: 
-r_nearest: 20
+r_nearest: 
 nn_min: 1
-nn_max: 4
+nn_max: 5
 r_nearest_min: 5
 r_nearest_max: 16 ##never can be larger than int(0.5*stampsize)
 
 ## Profiles dict of properties
 Sersic:
     sersiccut:  #this is not random
-    tru_rad:  4.0 #4.0 #half_light_radius
-    tru_sersicn: 2  #2 #sersic index
-    tru_sb: 6.0 #3.0 #fiducial surface brightness
+    tru_rad:   #4.0 #half_light_radius
+    tru_sersicn:   #2 #sersic index
+    tru_sb:  #3.0 #fiducial surface brightness
     # Limits
     tru_rad_min: 2.0
     tru_rad_max: 8.0

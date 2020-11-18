@@ -58,23 +58,28 @@ def _worker(ws):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Basic code to produce simulations with neighbors')
-    parser.add_argument('--neighbors_config', default='neighbors_config.yaml',  #default=None,
-                        help='yaml config definete properties of neighbors')
+    parser.add_argument('--neighbors_config', default='neighbors_config.yaml', help='yaml config definete properties of neighbors')
+    #parser.add_argument('--neighbors_config', default=None, help='yaml config definete properties of neighbors')
+    parser.add_argument('--name', default='ngbs-nearest-nn', help='Name for the run')
+
     args = parser.parse_args()
     return args
 
 def main():
     args = parse_args()
-    try:
-        with open(args.neighbors_config) as file:
-            doc = yaml.load(file, Loader=yaml.FullLoader)
-    except OSError :
-            with open(args.neighbors_config) as file: raise
-    
+    if args.neighbors_config is not None:
+        try:
+                with open(args.neighbors_config) as file:
+                        doc = yaml.load(file, Loader=yaml.FullLoader)
+        except OSError :
+                with open(arggs.neighbors_config) as file: raise
+    else:
+        doc =  None
+            
     #"tp-1-small"
     '''
     sp = simparams_d.Fiducial_statshear(
-            name = doc['name'],
+            name = args.name,
             snc_type = 5, 
             shear = 0.1, 
             noise_level = 1.0, 
@@ -92,7 +97,7 @@ def main():
     '''
 
     sp = simparams_d.Fiducial_statshear(
-            name = doc['name'],
+            name = args.name,
             snc_type = 0,
             shear = 0.1,
             noise_level = 1.0,
@@ -135,7 +140,8 @@ def main():
     for catalog, nei_catalog in zip(gal_catalogs, nei_catalogs):
         # We open a file object:
         catfile = tempfile.NamedTemporaryFile(mode='wb', prefix=prefix, suffix="_cat.pkl", dir=workdir, delete=False)
-        nei_catfile = open(catfile.name.replace("_cat.pkl","_nei_cat.pkl"), 'w+b')
+        if nei_catalog is not None:
+                nei_catfile = open(catfile.name.replace("_cat.pkl","_cat_nei.pkl"), 'w+b')
                 
         # Now we can get the unique filename
         catalog.meta["catname"] = os.path.basename(str(catfile.name)).replace("_cat.pkl","")
@@ -153,9 +159,10 @@ def main():
         
         # And we can write this catalog to disk
         pickle.dump(catalog, catfile) # We directly use this open file object.
-        pickle.dump(nei_catalog, nei_catfile)
-        #print(nei_catalog, file=open(catfile.name.replace("_cat.pkl","_nei_cat.yaml"),  "w"))
-        #with open(catfile.name.replace("_cat.pkl","_nei_cat.yaml"),  "w") as file: yaml.dump(nei_catalog,  file)
+        if nei_catalog is not None:
+                pickle.dump(nei_catalog, nei_catfile)
+        #print(nei_catalog, file=open(catfile.name.replace("_cat.pkl","_cat_nei.yaml"),  "w"))
+        #with open(catfile.name.replace("_cat.pkl","_cat_nei.yaml"),  "w") as file: yaml.dump(nei_catalog,  file)
 
         #print("Mr_meeseks0 \n", nei_catalog[0])
         #print("Mr_meeseks1 \n", nei_catalog[1])

@@ -107,7 +107,9 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                         
                         gal.update(statparams) # This would overwrite any of the "draw" params.
                         rows.append(gal) # So rows will be a list of dicts
-                        neigh_rows.append(neighs)
+
+                        if neighbors_config is not None:
+                                neigh_rows.append(neighs)
                 
                 else: # SNC with nsnc different versions rotated by sncrot degrees
                         
@@ -130,25 +132,26 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                                 rotgal.update(statparams)
                                 rows.append(rotgal)
                                 #print rotgal
-                               
-                                rotneighs = copy.deepcopy(neighs)
-                                if neighbors_config["snc_neighbors"]:
-                                        logger.info("Using SNC for neighbors too")
-                                        for i in range(len(rotneighs)):
-                                                profile_type = rotneighs[i]["profile_type"]
-                                                if profile_type in ["Sersic", "Gaussian"]:
-                                                        (rotneighs[i]["tru_g1"], rotneighs[i]["tru_g2"]) = tools.calc.rotg(neighs[i]["tru_g1"],
+                                
+                                if neighbors_config is not None:
+                                        rotneighs = copy.deepcopy(neighs)
+                                        if neighbors_config["snc_neighbors"]:
+                                                logger.info("Using SNC for neighbors too")
+                                                for i in range(len(rotneighs)):
+                                                        profile_type = rotneighs[i]["profile_type"]
+                                                        if profile_type in ["Sersic", "Gaussian"]:
+                                                                (rotneighs[i]["tru_g1"], rotneighs[i]["tru_g2"]) = tools.calc.rotg(neighs[i]["tru_g1"],
                                                                                                                            neighs[i]["tru_g2"],
                                                                                                                            roti*sncrot)
-                                                elif profile_type ==  "EBulgeDisk":
-                                                        rotneighs[i]["tru_theta"] = neighs[i]["tru_theta"] + roti*sncrot
-                                                else:
-                                                        raise RuntimeError("Unknown profile type")
-                                if neighbors_config["polar_translation"]:
-                                        logger.info("Using polar translation")
-                                        for nei in rotneighs:
-                                                polar_translation(nei, neighbors_config)
-                                neigh_rows.append(rotneighs)
+                                                        elif profile_type ==  "EBulgeDisk":
+                                                                rotneighs[i]["tru_theta"] = neighs[i]["tru_theta"] + roti*sncrot
+                                                        else:
+                                                                raise RuntimeError("Unknown profile type")
+                                        if neighbors_config["polar_translation"]:
+                                                logger.info("Using polar translation")
+                                                for nei in rotneighs:
+                                                        polar_translation(nei, neighbors_config)
+                                        neigh_rows.append(rotneighs)
                 
                 
         # A second loop simply adds the pixel positions and ids, for all galaxies (not just truely different ones):
@@ -160,8 +163,11 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                                 
         # There are many ways to build a new astropy.table
         # One of them directly uses a list of dicts...
-        neis_catalog = astropy.table.Table(rows= neigh_rows)
-        logger.info("Drawing of neighbors catalog done")
+        if neighbors_config is not None:
+                neis_catalog = astropy.table.Table(rows= neigh_rows)
+                logger.info("Drawing of neighbors catalog done")
+        else:
+                neis_catalog = None
         
         catalog = astropy.table.Table(rows=rows)
         logger.info("Drawing of catalog done")
@@ -267,6 +273,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                 psf_image.scale = 1.0
 
                 # And loop through the catalog:
+                if neighbors_catalog is None: neighbors_catalog =  [None]*len(catalog)
                 for row,  nei_row in zip(catalog, neighbors_catalog):
                         
                         # Some simplistic progress indication:
@@ -405,7 +412,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
 
                         #Add neighbors to each galaxy in a stamp
                         
-                        if neighbors_catalog is not None:
+                        if nei_row is not None:
                                 logger.info("Drawing image with neighbors")
                                 for doc in nei_row:           
                                         nei = draw_neighbor( doc=doc, psf=psf)

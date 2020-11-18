@@ -19,7 +19,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Basic code to produce simulations with neighbors')
     parser.add_argument('--neighbors_config', default='configfiles/neighbors_config.yaml',  #default=None,
                         help='yaml config define the properties of neighbors')
-    parser.add_argument('--name', default='ngbs-nearest-nn-vp-1', help='Name for the run')
+    parser.add_argument('--name', default='ngbs-nearest-nn-tp-1', help='Name for the run')
     args = parser.parse_args()
     return args
 
@@ -27,23 +27,24 @@ def parse_args():
 def configure(doc, name):
     """Configures settings for the different datasets
     """
-    
+
     sp = simparams.Fiducial_statshear(
             name = name,
-            snc_type = 10000, 
-            shear = 0.1, 
-            noise_level = 1.0, 
+            snc_type = 2000,
+            shear = 0.1,
+            noise_level = 1.0,
             min_tru_sb = 1.0,
         )
     drawconf = {
             "n":1,
             "nc":1,
             "nrea":1,
-            "ncat":5000,
+            "ncat":4000,
             "ncpu":10,
             "groupmode":"shear",
             "skipdone":False    
         }
+
     
 
     

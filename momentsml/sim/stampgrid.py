@@ -18,6 +18,7 @@ from datetime import datetime
 
 from .. import tools
 from . import params
+from .neighbors import draw_neighbor, draw_neighbor_dict, placer_dict,  draw_neighbors_feats, set_one_as_nearest,  polar_translation
 
 
 def trunc_rayleigh(sigma, max_val):
@@ -30,7 +31,7 @@ def trunc_rayleigh(sigma, max_val):
                 tmp = np.random.rayleigh(sigma)
         return tmp
 
-def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", metadict=None):
+def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", neighbors_config=None ,  metadict=None):
         """
         Generates a catalog of all the "truth" input parameters for each simulated galaxy.
         
@@ -46,7 +47,8 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
         :param pixelscale: scale in arcsec of the image, IGNORED: we always draw images with a scale of 1.0
         :type pixelscale: float
         :param idprefix: a string to use as prefix for the galaxy ids. Was tempted to call this idefix.
-        
+        :neighbors_config: dictionary containing neighbors information (features relevant to save in galaxy catalog are use in drawcat)
+
         :param medadict: further content added to the meta of the output catalog
         
         The ix index moves faster than the iy index when iterating over the output catalog.
@@ -80,8 +82,8 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
         logger.info("The grid will be %i x %i, and the number of SNC rotations is %i." % (nx, ny, nsnc))
         
         rows = [] # The "table"
+        neigh_rows = [] #neighbors table
         for i in range(n): # We loop over all "truely different" galaxies (not all SNC galaxies)
-                
                 # The indices used to draw parameters for each of these truely different galaxies:
                 (piy, pix) = divmod(i, nc)                
                 assert pix < nc and piy < ny
@@ -89,18 +91,38 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
                 # And draw one:
                 gal = simparams.draw(pix, piy, nc, ny)
                 
+                #neighbors features fixed by case
+                if neighbors_config is not None:
+                        neigh_feats_dict = draw_neighbors_feats(neighbors_config)
+                        #if randomness desired (besides positions and rotations, for instance flux, sigma)
+                        #also between realizations set that particular feat to None below
+                        logger.info("Drawing %i neighbors in galaxy %i, r_nearest: %d"%(neigh_feats_dict["nn"],  i,neigh_feats_dict["r_nearest"] ))
+                        print("Drawing %i neighbors in galaxy %d, r_nearest: %d"%(neigh_feats_dict["nn"],  i,neigh_feats_dict["r_nearest"] ))
+                        gal["nn"] =neigh_feats_dict["nn"]
+                        gal["r_nearest"] = neigh_feats_dict["r_nearest"]
+                        r_nearest = gal["r_nearest"]
+                        
+                        neighs = [ draw_neighbor_dict(neighbors_config) for n in range(gal["nn"]) ]
+                        neighs_pos = [ placer_dict(stampsize, neighbors_config, r_nearest=r_nearest) for n in range(gal["nn"]) ]
+                        # forcing the closest neighbor position for at least one of all draw
+                        set_one_as_nearest(neighs_pos, neighbors_config, r_nearest )
+                        #for nei in neighs_pos: print(r_nearest - np.sqrt(nei["x_rel"]**2 +nei["y_rel"]**2  ))
+                        for d1, d2 in zip(neighs, neighs_pos): d1.update(d2)
+                       
+                
                 # Now things get different depending on SNC
                 if statparams["snc_type"] == 0:        # No SNC, so we simply add this galaxy to the list.
-                
                         gal["ix"] = pix
                         gal["iy"] = piy
                         
                         gal.update(statparams) # This would overwrite any of the "draw" params.
                         rows.append(gal) # So rows will be a list of dicts
-                
+
+                        if neighbors_config is not None:
+                                neigh_rows.append(neighs)
                 
                 else: # SNC with nsnc different versions rotated by sncrot degrees
-                
+                        
                         for roti in range(nsnc):
                                 rotgal = copy.deepcopy(gal)
                                 
@@ -120,17 +142,42 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
                                 rotgal.update(statparams)
                                 rows.append(rotgal)
                                 #print rotgal
+                                
+                                if neighbors_config is not None:
+                                        rotneighs = copy.deepcopy(neighs)
+                                        if neighbors_config["snc_neighbors"]:
+                                                logger.info("Using SNC for neighbors too")
+                                                for i in range(len(rotneighs)):
+                                                        profile_type = rotneighs[i]["profile_type"]
+                                                        if profile_type in ["Sersic", "Gaussian"]:
+                                                                (rotneighs[i]["tru_g1"], rotneighs[i]["tru_g2"]) = tools.calc.rotg(neighs[i]["tru_g1"],
+                                                                                                                           neighs[i]["tru_g2"],
+                                                                                                                           roti*sncrot)
+                                                        elif profile_type ==  "EBulgeDisk":
+                                                                rotneighs[i]["tru_theta"] = neighs[i]["tru_theta"] + roti*sncrot
+                                                        else:
+                                                                raise RuntimeError("Unknown profile type")
+                                        if neighbors_config["polar_translation"]:
+                                                logger.info("Using polar translation")
+                                                for nei in rotneighs:
+                                                        polar_translation(nei, neighbors_config)
+                                        neigh_rows.append(rotneighs)
                 
                 
         # A second loop simply adds the pixel positions and ids, for all galaxies (not just truely different ones):
         for (i, gal) in enumerate(rows):
                 gal["id"] = idprefix + str(i)
-                gal["x"] = gal["ix"]*stampsize + stampsize/2.0 + 0.5 # I'm not calling this tru_x, as it will be jittered, and also as a simple x is default.
+                gal["x"] = gal["ix"]*stampsize + stampsize/2.0 + 0.5# I'm not calling this tru_x, as it will be jittered, and also as a simple x is default.
                 gal["y"] = gal["iy"]*stampsize + stampsize/2.0 + 0.5
                         
                                 
         # There are many ways to build a new astropy.table
         # One of them directly uses a list of dicts...
+        if neighbors_config is not None:
+                neis_catalog = astropy.table.Table(rows= neigh_rows)
+                logger.info("Drawing of neighbors catalog done")
+        else:
+                neis_catalog = None
         
         catalog = astropy.table.Table(rows=rows)
         logger.info("Drawing of catalog done")
@@ -151,12 +198,12 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
         if metadict:
                 catalog.meta.update(metadict)
         
-        return catalog
-        
+        return catalog, neis_catalog
+           
 
 
 
-def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, simpsfimgfilepath=None, gsparams=None, sersiccut=None, neighbors=None):
+def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, simpsfimgfilepath=None, gsparams=None, sersiccut=None, neighbors_catalog=None):
 
         """
         Turns a catalog as obtained from drawcat into FITS images.
@@ -236,7 +283,8 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                 psf_image.scale = 1.0
 
                 # And loop through the catalog:
-                for row in catalog:
+                if neighbors_catalog is None: neighbors_catalog =  [None]*len(catalog)
+                for row,  nei_row in zip(catalog, neighbors_catalog):
                         
                         # Some simplistic progress indication:
                         fracdone = float(row.index) / len(catalog)
@@ -373,20 +421,17 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                                 galconv.drawImage(gal_stamp, method="no_pixel") # Simply uses pixel-center values. Know what you are doing, see doc of galsim. 
 
                         #Add neighbors to each galaxy in a stamp
-                        if neighbors is not None:
-                                doc = neighbors
-                                #logger.info("Drawing image with neighbors")
-                                neighs = drawneigh( doc=doc, psf=psf)
-                                conv = doc['Convolve']
-                                for nei in neighs:
-                                        if conv and type(conv) == bool:
-                                                placer(galsim.Convolve([nei,psf]) , gal_stamp, doc=doc )
-                                                if simtrugalimgfilepath != None:
-                                                        placer(galsim.Convolve([nei,psf]) ,trugal_stamp, doc=doc)  
-                                        else:
-                                                placer(nei , gal_stamp, doc=doc )
-                                                if simtrugalimgfilepath != None:
-                                                        placer(nei , trugal_stamp,doc=doc )   
+                        
+                        if nei_row is not None:
+                                logger.info("Drawing image with neighbors")
+                                for doc in nei_row:           
+                                        nei = draw_neighbor( doc=doc, psf=psf)
+                                        conv = doc['profile_type'] not in ["Gaussian_PSF", "Stamp_PSF"]
+                                        if conv and type(conv) == bool: nei = galsim.Convolve([nei,psf])
+                                        pos = galsim.PositionD(row["x"] + doc["x_rel"],row["y"] + + doc["y_rel"])
+                                        nei.drawImage(gal_stamp, center=pos,  add_to_image=True,  method="auto" )
+                                        if simtrugalimgfilepath != None:
+                                                nei.drawImage(trugal_stamp, center=pos,  add_to_image=True,  method="auto" )
                                                 
                                         
                         # And add noise to the convolved galaxy:
@@ -494,9 +539,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
         
         endtime = datetime.now()
         logger.info("This drawing took %s" % (str(endtime - starttime)))
-
-
-
+    
 
 def drawneigh(doc=None, psf=None):
         gsparams=None
