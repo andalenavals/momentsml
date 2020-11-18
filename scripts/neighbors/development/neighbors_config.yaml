@@ -1,40 +1,84 @@
-name: ngbs-r10 #name of this particular config file
-profile_type: Sersic #Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
-nn: 40
-tru_g1: 0.2 #ellipticity
-tru_g2: 0.2 #ellipticity
-Convolve: True #set to false when using stars, i.e, PSF profiles
-placer_method: random_ring #random_box #random_ring
+name: ngbs-nearest-nn #name of this particular config file
 
-#Profiles dict of properties
+## Neighbors properties
+snc_neighbors: True #rotate neighbors in shape noise cancellation
+polar_translation: False #Translate neighbor around central galaxy
+profile_type: Sersic #Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
+tru_g1: 0.5 ## ellipticity tru_s1 means shear
+tru_g2: 0.0
+tru_g_min: 0.3
+tru_g_max: 0.6
+placer_method: random_ring #random_box 
+
+##Neighbors Features (fixed by case)
+nn: 
+r_nearest: 20
+nn_min: 1
+nn_max: 4
+r_nearest_min: 5
+r_nearest_max: 16 ##never can be larger than int(0.5*stampsize)
+
+## Profiles dict of properties
 Sersic:
-    sersiccut:
-    tru_rad: 4.0 #half_light_radius
-    tru_sersicn: 2 #sersic index
-    tru_sb: 2.0 #fiducial surface brightness
+    sersiccut:  #this is not random
+    tru_rad:  4.0 #4.0 #half_light_radius
+    tru_sersicn: 2  #2 #sersic index
+    tru_sb: 6.0 #3.0 #fiducial surface brightness
+    # Limits
+    tru_rad_min: 2.0
+    tru_rad_max: 8.0
+    sersicn_min: 1
+    sersicn_max: 4
+    ndivs: 10 #ndivs for sersicn
+    tru_sb_min: 1.0
+    tru_sb_max: 15.0 #15.0
 
 Gaussian:
     tru_flux: 70
     tru_sigma: 2
-
+    #Limits
+    tru_sigma_min: 0
+    tru_sigma_max: 2
+    tru_flux_min: 10
+    tru_flux_max: 3016
+    
 EBulgeDisk:
     tru_bulge_rad: 4.0 #half_light_radius
     tru_bulge_sersicn: 2 #sersic index
-    tru_bulge_flux: 50 #half_light_radius
+    tru_bulge_flux: 50 #flux
     tru_disk_hlr: 4.0
     tru_disk_tilt: 45 #tilt in degrees
     tru_disk_flux: 50
     tru_disk_scale_h_over_r: 1.0
     tru_theta: 45 #rotate disk angle degree
-
-Gaussian_PSF: #for stars not randomes in case not defined
+    #Limits
+    tru_bulge_rad_min: 2.0
+    tru_bulge_rad_max: 8.0
+    tru_bulge_sersicn_min: 1
+    tru_bulge_sersicn_max: 4
+    ndivs_bulge: 10
+    tru_bulge_flux_min: 1.0
+    tru_bulge_flux_max: 15.0
+    tru_disk_hlr_min: 2.0
+    tru_disk_hlr_max: 8.0
+    tru_disk_tilt_min: 0.0
+    tru_disk_tilt_max: 360
+    tru_disk_flux_min: 1.0
+    tru_disk_flux_max: 15.0
+    tru_disk_scale_h_over_r_min: 0.1
+    tru_disk_scale_h_over_r_max: 2.0
+    tru_theta_min: 0.0
+    tru_theta_max: 360.0
+    
+  
+Gaussian_PSF: #for stars not randomes in case not defined, no shear
     flux: 1.0 #1.0
     sigma: 2.0 #2.0
 
-Stamp_PSF: # import PSF stamp defined in catalog
+Stamp_PSF: # import PSF stamp defined in catalog, no shear
 
-#Placer_Methods
-random_box: # units in stamp fractional pixels (0,1.0) where 1.0 is the stampsize pixel
+## Placer_Methods
+random_box: # units in stamp fractional pixels (0,1.0) where 1.0 is the stampsize
     xmin:
     xmax:
     ymin: 0.2
@@ -43,9 +87,14 @@ random_box: # units in stamp fractional pixels (0,1.0) where 1.0 is the stampsiz
     y:
 
 random_ring:
-   rmin: 16 #pixels from center stamp
-   rmax: 20 #pixels from center stamp
+   rmin: 16 #pixels can be double #if nearest used this will be neglected
+   rmax: 29 #must be < stampsize*0.5 and r_nearest<rmax
    theta_min:  #angle in np.pi units
    theta_max:  #angle in np.pi units
    r:
    theta: #angle in np.pi units
+
+
+#NOTES
+#Each time drawneigh() is call new neighbors will be produced varying
+#undertemined properties, if defined it will be fixed

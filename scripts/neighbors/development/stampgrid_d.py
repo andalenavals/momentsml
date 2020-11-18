@@ -18,10 +18,10 @@ from datetime import datetime
 
 from momentsml import tools
 from momentsml.sim import params
-from simparams_d import trunc_rayleigh
+from neighbors import draw_neighbor, draw_neighbor_dict, placer_dict,  draw_neighbors_feats, set_one_as_nearest,  polar_translation
 
 
-def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", metadict=None):
+def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", neighbors_config=None ,  metadict=None):
         """
         Generates a catalog of all the "truth" input parameters for each simulated galaxy.
         
@@ -37,7 +37,8 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
         :param pixelscale: scale in arcsec of the image, IGNORED: we always draw images with a scale of 1.0
         :type pixelscale: float
         :param idprefix: a string to use as prefix for the galaxy ids. Was tempted to call this idefix.
-        
+        :neighbors_config: dictionary containing neighbors information (features relevant to save in galaxy catalog are use in drawcat)
+
         :param medadict: further content added to the meta of the output catalog
         
         The ix index moves faster than the iy index when iterating over the output catalog.
@@ -71,8 +72,8 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
         logger.info("The grid will be %i x %i, and the number of SNC rotations is %i." % (nx, ny, nsnc))
         
         rows = [] # The "table"
+        neigh_rows = [] #neighbors table
         for i in range(n): # We loop over all "truely different" galaxies (not all SNC galaxies)
-                
                 # The indices used to draw parameters for each of these truely different galaxies:
                 (piy, pix) = divmod(i, nc)                
                 assert pix < nc and piy < ny
@@ -80,18 +81,36 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
                 # And draw one:
                 gal = simparams.draw(pix, piy, nc, ny)
                 
+                #neighbors features fixed by case
+                if neighbors_config is not None:
+                        neigh_feats_dict = draw_neighbors_feats(neighbors_config)
+                        #if randomness desired (besides positions and rotations, for instance flux, sigma)
+                        #also between realizations set that particular feat to None below
+                        logger.info("Drawing %i neighbors in galaxy %i, r_nearest: %d"%(neigh_feats_dict["nn"],  i,neigh_feats_dict["r_nearest"] ))
+                        print("Drawing %i neighbors in galaxy %d, r_nearest: %d"%(neigh_feats_dict["nn"],  i,neigh_feats_dict["r_nearest"] ))
+                        gal["nn"] =neigh_feats_dict["nn"]
+                        gal["r_nearest"] = neigh_feats_dict["r_nearest"]
+                        r_nearest = gal["r_nearest"]
+                        
+                        neighs = [ draw_neighbor_dict(neighbors_config) for n in range(gal["nn"]) ]
+                        neighs_pos = [ placer_dict(stampsize, neighbors_config, r_nearest=r_nearest) for n in range(gal["nn"]) ]
+                        # forcing the closest neighbor position for at least one of all draw
+                        set_one_as_nearest(neighs_pos, neighbors_config, r_nearest )
+                        #for nei in neighs_pos: print(r_nearest - np.sqrt(nei["x_rel"]**2 +nei["y_rel"]**2  ))
+                        for d1, d2 in zip(neighs, neighs_pos): d1.update(d2)
+                       
+                
                 # Now things get different depending on SNC
                 if statparams["snc_type"] == 0:        # No SNC, so we simply add this galaxy to the list.
-                
                         gal["ix"] = pix
                         gal["iy"] = piy
                         
                         gal.update(statparams) # This would overwrite any of the "draw" params.
                         rows.append(gal) # So rows will be a list of dicts
-                
+                        neigh_rows.append(neighs)
                 
                 else: # SNC with nsnc different versions rotated by sncrot degrees
-                
+                        
                         for roti in range(nsnc):
                                 rotgal = copy.deepcopy(gal)
                                 
@@ -111,17 +130,38 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
                                 rotgal.update(statparams)
                                 rows.append(rotgal)
                                 #print rotgal
+                               
+                                rotneighs = copy.deepcopy(neighs)
+                                if neighbors_config["snc_neighbors"]:
+                                        logger.info("Using SNC for neighbors too")
+                                        for i in range(len(rotneighs)):
+                                                profile_type = rotneighs[i]["profile_type"]
+                                                if profile_type in ["Sersic", "Gaussian"]:
+                                                        (rotneighs[i]["tru_g1"], rotneighs[i]["tru_g2"]) = tools.calc.rotg(neighs[i]["tru_g1"],
+                                                                                                                           neighs[i]["tru_g2"],
+                                                                                                                           roti*sncrot)
+                                                elif profile_type ==  "EBulgeDisk":
+                                                        rotneighs[i]["tru_theta"] = neighs[i]["tru_theta"] + roti*sncrot
+                                                else:
+                                                        raise RuntimeError("Unknown profile type")
+                                if neighbors_config["polar_translation"]:
+                                        logger.info("Using polar translation")
+                                        for nei in rotneighs:
+                                                polar_translation(nei, neighbors_config)
+                                neigh_rows.append(rotneighs)
                 
                 
         # A second loop simply adds the pixel positions and ids, for all galaxies (not just truely different ones):
         for (i, gal) in enumerate(rows):
                 gal["id"] = idprefix + str(i)
-                gal["x"] = gal["ix"]*stampsize + stampsize/2.0 + 0.5 # I'm not calling this tru_x, as it will be jittered, and also as a simple x is default.
+                gal["x"] = gal["ix"]*stampsize + stampsize/2.0 + 0.5# I'm not calling this tru_x, as it will be jittered, and also as a simple x is default.
                 gal["y"] = gal["iy"]*stampsize + stampsize/2.0 + 0.5
                         
                                 
         # There are many ways to build a new astropy.table
         # One of them directly uses a list of dicts...
+        neis_catalog = astropy.table.Table(rows= neigh_rows)
+        logger.info("Drawing of neighbors catalog done")
         
         catalog = astropy.table.Table(rows=rows)
         logger.info("Drawing of catalog done")
@@ -142,12 +182,12 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", me
         if metadict:
                 catalog.meta.update(metadict)
         
-        return catalog
+        return catalog, neis_catalog
         
 
 
 
-def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, simpsfimgfilepath=None, gsparams=None, sersiccut=None, neighbors=None):
+def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, simpsfimgfilepath=None, gsparams=None, sersiccut=None, neighbors_catalog=None):
 
         """
         Turns a catalog as obtained from drawcat into FITS images.
@@ -227,7 +267,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                 psf_image.scale = 1.0
 
                 # And loop through the catalog:
-                for row in catalog:
+                for row,  nei_row in zip(catalog, neighbors_catalog):
                         
                         # Some simplistic progress indication:
                         fracdone = float(row.index) / len(catalog)
@@ -364,20 +404,17 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                                 galconv.drawImage(gal_stamp, method="no_pixel") # Simply uses pixel-center values. Know what you are doing, see doc of galsim. 
 
                         #Add neighbors to each galaxy in a stamp
-                        if neighbors is not None:
-                                doc = neighbors
+                        
+                        if neighbors_catalog is not None:
                                 logger.info("Drawing image with neighbors")
-                                neighs = drawneigh( doc=doc, psf=psf)
-                                conv = doc['Convolve']
-                                for nei in neighs:
-                                        if conv and type(conv) == bool:
-                                                placer(galsim.Convolve([nei,psf]) , gal_stamp, doc=doc )
-                                                if simtrugalimgfilepath != None:
-                                                        placer(galsim.Convolve([nei,psf]) ,trugal_stamp, doc=doc)  
-                                        else:
-                                                placer(nei , gal_stamp, doc=doc )
-                                                if simtrugalimgfilepath != None:
-                                                        placer(nei , trugal_stamp,doc=doc )  
+                                for doc in nei_row:           
+                                        nei = draw_neighbor( doc=doc, psf=psf)
+                                        conv = doc['profile_type'] not in ["Gaussian_PSF", "Stamp_PSF"]
+                                        if conv and type(conv) == bool: nei = galsim.Convolve([nei,psf])
+                                        pos = galsim.PositionD(row["x"] + doc["x_rel"],row["y"] + + doc["y_rel"])
+                                        nei.drawImage(gal_stamp, center=pos,  add_to_image=True,  method="auto" )
+                                        if simtrugalimgfilepath != None:
+                                                nei.drawImage(trugal_stamp, center=pos,  add_to_image=True,  method="auto" )
                                                 
                                         
                         # And add noise to the convolved galaxy:
@@ -485,223 +522,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
         
         endtime = datetime.now()
         logger.info("This drawing took %s" % (str(endtime - starttime)))
-
-
-
-
-def drawneigh(doc=None, psf=None):
-        gsparams=None
-        if gsparams is None:
-                gsparams = galsim.GSParams(maximum_fft_size=10240)
-
-        #begin of possible kwargsneigh
         
-        profile_type = doc['profile_type']
-        nn =  doc['nn'] #number of neighbors
-        tru_g1 =  doc['tru_g1']
-        tru_g2 =  doc['tru_g2']
-        
-        #end of possible kwargsneigh
-        gals = []
-         
-        #range values SERSIC profile
-        min_tru_rad = 2.0; max_tru_rad = 8.0
-        min_sersicn = 1; max_sersicn = 4; ndivs = 10
-        min_tru_sb = 1.0; max_tru_sb = 15.0
-
-        #range values EBulge profile
-        min_tru_bulge_rad = 2.0; max_tru_bulge_rad = 8.0
-        min_tru_bulge_sersicn = 1; max_tru_bulge_sersicn = 4; ndivs_bulge = 10
-        min_tru_bulge_flux = 1.0; max_tru_bulge_flux = 15.0
-        min_disk_hlr = 2.0; max_disk_hlr = 8.0
-        min_disk_tilt = 0.0; max_disk_tilt = 360.0
-        min_disk_flux = 1.0; max_disk_flux = 15.0
-        tru_disk_scale_h_over_r =0.1 ; tru_disk_scale_h_over_r =2.0 
-        min_tru_theta = 0.0; max_tru_theta = 360.0
-        
-        
-        #range values Gaussian profile
-        min_tru_flux =  np.pi*(min_tru_rad**2)*min_tru_sb
-        max_tru_flux =  np.pi*(max_tru_rad**2)*max_tru_sb
-        min_tru_sigma = 0; max_tru_sigma = 2
-        
-
-        #range values, any profile
-        
-        min_tru_g = 0.2; max_tru_g = 0.6
-        if tru_g1 is None :
-                tru_g = trunc_rayleigh(min_tru_g, max_tru_g)
-                tru_theta = 2.0 * np.pi * np.random.uniform(0.0, 1.0)
-                tru_g1 = tru_g * np.cos(2.0 * tru_theta)
-                #(tru_g1, tru_g2) = (tru_g * np.cos(2.0 * tru_theta), tru_g * np.sin(2.0 * tru_theta))
-        if tru_g2 is None :
-                tru_g = trunc_rayleigh(min_tru_g, max_tru_g)
-                tru_theta = 2.0 * np.pi * np.random.uniform(0.0, 1.0)
-                tru_g2 = tru_g * np.sin(2.0 * tru_theta)
-        
-        for nidx in range(nn):
-                if (profile_type == "Sersic"):
-                        sersiccut=doc['Sersic']['sersiccut']
-                        tru_rad =doc['Sersic']['tru_rad']
-                        tru_sersicn =  doc['Sersic']['tru_sersicn']
-                        tru_sb =  doc['Sersic']['tru_sb']
-                        
-                        if tru_rad is None:
-                                tru_rad = np.random.uniform(min_tru_rad, max_tru_rad)#half_light_radius
-                        if tru_sersicn is None:
-                                tru_sersicn = random.choice(np.linspace(min_sersicn, max_sersicn, ndivs))#sersic index
-                        if tru_sb is None:
-                                tru_sb = np.random.uniform(min_tru_sb, max_tru_sb )#fiducial noise level
-                        if tru_rad and tru_sb is not None:
-                                tru_flux = np.pi * tru_rad * tru_rad * tru_sb #flux
-                        
-                        if sersiccut is None:
-                                trunc = 0
-                        else:
-                                trunc = tru_rad* sersiccut
-
-                        gal = galsim.Sersic(n=tru_sersicn, half_light_radius=tru_rad, flux=tru_flux, gsparams=gsparams, trunc=trunc)
-                        # We make this profile elliptical
-                        gal = gal.shear(g1=tru_g1, g2=tru_g2) # This adds the ellipticity to the galaxy
-
-                elif profile_type == "Gaussian":
-                        tru_flux =  doc['Gaussian']['tru_flux']
-                        tru_sigma =  doc['Gaussian']['tru_sigma']
-                        if tru_flux is None:
-                                tru_flux = np.random.uniform(min_tru_flux, max_tru_flux)
-                        if tru_sigma is None:
-                                tru_sigma = np.random.uniform(min_tru_sigma, max_tru_sigma)
-                                
-                        gal = galsim.Gaussian(flux=tru_flux, sigma=tru_sigma, gsparams=gsparams)
-                        # We make this profile elliptical
-                        gal = gal.shear(g1=tru_g1, g2=tru_g2) # This adds the ellipticity to the galaxy        
-                                
-                elif profile_type == 'EBulgeDisk':
-                        # A more advanced Bulge + Disk model
-                        # It needs GalSim version master, as of April 2017 (probably 1.5).
-                
-                        # Get a Sersic bulge:
-                        tru_bulge_sersicn =  doc['EBulgeDisk']['tru_bulge_sersicn']
-                        tru_bulge_rad = doc['EBulgeDisk']['tru_bulge_rad']
-                        tru_bulge_flux = doc['EBulgeDisk']['tru_bulge_flux']
-                        tru_disk_hlr = doc['EBulgeDisk']['tru_disk_hlr']
-                        tru_disk_tilt =  doc['EBulgeDisk']['tru_disk_tilt']
-                        tru_disk_flux =  doc['EBulgeDisk']['tru_disk_flux']
-                        tru_theta = doc['EBulgeDisk']['tru_theta'] 
-                        if tru_bulge_rad is None:
-                                tru_bulge_rad = np.random.uniform(min_tru_bulge_rad, max_tru_bulge_rad)#half_light_radius
-                        if tru_bulge_sersicn is None:
-                                tru_bulge_sersicn = random.choice(np.linspace(min_tru_bulge_sersicn, max_tru_bulge_sersicn, ndivs_bulge))
-                        if tru_bulge_flux is None:
-                                tru_bulge_flux = np.random.uniform(min_tru_bulge_flux, max_tru_bulge_sflux)
-                        if tru_disk_hlr is None:
-                                tru_disk_hlr = np.random.uniform(min_disk_hlr, max_disk_hlr)
-                        if tru_disk_tilt is None:
-                                tru_disk_tilt = np.random.uniform(min_disk_tilt, max_disk_tilt)
-                        if tru_disk_flux is None:
-                                tru_disk_flux = np.random.uniform(min_disk_flux, max_disk_flux)
-                        if tru_theta is None:
-                                tru_theta = np.random.uniform(min_tru_theta, max_tru_theta)
-                                
-                        bulge = galsim.Sersic(n=tru_bulge_sersicn, half_light_radius=tru_bulge_rad, flux=tru_bulge_flux)
-                        # Make it elliptical:
-                        #bulge_ell = galsim.Shear(g=row["tru_bulge_g"], beta=row["tru_theta"] * galsim.degrees)
-                        #bulge = bulge.shear(bulge_ell)
-                        bulge = bulge.shear(g1=tru_g1, g2=tru_g2)
-                                
-                        # Get a disk
-                        scale_radius = tru_disk_hlr / galsim.Exponential._hlr_factor
-                        disk = galsim.InclinedExponential(inclination=tru_disk_tilt * galsim.degrees, scale_radius=scale_radius,
-                                                  flux=tru_disk_flux, scale_h_over_r=tru_disk_scale_h_over_r)
-                        # Rotate it in the same orientation as the bulge:
-                        disk = disk.rotate(tru_theta * galsim.degrees)
-                
-                        # And we add those profiles, as done in GalSim demo3.py :
-                        gal = bulge + disk
-
-                elif profile_type == 'Gaussian_PSF': #you meant to draw stars all of them identical
-                        gal = galsim.Gaussian(flux=doc['Gaussian_PSF']['flux'], sigma=doc['Gaussian_PSF']['flux'])        
-                        #gal = gal.shear(g1=tru_g1, g2=tru_g2)
-
-                elif profile_type == 'Stamp_PSF':
-                        raise RuntimeError("Neighbors with Stamp_PSF, but PSF stamp is not defined in catalog")    
-                        gal = psf
-                        #gal = gal.shear(g1=tru_g1, g2=tru_g2)
-                else:
-                        raise RuntimeError("Unknown galaxy profile!")        
-
-                gals.append(gal) 
-                 
-        logger.info("Drawing, %i neighbors"%(nn))
-        return gals
-
-
-def placer(gal, gal_image, doc=None):
-        method = doc['placer_method']
-        imgbound = gal_image.bounds
-        xmin, xmax, ymin, ymax = [imgbound.getXMin(), imgbound.getXMax(), imgbound.getYMin(), imgbound.getYMax()]
-        stampsize = xmax - xmin + 1
-        xcent = (xmin + xmax)*0.5
-        ycent = (ymin + ymax)*0.5
-        if method == 'random_box':
-                xmin_n = ymin_n  = 0
-                xmax_n = ymax_n = stampsize
-                if doc['random_box']['xmin'] is not None: xmin_n = int(doc['random_box']['xmin']*stampsize)
-                if doc['random_box']['xmax'] is not None: xmax_n = int(doc['random_box']['xmax']*stampsize)
-                if doc['random_box']['ymin'] is not None: ymin_n = int(doc['random_box']['ymin']*stampsize)
-                if doc['random_box']['ymax'] is not None: ymax_n = int(doc['random_box']['ymax']*stampsize) 
-                if doc['random_box']['x'] is not None:
-                        x =  xmin + int(doc['random_box']['x']*stampsize)
-                else:
-                        x = np.random.randint(xmin + xmin_n, xmin + xmax_n - 1)
-                if doc['random_box']['y'] is not None:
-                        y =  ymin + int(doc['random_box']['y'] * stampsize)
-                else:
-                        y = np.random.randint(ymin + ymin_n, ymin + ymax_n - 1)
-                pos = galsim.PositionI(x,y)
-                gal.drawImage(gal_image, center=pos,  add_to_image=True, method="auto" )#center is in pixel
-                #gal.drawImage(gal_image, method="auto")#center is in pixel
-        if method ==  'random_ring':
-                rmax = stampsize/2.
-                rmin = 0
-                theta_min = 0
-                theta_max = 2*np.pi  
-                if doc['random_ring']['rmin'] is not None: rmin = doc['random_ring']['rmin']
-                if doc['random_ring']['rmax'] is not None: rmax = doc['random_ring']['rmax']
-                if doc['random_ring']['theta_min'] is not None:theta_min=doc['random_ring']['theta_min']*np.pi
-                if doc['random_ring']['theta_max'] is not None:theta_max=doc['random_ring']['theta_max']*np.pi 
-                max_rsq = rmax**2
-                min_rsq = rmin**2
-                if doc['random_ring']['r'] is not None and doc['random_ring']['theta'] is not None:
-                        r = doc['random_ring']['r']
-                        theta =  doc['random_ring']['theta']*np.pi
-                        x = r*np.cos(theta)
-                        y = r*np.sin(theta)
-                        pos = galsim.PositionD(xcent + x,ycent + y)
-                elif doc['random_ring']['r'] is not None and doc['random_ring']['theta'] is None:
-                        r = doc['random_ring']['r']
-                        theta =  np.random.uniform(theta_min, theta_max)
-                        x = r*np.cos(theta)
-                        y = r*np.sin(theta)
-                        pos = galsim.PositionD(xcent + x,ycent + y)
-                elif doc['random_ring']['r'] is None and doc['random_ring']['theta'] is not None:
-                        theta = doc['random_ring']['theta']*np.pi
-                        r =  np.random.uniform(rmin, rmax)
-                        x = r*np.cos(theta)
-                        y = r*np.sin(theta)
-                        pos = galsim.PositionD(xcent + x,ycent + y)
-                else:
-                        while True:  # (This is essentially a do..while loop.)
-                                x = np.random.uniform( -rmax, rmax)
-                                y = np.random.uniform( -rmax, rmax)
-                                rsq = x**2 + y**2
-                                theta = np.arctan2(y, x)
-                                if theta < 0: theta +=2*np.pi
-                                bo = rsq>=min_rsq and rsq<=max_rsq and theta>=theta_min and theta<=theta_max
-                                if bo: break
-                        pos = galsim.PositionD(xcent + x,ycent + y)
-                gal.drawImage(gal_image, center=pos,  add_to_image=True,  method="auto" )#center is in pixel
-
 
 def checkcat(cat):
         """

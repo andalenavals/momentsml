@@ -72,6 +72,7 @@ def main():
             with open(args.neighbors_config) as file: raise
     
     #"tp-1-small"
+    '''
     sp = simparams_d.Fiducial_statshear(
             name = doc['name'],
             snc_type = 5, 
@@ -83,44 +84,62 @@ def main():
             "n":1,
             "nc":1,
             "nrea":1,
-            "ncat":2,
+            "ncat":3,
             "ncpu":2,
             "groupmode":"shear",
             "skipdone":False    
         }
+    '''
+
+    sp = simparams_d.Fiducial_statshear(
+            name = doc['name'],
+            snc_type = 0,
+            shear = 0.1,
+            noise_level = 1.0,
+            min_tru_sb = 1.0
+        )
+    drawconf = { "n":4, "nc":4, "nrea":1, "ncat":1, "ncpu":2,
+                 "groupmode":"shear", "skipdone":False }
     
     simdir = "/data/git_repositories/momentsml/out/fiducial/sim"
     workdir = os.path.join(simdir, sp.name)
     if not os.path.exists(workdir):
         os.makedirs(workdir)
         
-    stampsize = 64 #64
+    stampsize = 64 #96 #64
     print( args.neighbors_config)
     ncat = drawconf["ncat"]
     nrea = drawconf["nrea"]
     ncpu=drawconf["ncpu"]
-    drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":stampsize}
+    drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":stampsize,  'neighbors_config':doc}
 
-
-    
             
-    drawimgkwargs={"neighbors":doc}
+    drawimgkwargs={}
     #drawimgkwargs={}
     psfcat=None; psfselect="random"
     savetrugalimg=True; savepsfimg=False
 
-    catalogs = [stampgrid_d.drawcat(sp, **drawcatkwargs) for i in range(ncat)]
+    gal_catalogs = []; nei_catalogs = []
+    for i in range(ncat):
+        gal_cat,  nei_cat =  stampgrid_d.drawcat(sp, **drawcatkwargs)
+        gal_catalogs.append(gal_cat)
+        nei_catalogs.append(nei_cat)
+
+    #catalogs = np.array([stampgrid_d.drawcat(sp, **drawcatkwargs) ])
+    #gal_catalogs = catalogs.T[0]
+    #nei_catalogs = catalogs.T[1]
 
     starttime = datetime.datetime.now()
     prefix = starttime.strftime("%Y%m%dT%H%M%S_")
     
-    for catalog in catalogs:
-
+    for catalog, nei_catalog in zip(gal_catalogs, nei_catalogs):
         # We open a file object:
         catfile = tempfile.NamedTemporaryFile(mode='wb', prefix=prefix, suffix="_cat.pkl", dir=workdir, delete=False)
+        nei_catfile = open(catfile.name.replace("_cat.pkl","_nei_cat.pkl"), 'w+b')
                 
         # Now we can get the unique filename
         catalog.meta["catname"] = os.path.basename(str(catfile.name)).replace("_cat.pkl","")
+        #print(catalog.meta["catname"])
                 
         # The images will be written here:
         catimgdirpath = os.path.join(workdir, catalog.meta["catname"] + "_img")
@@ -134,14 +153,25 @@ def main():
         
         # And we can write this catalog to disk
         pickle.dump(catalog, catfile) # We directly use this open file object.
+        pickle.dump(nei_catalog, nei_catfile)
+        #print(nei_catalog, file=open(catfile.name.replace("_cat.pkl","_nei_cat.yaml"),  "w"))
+        #with open(catfile.name.replace("_cat.pkl","_nei_cat.yaml"),  "w") as file: yaml.dump(nei_catalog,  file)
+
+        #print("Mr_meeseks0 \n", nei_catalog[0])
+        #print("Mr_meeseks1 \n", nei_catalog[1])
+        #print("Mr_meeseks2 \n", nei_catalog[2])
+        #print("Mr_meeseks3 \n", nei_catalog[3])
+        #print("Mr_meeseks4 \n", nei_catalog[4])
+        
         catfile.close()
 
     wslist = []
-    for catalog in catalogs:	
+    for catalog, nei_catalog in zip(gal_catalogs, nei_catalogs):	
         for reaindex in range(nrea):
             
             # We have to customize the drawimgkwargs, and so we work on a copy
             thisdrawimgkwargs = copy.deepcopy(drawimgkwargs)
+            thisdrawimgkwargs["neighbors_catalog"] = nei_catalog
             
             # Preparing the filepaths in which we will write the output image(s)
             catname = catalog.meta["catname"]
@@ -203,7 +233,8 @@ def main():
         pool.join()
         
     endtime = datetime.datetime.now()
-    nstamps = len(catalogs[0])*nrea
+    nstamps = len(gal_catalogs[0])*nrea
+    
 
 if __name__ == "__main__":
     main()
