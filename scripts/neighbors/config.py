@@ -11,7 +11,8 @@ loggerformat='PID %(process)06d | %(asctime)s | %(levelname)s: %(name)s(%(funcNa
 # Try this one, it's colorful:
 #loggerformat='\033[1;31m%(levelname)s\033[1;0m: %(name)s(%(funcName)s): \033[1;21m%(message)s\033[1;0m'
 
-logging.basicConfig(format=loggerformat,level=logging.INFO)
+#logging.basicConfig(format=loggerformat,level=logging.INFO)
+
 
 # Give a path to an existing directory in which everything can be written (will get large!)
 

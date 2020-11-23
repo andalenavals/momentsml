@@ -20,6 +20,7 @@ def parse_args():
     parser.add_argument('--neighbors_config', default='configfiles/neighbors_config.yaml',  #default=None,
                         help='yaml config define the properties of neighbors')
     parser.add_argument('--name', default='ngbs-nearest-nn-vp-1', help='Name for the run')
+    parser.add_argument('--verbose', default=None, help='verbose level { 50:CRITICAL, 40:ERROR, 30:WARNING, 20:INFO, 10:DEBUGG ')
     args = parser.parse_args()
     return args
 
@@ -140,7 +141,12 @@ def run(configuration):
 
 def main():
     args = parse_args()
-
+    if args.verbose is not None:
+        level = int(args.verbose)
+    else:
+        level = logging.DEBUG
+    logging.basicConfig(format=config.loggerformat, level=level)
+    
     try:
         with open(args.neighbors_config) as file:
             doc = yaml.load(file, Loader=yaml.FullLoader)

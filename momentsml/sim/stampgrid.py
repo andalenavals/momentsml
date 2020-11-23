@@ -133,7 +133,6 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                                 
                                 rotgal.update(statparams)
                                 rows.append(rotgal)
-                                #print rotgal
                                 
                                 if neighbors_config is not None:
                                         rotneighs = copy.deepcopy(neighs)
