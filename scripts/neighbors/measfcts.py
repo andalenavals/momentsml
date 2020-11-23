@@ -40,7 +40,9 @@ default_groupcols = [
 'skymed',
 'skystampsum',
 'skyflag',
-'snr'
+'snr',
+'nn',
+'neighbor1'
 ]
 
 default_removecols = []

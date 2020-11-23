@@ -14,6 +14,24 @@ def trunc_rayleigh(sigma, max_val):
                 tmp = np.random.rayleigh(sigma)
         return tmp
 
+def draw_all_neighbors(neighbors_config,  stampsize):
+        #stampsize is required only for positions
+        neighbors_config["nn"]
+        nn = neighbors_config["nn"]
+        nn_min = neighbors_config["nn_min"]
+        nn_max = neighbors_config["nn_max"]
+        if nn is None:
+                nn = random.choice(range(nn_min, nn_max + 1))
+        logger.info("Drawing %i neighbors"%(nn))
+        #logger.info("Drawing %i neighbors in galaxy %i"%(nn,  i))
+        #Define list with one dictionary by neighbor properties
+        neighs = [ draw_neighbor_dict(neighbors_config) for n in range(nn) ]
+        neighs_pos = [ placer_dict(stampsize, neighbors_config) for n in range(nn) ]
+        for d1, d2 in zip(neighs, neighs_pos): d1.update(d2)
+        return neighs
+
+#This is call for each realization in case features are not defined they
+# will vary among realizations
 def draw_neighbor(doc=None, psf=None):
         gsparams=None
         if gsparams is None:
@@ -247,40 +265,11 @@ def draw_neighbor_dict(doc):
 
     return dict_out
 
-
-def draw_neighbors_feats(doc):
-    dict_out = {}
-    
-    nn = doc["nn"]
-    r = doc["r_nearest"]
-    nn_min = doc["nn_min"] ; nn_max = doc["nn_max"]
-    r_min = doc["r_nearest_min"]; r_max = doc["r_nearest_max"]
-    if nn is None:
-         nn = random.choice(range(nn_min, nn_max + 1))
-    if r is None:
-        r =   np.random.uniform(r_min, r_max )
-
-    dict_out["nn"] = nn
-    dict_out["r_nearest"] = r
-    return dict_out
-    
-
-def placer_dict(stampsize, doc, r_nearest=None):
+   
+def placer_dict(stampsize, doc):
     dict_out = {}
     method = doc['placer_method']
     ##Relative placing
-    
-    if r_nearest is not None:
-        logger.info("Drawing using r_nearest %d"%(r_nearest))
-        if method == "random_ring":
-            doc['random_ring']['rmin'] = r_nearest
-        else:
-            raise RuntimeError("r_nearest is not implemented for %s placer method"%(doc["placer_method"]))   
-        doc['random_ring']['rmin'] = r_nearest
-    else:
-        logger.info("r_nearest not used as a feature drawing neighbors using %s placer method"%(method))
-    
-
         
     if method == 'random_box':
         xmin_n = ymin_n  = 0
@@ -310,7 +299,7 @@ def placer_dict(stampsize, doc, r_nearest=None):
         if doc['random_ring']['rmin'] is not None: rmin = doc['random_ring']['rmin']
         if doc['random_ring']['rmax'] is not None: rmax = doc['random_ring']['rmax']
         if doc['random_ring']['theta_min'] is not None:theta_min=doc['random_ring']['theta_min']*np.pi
-        if doc['random_ring']['theta_max'] is not None:theta_max=doc['random_ring']['theta_max']*np.pi 
+        if doc['random_ring']['theta_max'] is not None:theta_max=doc['random_ring']['theta_max']*np.pi
         max_rsq = rmax**2
         min_rsq = rmin**2
 
@@ -343,17 +332,6 @@ def placer_dict(stampsize, doc, r_nearest=None):
         
         return dict_out
 
-                
-def set_one_as_nearest(neighs_pos, doc, r_nearest ):
-    theta_min = 0
-    theta_max = 2*np.pi 
-    if doc['random_ring']['theta_min'] is not None:theta_min=doc['random_ring']['theta_min']*np.pi
-    if doc['random_ring']['theta_max'] is not None:theta_max=doc['random_ring']['theta_max']*np.pi
-    theta =  np.random.uniform(theta_min, theta_max)
-    x = r_nearest*np.cos(theta)
-    y = r_nearest*np.sin(theta)
-    idx = random.choice(range(len(neighs_pos)))
-    neighs_pos[idx].update({'x_rel': x, 'y_rel': y})
 
 def polar_translation(nei, doc):
     theta_min = 0
@@ -365,3 +343,15 @@ def polar_translation(nei, doc):
     x_new = r*np.cos(theta)
     y_new = r*np.sin(theta)
     nei.update({'x_rel': x_new,  'y_rel': y_new})
+
+
+def find_nearest(neighs):
+        raux = neighs[0]["x_rel"]**2 + neighs[0]["y_rel"]**2
+        idx = 0
+        for i, n in enumerate(neighs):
+                r2 = n["x_rel"]**2 + n["y_rel"]**2
+                print(r2)
+                if r2 < raux:
+                        raux = r2
+                        idx = i              
+        return neighs[idx]

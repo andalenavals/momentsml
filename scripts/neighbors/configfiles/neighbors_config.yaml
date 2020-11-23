@@ -2,7 +2,7 @@ name: ngbs-nearest-nn #name of this particular config file
 
 ## Neighbors properties
 snc_neighbors: True #rotate neighbors in shape noise cancellation
-polar_translation: False #Translate neighbor around central galaxy
+polar_translation: True #Translate neighbor around central galaxy
 profile_type: Sersic #Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
 tru_g1:  ## ellipticity tru_s1 means shear
 tru_g2: 
@@ -87,8 +87,8 @@ random_box: # units in stamp fractional pixels (0,1.0) where 1.0 is the stampsiz
     y:
 
 random_ring:
-   rmin: 16 #pixels can be double #if nearest used this will be neglected
-   rmax: 29 #must be < stampsize*0.5 and r_nearest<rmax
+   rmin: 16 
+   rmax: 29 #must be < stampsize*0.5 
    theta_min:  #angle in np.pi units
    theta_max:  #angle in np.pi units
    r:

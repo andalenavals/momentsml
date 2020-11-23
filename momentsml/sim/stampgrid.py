@@ -18,7 +18,7 @@ from datetime import datetime
 
 from .. import tools
 from . import params
-from .neighbors import draw_neighbor, draw_neighbor_dict, placer_dict,  draw_neighbors_feats, set_one_as_nearest,  polar_translation
+from .neighbors import draw_all_neighbors,  find_nearest, draw_neighbor, polar_translation
 
 
 def trunc_rayleigh(sigma, max_val):
@@ -30,6 +30,7 @@ def trunc_rayleigh(sigma, max_val):
         while tmp > max_val:
                 tmp = np.random.rayleigh(sigma)
         return tmp
+
 
 def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", neighbors_config=None ,  metadict=None):
         """
@@ -93,21 +94,11 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 
                 #neighbors features fixed by case
                 if neighbors_config is not None:
-                        neigh_feats_dict = draw_neighbors_feats(neighbors_config)
-                        #if randomness desired (besides positions and rotations, for instance flux, sigma)
-                        #also between realizations set that particular feat to None below
-                        logger.info("Drawing %i neighbors in galaxy %i, r_nearest: %d"%(neigh_feats_dict["nn"],  i,neigh_feats_dict["r_nearest"] ))
-                        print("Drawing %i neighbors in galaxy %d, r_nearest: %d"%(neigh_feats_dict["nn"],  i,neigh_feats_dict["r_nearest"] ))
-                        gal["nn"] =neigh_feats_dict["nn"]
-                        gal["r_nearest"] = neigh_feats_dict["r_nearest"]
-                        r_nearest = gal["r_nearest"]
-                        
-                        neighs = [ draw_neighbor_dict(neighbors_config) for n in range(gal["nn"]) ]
-                        neighs_pos = [ placer_dict(stampsize, neighbors_config, r_nearest=r_nearest) for n in range(gal["nn"]) ]
-                        # forcing the closest neighbor position for at least one of all draw
-                        set_one_as_nearest(neighs_pos, neighbors_config, r_nearest )
-                        #for nei in neighs_pos: print(r_nearest - np.sqrt(nei["x_rel"]**2 +nei["y_rel"]**2  ))
-                        for d1, d2 in zip(neighs, neighs_pos): d1.update(d2)
+                        # Define first the number of neighbors
+                        neighs = draw_all_neighbors(neighbors_config, stampsize)
+                        #TODO this should be implemented in meas.run.onsims 
+                        gal["nn"] =  len(neighs)
+                        gal["neighbor1"] = find_nearest(neighs)
                        
                 
                 # Now things get different depending on SNC
@@ -199,9 +190,7 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 catalog.meta.update(metadict)
         
         return catalog, neis_catalog
-           
-
-
+   
 
 def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, simpsfimgfilepath=None, gsparams=None, sersiccut=None, neighbors_catalog=None):
 
