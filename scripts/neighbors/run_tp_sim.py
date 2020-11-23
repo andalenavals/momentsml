@@ -57,7 +57,7 @@ def configure(doc, name):
             "n":1,
             "nc":1,
             "nrea":1,
-            "ncat":2,
+            "ncat":10,
             "ncpu":2,
             "groupmode":"shear",
             "skipdone":False    

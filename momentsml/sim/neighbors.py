@@ -14,7 +14,7 @@ def trunc_rayleigh(sigma, max_val):
                 tmp = np.random.rayleigh(sigma)
         return tmp
 
-def draw_all_neighbors(neighbors_config,  stampsize):
+def draw_all_neighbors(neighbors_config,  stampsize,  nei_limits = None):
         #stampsize is required only for positions
         neighbors_config["nn"]
         nn = neighbors_config["nn"]
@@ -25,7 +25,7 @@ def draw_all_neighbors(neighbors_config,  stampsize):
         logger.info("Drawing %i neighbors"%(nn))
         #logger.info("Drawing %i neighbors in galaxy %i"%(nn,  i))
         #Define list with one dictionary by neighbor properties
-        neighs = [ draw_neighbor_dict(neighbors_config) for n in range(nn) ]
+        neighs = [ draw_neighbor_dict(neighbors_config, nei_limits=nei_limits) for n in range(nn) ]
         neighs_pos = [ placer_dict(stampsize, neighbors_config) for n in range(nn) ]
         for d1, d2 in zip(neighs, neighs_pos): d1.update(d2)
         return neighs
@@ -112,8 +112,11 @@ def draw_neighbor(doc=None, psf=None):
 
    
 #This function is call for each catalog
-def draw_neighbor_dict(doc):
+def draw_neighbor_dict(doc, nei_limits=None):
     ## stampsize is mandatory only for relative placing
+    if nei_limits is not None:
+            logger.info("Using neighbor limits from central galaxy")
+            doc.update(nei_limits)
     dict_out ={}
     profile_type = doc['profile_type']
     tru_g1 =  doc['tru_g1']

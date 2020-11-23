@@ -95,7 +95,8 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 #neighbors features fixed by case
                 if neighbors_config is not None:
                         # Define first the number of neighbors
-                        neighs = draw_all_neighbors(neighbors_config, stampsize)
+                        nei_limits = {'tru_sb_max':0.5*gal['tru_sb'],'tru_rad_max':0.5*gal['tru_rad']  }
+                        neighs = draw_all_neighbors(neighbors_config, stampsize, nei_limits=nei_limits)
                         #TODO this should be implemented in meas.run.onsims 
                         gal["nn"] =  len(neighs)
                         gal["neighbor1"] = find_nearest(neighs)
