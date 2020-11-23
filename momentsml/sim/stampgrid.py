@@ -95,7 +95,7 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 #neighbors features fixed by case
                 if neighbors_config is not None:
                         # Define first the number of neighbors
-                        nei_limits = {'tru_sb_max':0.5*gal['tru_sb'],'tru_rad_max':0.5*gal['tru_rad']  }
+                        nei_limits = {'Sersic':{'tru_sb_max':0.5*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
                         neighs = draw_all_neighbors(neighbors_config, stampsize, nei_limits=nei_limits)
                         #TODO this should be implemented in meas.run.onsims 
                         gal["nn"] =  len(neighs)
@@ -413,7 +413,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                         #Add neighbors to each galaxy in a stamp
                         
                         if nei_row is not None:
-                                logger.info("Drawing image with neighbors")
+                                #logger.info("Drawing image with neighbors")
                                 for doc in nei_row:           
                                         nei = draw_neighbor( doc=doc, psf=psf)
                                         conv = doc['profile_type'] not in ["Gaussian_PSF", "Stamp_PSF"]

@@ -114,9 +114,12 @@ def draw_neighbor(doc=None, psf=None):
 #This function is call for each catalog
 def draw_neighbor_dict(doc, nei_limits=None):
     ## stampsize is mandatory only for relative placing
+    print("Before update \n",  doc)
     if nei_limits is not None:
             logger.info("Using neighbor limits from central galaxy")
-            doc.update(nei_limits)
+            p_type = list(nei_limits.keys())[0]
+            doc[p_type].update(nei_limits[p_type])
+    print("After update \n",  doc)
     dict_out ={}
     profile_type = doc['profile_type']
     tru_g1 =  doc['tru_g1']

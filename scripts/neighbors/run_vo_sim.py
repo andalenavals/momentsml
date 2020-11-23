@@ -15,20 +15,21 @@ logging.basicConfig(format=config.loggerformat, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-def parse_args():
+def parse_args(): 
     parser = argparse.ArgumentParser(description='Basic code to produce simulations with neighbors')
     parser.add_argument('--neighbors_config', default='configfiles/neighbors_config.yaml',  #default=None,
                         help='yaml config define the properties of neighbors')
+    parser.add_argument('--name', default='ngbs-nearest-nn-vo-1', help='Name for the run')
     args = parser.parse_args()
     return args
 
 
-def configure(doc):
+def configure(doc, name):
     """Configures settings for the different datasets
     """
-    
+    '''
     sp = simparams.Fiducial_statshear(
-            name = doc['name'],
+            name = name,
             snc_type = 0, 
             shear = 0.1, 
             noise_level = 1.0, 
@@ -43,13 +44,27 @@ def configure(doc):
             "groupmode":"shear",
             "skipdone":False    
         }
+    '''
+    
+    sp = simparams.Fiducial_statshear(
+            name = name,
+            snc_type = 0, 
+            shear = 0.1, 
+            noise_level = 1.0, 
+            min_tru_sb = 1.0,
+        )
+    drawconf = {
+            "n":5,
+            "nc":5,
+            "nrea":1,
+            "ncat":3,
+            "ncpu":1,
+            "groupmode":"shear",
+            "skipdone":False    
+        }
 
     
     return (sp, drawconf, doc )
-
-
-
-
 
 
 
@@ -62,16 +77,15 @@ def run(configuration):
     simdir = config.simdir
     measdir = config.simmeasdir
 
-
     # Simulating images
     momentsml.sim.run.multi(
         simdir=simdir,
         simparams=sp,
-        drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":config.drawstampsize},
-        drawimgkwargs={"neighbors":doc}, 
+        drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":config.drawstampsize,  'neighbors_config':doc},
+        drawimgkwargs={}, 
         psfcat=None, psfselect="random",
         ncat=drawconf["ncat"], nrea=drawconf["nrea"], ncpu=drawconf["ncpu"],
-        savepsfimg=False, savetrugalimg=False
+        savepsfimg=False, savetrugalimg=True
     )
 
     # Measuring the newly drawn images
@@ -126,7 +140,7 @@ def main():
     except OSError :
             with open(args.neighbors_config) as file: raise
             
-    status = run(configure(doc))
+    status = run(configure(doc, args.name))
     exit(status)
 
 if __name__ == "__main__":

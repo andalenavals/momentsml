@@ -27,7 +27,26 @@ def parse_args():
 def configure(doc, name):
     """Configures settings for the different datasets
     """
+    '''
+    sp = simparams.Fiducial_statshear(
+            name = name,
+            snc_type = 5, 
+            shear = 0.1, 
+            noise_level = 1.0, 
+            min_tru_sb = 1.0,
+        )
+    drawconf = {
+            "n":1,
+            "nc":1,
+            "nrea":1,
+            "ncat":2,
+            "ncpu":2,
+            "groupmode":"shear",
+            "skipdone":False    
+        }
+    '''
     
+
     sp = simparams.Fiducial_statshear(
             name = name,
             snc_type = 10000, 
@@ -44,6 +63,7 @@ def configure(doc, name):
             "groupmode":"shear",
             "skipdone":False    
         }
+    
     
 
     
