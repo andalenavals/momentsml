@@ -258,7 +258,6 @@ def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
         # And so, we do this in one loop
         
         for catalog, nei_catalog in zip(catalogs, nei_catalogs):
-                print("Mr meeseeks \n",  catalog)
                 # We open a file object:
                 catfile = tempfile.NamedTemporaryFile(mode='wb', prefix=prefix, suffix="_cat.pkl", dir=workdir, delete=False)
                 if nei_catalog is not None:

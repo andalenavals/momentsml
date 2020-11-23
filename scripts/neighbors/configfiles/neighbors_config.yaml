@@ -9,14 +9,10 @@ tru_g2:
 tru_g_min: 0.3
 tru_g_max: 0.6
 placer_method: random_ring #random_box 
-
-##Neighbors Features (fixed by case)
 nn: 
-r_nearest: 
 nn_min: 1
-nn_max: 5
-r_nearest_min: 5
-r_nearest_max: 16 ##never can be larger than int(0.5*stampsize)
+nn_max: 10
+
 
 ## Profiles dict of properties
 Sersic:
