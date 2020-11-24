@@ -28,7 +28,7 @@ def parse_args():
 def configure(doc, name):
     """Configures settings for the different datasets
     """
-    '''
+    
     sp = simparams.Fiducial_statshear(
             name = name,
             snc_type = 0, 
@@ -45,8 +45,8 @@ def configure(doc, name):
             "groupmode":"shear",
             "skipdone":False    
         }
-    '''
     
+    '''
     sp = simparams.Fiducial_statshear(
             name = name,
             snc_type = 0, 
@@ -55,15 +55,15 @@ def configure(doc, name):
             min_tru_sb = 1.0,
         )
     drawconf = {
-            "n":5,
-            "nc":5,
+            "n":4,
+            "nc":4,
             "nrea":1,
-            "ncat":3,
+            "ncat":1,
             "ncpu":1,
             "groupmode":"shear",
             "skipdone":False    
         }
-
+    '''
     
     return (sp, drawconf, doc )
 
@@ -86,7 +86,7 @@ def run(configuration):
         drawimgkwargs={}, 
         psfcat=None, psfselect="random",
         ncat=drawconf["ncat"], nrea=drawconf["nrea"], ncpu=drawconf["ncpu"],
-        savepsfimg=False, savetrugalimg=True
+        savepsfimg=False, savetrugalimg=False
     )
 
     # Measuring the newly drawn images

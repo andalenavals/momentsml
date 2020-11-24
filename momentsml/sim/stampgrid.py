@@ -18,7 +18,7 @@ from datetime import datetime
 
 from .. import tools
 from . import params
-from .neighbors import draw_all_neighbors,  find_nearest, draw_neighbor, polar_translation
+from .neighbors import draw_all_neighbors,  find_nearest, draw_neighbor, polar_translation,  placer_dict, draw_neighbor_dict
 
 
 def trunc_rayleigh(sigma, max_val):
@@ -81,6 +81,14 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
         sncrot = 180.0/float(nsnc) # Rotation for SNC, in degrees. For example, 90.0 for snc_type == 2
         
         logger.info("The grid will be %i x %i, and the number of SNC rotations is %i." % (nx, ny, nsnc))
+
+        ## Each catalog have different number of neighbors and positions
+        nn = neighbors_config["nn"]
+        nn_min = neighbors_config["nn_min"]
+        nn_max = neighbors_config["nn_max"]
+        if nn is None:
+                nn = random.choice(range(nn_min, nn_max + 1))
+        neighs_pos = [ placer_dict(stampsize, neighbors_config) for n in range(nn) ]
         
         rows = [] # The "table"
         neigh_rows = [] #neighbors table
@@ -94,13 +102,23 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 
                 #neighbors features fixed by case
                 if neighbors_config is not None:
-                        # Define first the number of neighbors
                         nei_limits = {'Sersic':{'tru_sb_max':0.5*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
-                        neighs = draw_all_neighbors(neighbors_config, stampsize, nei_limits=nei_limits)
+                        if statparams["snc_type"] == 0:
+                                # for training weights. catalogs with realization of different galaxies, same nn and rotations in neighbors
+                                neighbors_config.update({'nn': nn})
+                                neighs = [ draw_neighbor_dict(neighbors_config, nei_limits=nei_limits) for n in range(nn) ]
+                                for nei_p in neighs_pos:
+                                        polar_translation(nei_p, neighbors_config)
+                                for d1, d2 in zip(neighs, neighs_pos): d1.update(d2)
+                        else:
+                                # Realization of truly different galaxies with different number of neighbors and positions
+                                neighbors_config.update({'nn': None})
+                                neighs = draw_all_neighbors(neighbors_config, stampsize, nei_limits=nei_limits)
+                        
+                        
                         #TODO this should be implemented in meas.run.onsims 
                         gal["nn"] =  len(neighs)
-                        gal["neighbor1"] = find_nearest(neighs)
-                       
+                        gal["neighbor1"] = find_nearest(neighs)                    
                 
                 # Now things get different depending on SNC
                 if statparams["snc_type"] == 0:        # No SNC, so we simply add this galaxy to the list.
@@ -162,14 +180,19 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 gal["y"] = gal["iy"]*stampsize + stampsize/2.0 + 0.5
                         
                                 
-        # There are many ways to build a new astropy.table
-        # One of them directly uses a list of dicts...
+        # All elements in row_list must have same size.
+        # Astropy will reshape using the min len element
         if neighbors_config is not None:
-                neis_catalog = astropy.table.Table(rows= neigh_rows)
-                logger.info("Drawing of neighbors catalog done")
+                if statparams["snc_type"] == 0:
+                        neis_catalog = neigh_rows
+                else:
+                        neis_catalog = astropy.table.Table(rows= neigh_rows)
+                        logger.info("Drawing of neighbors catalog done")
         else:
                 neis_catalog = None
-        
+
+        # There are many ways to build a new astropy.table
+        # One of them directly uses a list of dicts...
         catalog = astropy.table.Table(rows=rows)
         logger.info("Drawing of catalog done")
         
@@ -188,7 +211,6 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
         
         if metadict:
                 catalog.meta.update(metadict)
-        
         return catalog, neis_catalog
    
 
@@ -272,6 +294,8 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                 psf_image.scale = 1.0
 
                 # And loop through the catalog:
+
+                
                 if neighbors_catalog is None: neighbors_catalog =  [None]*len(catalog)
                 for row,  nei_row in zip(catalog, neighbors_catalog):
                         
@@ -416,7 +440,8 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                                 for doc in nei_row:           
                                         nei = draw_neighbor( doc=doc, psf=psf)
                                         conv = doc['profile_type'] not in ["Gaussian_PSF", "Stamp_PSF"]
-                                        if conv and type(conv) == bool: nei = galsim.Convolve([nei,psf])
+                                        if conv and type(conv) == bool:
+                                                nei = galsim.Convolve([nei,psf])
                                         pos = galsim.PositionD(row["x"] + doc["x_rel"],row["y"] + + doc["y_rel"])
                                         nei.drawImage(gal_stamp, center=pos,  add_to_image=True,  method="auto" )
                                         if simtrugalimgfilepath != None:

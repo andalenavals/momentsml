@@ -16,7 +16,6 @@ def trunc_rayleigh(sigma, max_val):
 
 def draw_all_neighbors(neighbors_config,  stampsize,  nei_limits = None):
         #stampsize is required only for positions
-        neighbors_config["nn"]
         nn = neighbors_config["nn"]
         nn_min = neighbors_config["nn_min"]
         nn_max = neighbors_config["nn_max"]
