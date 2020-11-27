@@ -55,10 +55,10 @@ def configure(doc, name):
             min_tru_sb = 1.0,
         )
     drawconf = {
-            "n":4,
-            "nc":4,
+            "n":2,
+            "nc":2,
             "nrea":1,
-            "ncat":1,
+            "ncat":3,
             "ncpu":1,
             "groupmode":"shear",
             "skipdone":False    

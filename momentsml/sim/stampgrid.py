@@ -83,11 +83,14 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
         logger.info("The grid will be %i x %i, and the number of SNC rotations is %i." % (nx, ny, nsnc))
 
         ## Each catalog have different number of neighbors and positions
+        n_config = copy.deepcopy(neighbors_config)
+        
         nn = neighbors_config["nn"]
         nn_min = neighbors_config["nn_min"]
         nn_max = neighbors_config["nn_max"]
         if nn is None:
                 nn = random.choice(range(nn_min, nn_max + 1))
+
         neighs_pos = [ placer_dict(stampsize, neighbors_config) for n in range(nn) ]
         
         rows = [] # The "table"
@@ -103,22 +106,24 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 #neighbors features fixed by case
                 if neighbors_config is not None:
                         nei_limits = {'Sersic':{'tru_sb_max':0.5*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
+                        n_config.update({'nn': nn})
                         if statparams["snc_type"] == 0:
-                                # for training weights. catalogs with realization of different galaxies, same nn and rotations in neighbors
-                                neighbors_config.update({'nn': nn})
-                                neighs = [ draw_neighbor_dict(neighbors_config, nei_limits=nei_limits) for n in range(nn) ]
+                                # for training weights. catalogs with realization of different galaxies, same nn and rotations in neighbors                     
+                                neighs = [ draw_neighbor_dict(n_config, nei_limits=nei_limits) for n in range(nn) ]
                                 for nei_p in neighs_pos:
-                                        polar_translation(nei_p, neighbors_config)
+                                        polar_translation(nei_p, n_config)
                                 for d1, d2 in zip(neighs, neighs_pos): d1.update(d2)
                         else:
-                                # Realization of truly different galaxies with different number of neighbors and positions
-                                neighbors_config.update({'nn': None})
-                                neighs = draw_all_neighbors(neighbors_config, stampsize, nei_limits=nei_limits)
+                                neighs = draw_all_neighbors(n_config, stampsize, nei_limits=nei_limits)
                         
-                        
-                        #TODO this should be implemented in meas.run.onsims 
+                        #TODO might be different number of neighbors among realizations just set  n_config.update({'nn': None})
+                        #TODO this should be implemented in meas.run.onsim`s 
                         gal["nn"] =  len(neighs)
-                        gal["neighbor1"] = find_nearest(neighs)                    
+                        if len(neighs) != 0:
+                                gal["neighbor1"] = find_nearest(neighs)
+                        else:
+                                gal["neighbor1"] = None
+
                 
                 # Now things get different depending on SNC
                 if statparams["snc_type"] == 0:        # No SNC, so we simply add this galaxy to the list.
@@ -295,10 +300,9 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
 
                 # And loop through the catalog:
 
+                if neighbors_catalog is None or len(neighbors_catalog)==0 : neighbors_catalog =  [None]*len(catalog)
                 
-                if neighbors_catalog is None: neighbors_catalog =  [None]*len(catalog)
                 for row,  nei_row in zip(catalog, neighbors_catalog):
-                        
                         # Some simplistic progress indication:
                         fracdone = float(row.index) / len(catalog)
                         if row.index%500 == 0:
@@ -372,6 +376,17 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                         # We draw the pure unconvolved galaxy
                         if simtrugalimgfilepath != None:
                                 gal.drawImage(trugal_stamp, method="auto") # Will convolve by the sampling pixel.
+                                # We draw the pure unconvolved neighbors
+                                if nei_row is not None:
+                                        #logger.info("Drawing image with neighbors")
+                                        for doc in nei_row:           
+                                                nei = draw_neighbor( neighbors_config=doc, psf=None)
+                                                conv = doc['profile_type'] in ["Gaussian_PSF", "Stamp_PSF"]
+                                                if conv and type(conv) == bool:
+                                                        logger.warning("Can not draw point sources in trugal_stamp")
+                                                else:
+                                                        pos = galsim.PositionD(row["x"] + doc["x_rel"],row["y"] + + doc["y_rel"])
+                                                        nei.drawImage(trugal_stamp, center=pos,  add_to_image=True,  method="auto" )
                                 
 
                         # We prepare/get the PSF and do the convolution:
@@ -434,18 +449,14 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                                 galconv.drawImage(gal_stamp, method="no_pixel") # Simply uses pixel-center values. Know what you are doing, see doc of galsim. 
 
                         #Add neighbors to each galaxy in a stamp
-                        
-                        if nei_row is not None:
-                                #logger.info("Drawing image with neighbors")
+                        if nei_row is not None :
                                 for doc in nei_row:           
-                                        nei = draw_neighbor( doc=doc, psf=psf)
+                                        nei = draw_neighbor( neighbors_config=doc, psf=psf)
                                         conv = doc['profile_type'] not in ["Gaussian_PSF", "Stamp_PSF"]
                                         if conv and type(conv) == bool:
                                                 nei = galsim.Convolve([nei,psf])
                                         pos = galsim.PositionD(row["x"] + doc["x_rel"],row["y"] + + doc["y_rel"])
                                         nei.drawImage(gal_stamp, center=pos,  add_to_image=True,  method="auto" )
-                                        if simtrugalimgfilepath != None:
-                                                nei.drawImage(trugal_stamp, center=pos,  add_to_image=True,  method="auto" )
                                                 
                                         
                         # And add noise to the convolved galaxy:

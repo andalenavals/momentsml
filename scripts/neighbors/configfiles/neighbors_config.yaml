@@ -10,7 +10,7 @@ tru_g_min: 0.3
 tru_g_max: 0.6
 placer_method: random_ring #random_box 
 nn: 
-nn_min: 1
+nn_min: 0
 nn_max: 6
 
 

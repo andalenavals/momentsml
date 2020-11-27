@@ -31,22 +31,22 @@ def draw_all_neighbors(neighbors_config,  stampsize,  nei_limits = None):
 
 #This is call for each realization in case features are not defined they
 # will vary among realizations
-def draw_neighbor(doc=None, psf=None):
+def draw_neighbor(neighbors_config=None, psf=None):
         gsparams=None
         if gsparams is None:
                 gsparams = galsim.GSParams(maximum_fft_size=10240)
 
         #begin of possible kwargsneigh
         
-        profile_type = doc['profile_type']
-        tru_g1 =  doc['tru_g1']
-        tru_g2 =  doc['tru_g2']
+        profile_type = neighbors_config['profile_type']
+        tru_g1 =  neighbors_config['tru_g1']
+        tru_g2 =  neighbors_config['tru_g2']
                 
         if (profile_type == "Sersic"):
-            sersiccut=doc['Sersic']['sersiccut']
-            tru_rad =doc['Sersic']['tru_rad']
-            tru_sersicn =  doc['Sersic']['tru_sersicn']
-            tru_sb =  doc['Sersic']['tru_sb']
+            sersiccut=neighbors_config['Sersic']['sersiccut']
+            tru_rad =neighbors_config['Sersic']['tru_rad']
+            tru_sersicn =  neighbors_config['Sersic']['tru_sersicn']
+            tru_sb =  neighbors_config['Sersic']['tru_sb']
             tru_flux = np.pi * tru_rad * tru_rad * tru_sb 
                 
             if sersiccut is None:
@@ -59,8 +59,8 @@ def draw_neighbor(doc=None, psf=None):
             gal = gal.shear(g1=tru_g1, g2=tru_g2) # This adds the ellipticity to the galaxy
 
         elif profile_type == "Gaussian":
-            tru_flux =  doc['Gaussian']['tru_flux']
-            tru_sigma =  doc['Gaussian']['tru_sigma']
+            tru_flux =  neighbors_config['Gaussian']['tru_flux']
+            tru_sigma =  neighbors_config['Gaussian']['tru_sigma']
                                 
             gal = galsim.Gaussian(flux=tru_flux, sigma=tru_sigma, gsparams=gsparams)
             # We make this profile elliptical
@@ -71,13 +71,13 @@ def draw_neighbor(doc=None, psf=None):
             # It needs GalSim version master, as of April 2017 (probably 1.5).
             
             # Get a Sersic bulge:
-            tru_bulge_sersicn =  doc['EBulgeDisk']['tru_bulge_sersicn']
-            tru_bulge_rad = doc['EBulgeDisk']['tru_bulge_rad']
-            tru_bulge_flux = doc['EBulgeDisk']['tru_bulge_flux']
-            tru_disk_hlr = doc['EBulgeDisk']['tru_disk_hlr']
-            tru_disk_tilt =  doc['EBulgeDisk']['tru_disk_tilt']
-            tru_disk_flux =  doc['EBulgeDisk']['tru_disk_flux']
-            tru_theta = doc['EBulgeDisk']['tru_theta'] 
+            tru_bulge_sersicn =  neighbors_config['EBulgeDisk']['tru_bulge_sersicn']
+            tru_bulge_rad = neighbors_config['EBulgeDisk']['tru_bulge_rad']
+            tru_bulge_flux = neighbors_config['EBulgeDisk']['tru_bulge_flux']
+            tru_disk_hlr = neighbors_config['EBulgeDisk']['tru_disk_hlr']
+            tru_disk_tilt =  neighbors_config['EBulgeDisk']['tru_disk_tilt']
+            tru_disk_flux =  neighbors_config['EBulgeDisk']['tru_disk_flux']
+            tru_theta = neighbors_config['EBulgeDisk']['tru_theta'] 
    
                                 
             bulge = galsim.Sersic(n=tru_bulge_sersicn, half_light_radius=tru_bulge_rad, flux=tru_bulge_flux)
@@ -97,7 +97,7 @@ def draw_neighbor(doc=None, psf=None):
             gal = bulge + disk
 
         elif profile_type == 'Gaussian_PSF': #you meant to draw stars all of them identical
-            gal = galsim.Gaussian(flux=doc['Gaussian_PSF']['flux'], sigma=doc['Gaussian_PSF']['flux'])        
+            gal = galsim.Gaussian(flux=neighbors_config['Gaussian_PSF']['flux'], sigma=neighbors_config['Gaussian_PSF']['flux'])        
             #gal = gal.shear(g1=tru_g1, g2=tru_g2)
 
         elif profile_type == 'Stamp_PSF':

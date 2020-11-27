@@ -28,6 +28,7 @@ def parse_args():
 def configure(doc, name):
     """Configures settings for the different datasets
     """
+    
     '''
     sp = simparams.Fiducial_statshear(
             name = name,
@@ -40,14 +41,13 @@ def configure(doc, name):
             "n":1,
             "nc":1,
             "nrea":1,
-            "ncat":2,
+            "ncat":3,
             "ncpu":2,
             "groupmode":"shear",
             "skipdone":False    
         }
     '''
     
-
     sp = simparams.Fiducial_statshear(
             name = name,
             snc_type = 10000, 
@@ -64,6 +64,7 @@ def configure(doc, name):
             "groupmode":"shear",
             "skipdone":False    
         }
+    
     
     
 
@@ -96,6 +97,7 @@ def run(configuration):
         savepsfimg=False, savetrugalimg=False
     )
 
+    
     # Measuring the newly drawn images
     momentsml.meas.run.onsims(
         simdir=simdir,
@@ -107,6 +109,7 @@ def run(configuration):
         skipdone=drawconf["skipdone"]
     )
 
+    
     cat = momentsml.meas.avg.onsims(
         measdir=measdir, 
         simparams=sp,
@@ -138,6 +141,7 @@ def run(configuration):
     
         #print momentsml.tools.table.info(cat)
         momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
+    
 
 def main():
     args = parse_args()
