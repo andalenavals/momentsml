@@ -79,6 +79,7 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 raise RuntimeError("Did not understand snc_type")
         nx = nsnc * nc
         sncrot = 180.0/float(nsnc) # Rotation for SNC, in degrees. For example, 90.0 for snc_type == 2
+        if neighbors_config is not None: sncrot = 360.0/float(nsnc) # neighbors break pi simmetry          
         
         logger.info("The grid will be %i x %i, and the number of SNC rotations is %i." % (nx, ny, nsnc))
 
@@ -105,7 +106,7 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 
                 #neighbors features fixed by case
                 if neighbors_config is not None:
-                        nei_limits = {'Sersic':{'tru_sb_max':0.5*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
+                        nei_limits = {'Sersic':{'tru_sb_max':1.0*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
                         n_config.update({'nn': nn})
                         if statparams["snc_type"] == 0:
                                 # for training weights. catalogs with realization of different galaxies, same nn and rotations in neighbors                     
@@ -159,6 +160,12 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                                 
                                 if neighbors_config is not None:
                                         rotneighs = copy.deepcopy(neighs)
+                                        theta = None
+                                        if neighbors_config["snc_stamp"]:
+                                                 neighbors_config["snc_neighbors"] = True
+                                                 neighbors_config["polar_translation"] =  True
+                                                 logger.info("Using snc_stamp")
+                                                 theta=roti*sncrot*(np.pi/180.0) 
                                         if neighbors_config["snc_neighbors"]:
                                                 logger.info("Using SNC for neighbors too")
                                                 for i in range(len(rotneighs)):
@@ -174,7 +181,8 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                                         if neighbors_config["polar_translation"]:
                                                 logger.info("Using polar translation")
                                                 for nei in rotneighs:
-                                                        polar_translation(nei, neighbors_config)
+                                                        print(theta)
+                                                        polar_translation(nei, neighbors_config, theta=theta)
                                         neigh_rows.append(rotneighs)
                 
                 

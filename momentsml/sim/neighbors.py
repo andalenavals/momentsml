@@ -336,16 +336,20 @@ def placer_dict(stampsize, doc):
         return dict_out
 
 
-def polar_translation(nei, doc):
-    theta_min = 0
-    theta_max = 2*np.pi 
-    if doc['random_ring']['theta_min'] is not None:theta_min=doc['random_ring']['theta_min']*np.pi
-    if doc['random_ring']['theta_max'] is not None:theta_max=doc['random_ring']['theta_max']*np.pi
-    theta =  np.random.uniform(theta_min, theta_max)
-    r = np.sqrt(nei['x_rel']**2 +  nei['y_rel']**2)
-    x_new = r*np.cos(theta)
-    y_new = r*np.sin(theta)
-    nei.update({'x_rel': x_new,  'y_rel': y_new})
+def polar_translation(nei, doc,  theta=None):
+        #theta in rad
+        if theta is None:
+                theta_min = 0
+                theta_max = 2*np.pi 
+                if doc['random_ring']['theta_min'] is not None:theta_min=doc['random_ring']['theta_min']*np.pi
+                if doc['random_ring']['theta_max'] is not None:theta_max=doc['random_ring']['theta_max']*np.pi
+                theta =  np.random.uniform(theta_min, theta_max)
+        else:
+                theta = np.arctan2(nei['y_rel'], nei['x_rel']) + theta
+        r = np.sqrt(nei['x_rel']**2 +  nei['y_rel']**2)
+        x_new = r*np.cos(theta)
+        y_new = r*np.sin(theta)
+        nei.update({'x_rel': x_new,  'y_rel': y_new})
 
 
 def find_nearest(neighs):

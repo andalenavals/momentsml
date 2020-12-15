@@ -47,7 +47,7 @@ def configure(doc, name):
             "skipdone":False    
         }
     '''
-    
+
     sp = simparams.Fiducial_statshear(
             name = name,
             snc_type = 10000, 
