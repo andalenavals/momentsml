@@ -106,8 +106,13 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 
                 #neighbors features fixed by case
                 if neighbors_config is not None:
-                        nei_limits = {'Sersic':{'tru_sb_max':1.0*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
-                        n_config.update({'nn': nn})
+                        nei_limits = neighbors_config["nei_limits"]
+                        if nei_limits is not None:
+                                nei_limits = {'Sersic':{'tru_sb_max':1.0*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
+                                n_config.update({'nn': nn})
+                        else :
+                                nei_limits = None
+                        
                         if statparams["snc_type"] == 0:
                                 # for training weights. catalogs with realization of different galaxies, same nn and rotations in neighbors                     
                                 neighs = [ draw_neighbor_dict(n_config, nei_limits=nei_limits) for n in range(nn) ]
@@ -393,7 +398,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                                                 if conv and type(conv) == bool:
                                                         logger.warning("Can not draw point sources in trugal_stamp")
                                                 else:
-                                                        pos = galsim.PositionD(row["x"] + doc["x_rel"],row["y"] + + doc["y_rel"])
+                                                        pos = galsim.PositionD(row["x"] + doc["x_rel"],row["y"] + doc["y_rel"])
                                                         nei.drawImage(trugal_stamp, center=pos,  add_to_image=True,  method="auto" )
                                 
 

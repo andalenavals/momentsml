@@ -11,6 +11,7 @@ import measfcts
 import numpy as np
 import yaml 
 import logging
+import glob
 logging.basicConfig(format=config.loggerformat, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ def configure(doc, name):
     """Configures settings for the different datasets
     """
     
-    '''
+    
     sp = simparams.Fiducial_statshear(
             name = name,
             snc_type = 5, 
@@ -46,8 +47,8 @@ def configure(doc, name):
             "groupmode":"shear",
             "skipdone":False    
         }
+    
     '''
-
     sp = simparams.Fiducial_statshear(
             name = name,
             snc_type = 10000, 
@@ -64,7 +65,7 @@ def configure(doc, name):
             "groupmode":"shear",
             "skipdone":False    
         }
-    
+    '''
     
     
 
@@ -94,9 +95,10 @@ def run(configuration):
         drawimgkwargs={}, 
         psfcat=None, psfselect="random",
         ncat=drawconf["ncat"], nrea=drawconf["nrea"], ncpu=drawconf["ncpu"],
-        savepsfimg=False, savetrugalimg=False
+        savepsfimg=False, savetrugalimg=True
     )
 
+    '''
     
     # Measuring the newly drawn images
     momentsml.meas.run.onsims(
@@ -141,7 +143,7 @@ def run(configuration):
     
         #print momentsml.tools.table.info(cat)
         momentsml.tools.io.writepickle(cat, os.path.join(measdir, sp.name, "groupmeascat.pkl"))
-    
+    '''
 
 def main():
     args = parse_args()
@@ -158,7 +160,23 @@ def main():
             with open(args.neighbors_config) as file: raise
 
     status = run(configure(doc, args.name))
-    exit(status)
+    #exit(status)
+
+    #Repeat sim without neighbors for testing
+    print("STARTD")
+    folder = os.path.join(config.simdir,args.name)
+    catalogs= glob.glob(os.path.join(folder,'*_cat.pkl') )
+    print(catalogs)
+    for cat in catalogs:
+        dirname = cat.replace("_cat.pkl", "_img")
+        galfilename = "%s_wngalimg.fits"%(os.path.basename(dirname))
+        galname = os.path.join(dirname, galfilename)
+        trugalfilename = "%s_wntrugalimg.fits"%(os.path.basename(dirname))
+        trugalname = os.path.join(dirname, trugalfilename)
+        
+        momentsml.sim.stampgrid.drawimg(momentsml.tools.io.readpickle(cat),
+                                        galname,  trugalname)
+  
 
 if __name__ == "__main__":
     main()

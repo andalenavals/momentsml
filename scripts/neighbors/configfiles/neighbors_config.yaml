@@ -1,7 +1,7 @@
 name: ngbs-nearest-nn #name of this particular config file
 
 ## Neighbors properties
-snc_stamp: False # if true ignore snc_neighbors and polar translation
+snc_stamp: True # if true ignore snc_neighbors and polar translation
 snc_neighbors: True #rotate neighbors in shape noise cancellation
 polar_translation: True #Translate neighbor around central galaxy
 profile_type: Sersic #Gaussian_PSF #Sersic # EBulgeDisk, Gaussian
@@ -10,9 +10,15 @@ tru_g2:
 tru_g_min: 0.3
 tru_g_max: 0.6
 placer_method: random_ring #random_box 
-nn: 
+nn: 1
 nn_min: 0
 nn_max: 10
+
+nei_limits:
+# update limits depending on value draw for main galaxies (use internal and not this config)
+# internally {'Sersic':{'tru_sb_max':1.0*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
+# we want neighbors not brighter than main galaxy
+# when None all limits will be determine by this config file
 
 
 ## Profiles dict of properties
@@ -84,7 +90,7 @@ random_box: # units in stamp fractional pixels (0,1.0) where 1.0 is the stampsiz
     y:
 
 random_ring:
-   rmin: 0
+   rmin: 1
    rmax: 29 #must be < stampsize*0.5 
    theta_min:  #angle in np.pi units
    theta_max:  #angle in np.pi units
