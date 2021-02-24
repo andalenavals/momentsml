@@ -14,7 +14,7 @@ nn: 1
 nn_min: 0
 nn_max: 10
 
-nei_limits:
+nei_limits: Something
 # update limits depending on value draw for main galaxies (use internal and not this config)
 # internally {'Sersic':{'tru_sb_max':1.0*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
 # we want neighbors not brighter than main galaxy

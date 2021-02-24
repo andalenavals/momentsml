@@ -163,7 +163,6 @@ def main():
     #exit(status)
 
     #Repeat sim without neighbors for testing
-    print("STARTD")
     folder = os.path.join(config.simdir,args.name)
     catalogs= glob.glob(os.path.join(folder,'*_cat.pkl') )
     print(catalogs)
@@ -176,7 +175,8 @@ def main():
         
         momentsml.sim.stampgrid.drawimg(momentsml.tools.io.readpickle(cat),
                                         galname,  trugalname)
-  
+    
+    
 
 if __name__ == "__main__":
     main()
