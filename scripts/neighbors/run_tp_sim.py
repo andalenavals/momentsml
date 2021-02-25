@@ -24,8 +24,14 @@ def parse_args():
                         action='store_const', const=True, help='Draw simulations')
     parser.add_argument('--measure', default=False,
                         action='store_const', const=True, help='Measure simulations')
+    parser.add_argument('--runsex', default=False,
+                        action='store_const', const=True, help='Run sextractor')
     parser.add_argument('--weight', default=False,
                         action='store_const', const=True, help='Use partion map as weigths')
+    parser.add_argument('--skipdone', default=False,
+                        action='store_const', const=True, help='Skip finished measures both sextractor and hsm. If false overwrite measures')
+    parser.add_argument('--ncpu', default=1, type=int, 
+                        help='Number of cpus')
     parser.add_argument('--workdir', default='~/test', 
                         help='diractory of work')
     parser.add_argument('--sex_bin', default='/usr/bin/sex',
@@ -68,7 +74,7 @@ def configure(doc, name):
     
     sp = simparams.Fiducial_statshear(
             name = name,
-            snc_type = 5,
+            snc_type = 10,
             shear = 0.1,
             noise_level = 1.0,
             min_tru_sb = 1.0,
@@ -77,11 +83,12 @@ def configure(doc, name):
             "n":1,
             "nc":1,
             "nrea":1,
-            "ncat":3,
-            "ncpu":2,
+            "ncat":6,
+            "ncpu":1,
             "groupmode":"shear",
             "skipdone":False    
         }
+    
 
         
 
@@ -91,7 +98,7 @@ def configure(doc, name):
     return (sp, drawconf, doc )
 
 
-def run(configuration, simdir, measdir, drawsim=True, measure=True, weight=False, sextractor_config=None):
+def run(configuration, simdir, measdir, ncpu=1, drawsim=True, measure=True, weight=False, sextractor_config=None, skipdone=False):
     """Draws the simulations and measures them
     """
     sp, drawconf, doc = configuration
@@ -105,7 +112,7 @@ def run(configuration, simdir, measdir, drawsim=True, measure=True, weight=False
             drawcatkwargs={"n":drawconf["n"], "nc":drawconf["nc"], "stampsize":config.drawstampsize,  'neighbors_config':doc},
             drawimgkwargs={}, 
             psfcat=None, psfselect="random",
-            ncat=drawconf["ncat"], nrea=drawconf["nrea"], ncpu=drawconf["ncpu"],
+            ncat=drawconf["ncat"], nrea=drawconf["nrea"], ncpu=ncpu,
             savepsfimg=False, savetrugalimg=False
         )
 
@@ -114,7 +121,10 @@ def run(configuration, simdir, measdir, drawsim=True, measure=True, weight=False
     if sextractor_config is not None:
         logger.info("Running sextractor")
         momentsml.meas.run.sextractor(
-            simdir=os.path.join(simdir,sp.name), **sextractor_config )
+            simdir=os.path.join(simdir,sp.name),
+            ncpu=ncpu,
+            skipdone=skipdone,
+            **sextractor_config )
     
     # Measuring the newly drawn images
     if (measure):
@@ -125,8 +135,8 @@ def run(configuration, simdir, measdir, drawsim=True, measure=True, weight=False
             measdir=measdir,
             measfct=measfcts.default,
             measfctkwargs={"stampsize":config.stampsize, "weight":weight},
-            ncpu=drawconf["ncpu"],
-            skipdone=drawconf["skipdone"]
+            ncpu=ncpu,
+            skipdone=skipdone
         )
 
         
@@ -191,8 +201,10 @@ def main():
                        "sex_config":args.sex_config,
                        "sex_params":args.sex_params,
                        "sex_filter":args.sex_filter}
+
+    if args.runsex==False: sextractor_config=None
     
-    status = run(configure(doc, args.name), simdir, measdir, drawsim=args.drawsim, measure=args.measure, weight=args.weight,sextractor_config=sextractor_config)
+    status = run(configure(doc, args.name), simdir, measdir, ncpu=args.ncpu, drawsim=args.drawsim, measure=args.measure, weight=args.weight,sextractor_config=sextractor_config, skipdone=args.skipdone)
     exit(status)
 
 if __name__ == "__main__":

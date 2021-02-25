@@ -34,12 +34,12 @@ from . import sex
 import logging
 logger = logging.getLogger(__name__)
 
-
-def sextractor(simdir, sex_bin, sex_config, sex_params, sex_filter):
+def sextractor(simdir, sex_bin, sex_config, sex_params, sex_filter, skipdone=False, ncpu=1):
         work=simdir
         images_folders = glob.glob(os.path.join(work,'*_img') )
         logger.info('The work dir have %i images'%(len(images_folders)))
 
+        wslist = []
         ext='_galimg.fits'
         for img_path in images_folders:
                 filenames = glob.glob(os.path.join(img_path,'*%s'%(ext)) )
@@ -52,7 +52,17 @@ def sextractor(simdir, sex_bin, sex_config, sex_params, sex_filter):
                 base = os.path.splitext(img_file)[0]
                 cat_file = os.path.join(work, base + '_cat.fits')
                 check_file = os.path.join(work, base + '_seg.fits')
-                sex.run_SEGMAP(img_file, cat_file, check_file, sex_bin, sex_config, sex_params, sex_filter, logger )
+                if ( os.path.isfile(check_file) & skipdone):
+                        logger.info("%s exist skipping sextractor run"%(check_file)) 
+                        continue
+                
+                ws = _SexWorkerSettings(img_file, cat_file, check_file, sex_bin, sex_config, sex_params, sex_filter)
+                wslist.append(ws)
+        
+        logger.info("Ready to run Sextractor measurements on %i images." % (len(wslist)))
+        _sexrun(wslist, ncpu)
+                        
+
 
 def onsims(simdir, simparams, measdir, measfct, measfctkwargs, ncpu=1, skipdone=True):
 	"""
@@ -310,3 +320,67 @@ def _run(wslist, ncpu):
 
 
 
+class _SexWorkerSettings():
+        """
+        A class that holds together all the settings for running sextractor in an image.
+        """
+        
+        def __init__(self, img_file, cat_file, check_file, sex_bin, sex_config, sex_params, sex_filter):
+                
+                self.img_file= img_file
+                self.cat_file = cat_file
+                self.check_file = check_file
+                self.sex_bin = sex_bin
+                self.sex_config = sex_config
+                self.sex_params = sex_params
+                self.sex_filter = sex_filter
+
+def _sexworker(ws):
+        """
+        Worker function that the different processes will execute, processing the
+        _SexWorkerSettings objects.
+        """
+        starttime = datetime.datetime.now()
+        p = multiprocessing.current_process()
+        logger.info("%s is starting Sextractor measure catalog %s with PID %s" % (p.name, str(ws), p.pid))
+        
+        sex.run_SEGMAP(ws.img_file, ws.cat_file, ws.check_file, ws.sex_bin,
+                       ws.sex_config, ws.sex_params, ws.sex_filter,
+                       logger)
+
+        
+        endtime = datetime.datetime.now()
+        logger.info("%s is done, it took %s" % (p.name, str(endtime - starttime)))
+
+	
+def _sexrun(wslist, ncpu):
+	"""
+	Wrapper around multiprocessing.Pool with some verbosity.
+	"""
+	
+	if len(wslist) == 0: # This test is useful, as pool.map otherwise starts and is a pain to kill.
+		logger.info("No images to measure.")
+		return
+
+	if ncpu == 0:
+		try:
+			ncpu = multiprocessing.cpu_count()
+		except:
+			logger.warning("multiprocessing.cpu_count() is not implemented!")
+			ncpu = 1
+	
+	starttime = datetime.datetime.now()
+	
+	logger.info("Starting the measurement on %i images using %i CPUs" % (len(wslist), ncpu))
+	
+	if ncpu == 1: # The single process way (MUCH MUCH EASIER TO DEBUG...)
+		list(map(_sexworker, wslist))
+	
+	else:
+		pool = multiprocessing.Pool(processes=ncpu)
+		pool.map(_sexworker, wslist)
+		pool.close()
+		pool.join()
+	
+	endtime = datetime.datetime.now()
+	logger.info("Done, the total measurement time was %s" % (str(endtime - starttime)))
