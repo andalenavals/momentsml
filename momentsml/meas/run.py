@@ -25,12 +25,34 @@ import glob
 import datetime
 import multiprocessing
 import copy
+import glob
+import os
 
 from .. import tools
+from . import sex
 
 import logging
 logger = logging.getLogger(__name__)
 
+
+def sextractor(simdir, sex_bin, sex_config, sex_params, sex_filter):
+        work=simdir
+        images_folders = glob.glob(os.path.join(work,'*_img') )
+        logger.info('The work dir have %i images'%(len(images_folders)))
+
+        ext='_galimg.fits'
+        for img_path in images_folders:
+                filenames = glob.glob(os.path.join(img_path,'*%s'%(ext)) )
+                if (len(filenames) == 0):
+                        logger.info("Skipping dir %s not %s files"%(img_path,ext))
+                        continue
+                assert len(filenames) ==1
+                img_file = filenames[0]
+                
+                base = os.path.splitext(img_file)[0]
+                cat_file = os.path.join(work, base + '_cat.fits')
+                check_file = os.path.join(work, base + '_seg.fits')
+                sex.run_SEGMAP(img_file, cat_file, check_file, sex_bin, sex_config, sex_params, sex_filter, logger )
 
 def onsims(simdir, simparams, measdir, measfct, measfctkwargs, ncpu=1, skipdone=True):
 	"""

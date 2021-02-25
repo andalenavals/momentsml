@@ -1,13 +1,16 @@
 import momentsml.meas
 
 
-def default(catalog, stampsize):
+def default(catalog, stampsize, weight=False):
 	"""
 	Default measfct, runs on "img".
 	"""	
 	
 	# HSM adamom
-	catalog = momentsml.meas.galsim_adamom.measfct(catalog, stampsize=stampsize, variant="wider")
+	catalog = momentsml.meas.galsim_adamom.measfct(catalog,
+	                                               stampsize=stampsize,
+	                                               variant="wider",
+	                                               weight=weight)
 	catalog = momentsml.meas.adamom_calc.measfct(catalog)
 	
 	# And skystats

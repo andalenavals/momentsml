@@ -17,7 +17,9 @@ loggerformat='PID %(process)06d | %(asctime)s | %(levelname)s: %(name)s(%(funcNa
 # Give a path to an existing directory in which everything can be written (will get large!)
 
 #workdir = "/vol/fohlen11/fohlen11_1/mtewes/MomentsML/fiducial"
-workdir = "/data/git_repositories/momentsml/out/fiducial"
+#workdir = "/data/git_repositories/momentsml/out/fiducial"
+#workdir = "/vol/euclid5/euclid5_raid3/aanavarroa/catalogs/MomentsML/fiducial"
+workdir = "/users/aanavarroa/original_gitrepos/TF_MomentsML_experiments/segmentation_tests/images_oldsextractor"
 
 simdir = os.path.join(workdir, "sim")
 simmeasdir = os.path.join(workdir, "simmeas")

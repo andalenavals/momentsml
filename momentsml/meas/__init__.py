@@ -12,3 +12,4 @@ from . import skystats
 from . import snr
 from . import run
 from . import avg
+from . import sex
