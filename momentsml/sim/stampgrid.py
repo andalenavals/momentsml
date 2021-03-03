@@ -108,7 +108,8 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
                 if neighbors_config is not None:
                         nei_limits = neighbors_config["nei_limits"]
                         if nei_limits is not None:
-                                nei_limits = {'Sersic':{'tru_sb_max':1.0*gal['tru_sb'],'tru_rad_max':gal['tru_rad']} }
+                                # Brightness and radius limit for neighbors
+                                nei_limits = {'Sersic':{'tru_sb_max':2.0*gal['tru_sb'],'tru_rad_max':2.0*gal['tru_rad']} }
                                 n_config.update({'nn': nn})
                         else :
                                 nei_limits = None
@@ -232,7 +233,7 @@ def drawcat(simparams, n=10, nc=2, stampsize=64, pixelscale=1.0, idprefix="", ne
         return catalog, neis_catalog
    
 
-def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, simpsfimgfilepath=None, gsparams=None, sersiccut=None, neighbors_catalog=None):
+def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, simpsfimgfilepath=None, simpsfcoreimgfilepath=None, gsparams=None, sersiccut=None, neighbors_catalog=None):
 
         """
         Turns a catalog as obtained from drawcat into FITS images.
@@ -250,6 +251,7 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
         :param simgalimgfilepath: where I write my output image of simulated and noisy galaxies
         :param simtrugalimgfilepath: (optional) where I write the image without convolution and noise
         :param simpsfimgfilepath: (optional) where I write the PSFs
+        :param simpsfimgfilepath: (optional) where I write the PSF core
         
         :param sersiccut: cuts the sersic profile at this number of rad
         
@@ -306,6 +308,28 @@ def drawimg(catalog, simgalimgfilepath="test.fits", simtrugalimgfilepath=None, s
                 gal_image = galsim.ImageF(stampsize * nx , stampsize * ny)
                 trugal_image = galsim.ImageF(stampsize * nx , stampsize * ny)
                 psf_image = galsim.ImageF(stampsize * nx , stampsize * ny)
+
+                #PSF_CORE must be odd for the newsextractor understand it.
+                psfcore_image=galsim.ImageF(stampsize -1 , stampsize -1)
+                if "usegausspsf" in todo:
+                        if catalog["tru_psf_sigma"][0] < 0.0:
+                                raise RuntimeError("Unknown hack!")        
+                        else:
+                                #TODO raise error when psf is not the same among realizations in a catalog
+                                psf = galsim.Gaussian(flux=1., sigma=catalog["tru_psf_sigma"][0])        
+                                psf = psf.shear(g1=catalog["tru_psf_g1"][0], g2=catalog["tru_psf_g2"][0])
+                        
+                                # Let's apply some jitter to the position of the PSF (not sure if this is required, but should not harm ?)
+                                psf_xjitter = ud() - 0.5
+                                psf_yjitter = ud() - 0.5
+                                psf = psf.shift(psf_xjitter,psf_yjitter)
+                                
+                        if simpsfcoreimgfilepath != None:
+                                psf.drawImage(psfcore_image, method="auto") # Will convolve by the sampling pixel.
+                                psfcore_image.write(simpsfcoreimgfilepath)
+      
+                                
+                
                 
                 gal_image.scale = 1.0 # we use pixels as units. Note that if you change something here, you also have to change the jitter.
                 trugal_image.scale = 1.0

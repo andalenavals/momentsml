@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
         psfcat=None, psfselect="random", psfskipbad=False,
-        ncat=2, nrea=2, ncpu=1, savetrugalimg=False, savepsfimg=False):
+          ncat=2, nrea=2, ncpu=1, savetrugalimg=False, savepsfimg=False, savepsfcoreimg=False):
         """
         Uses stampgrid.drawcat and stampgrid.drawimg to draw several (ncat) catalogs
         and several (nrea) "image realizations" per catalog.
@@ -84,6 +84,7 @@ def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
         :type ncpu: int
         :param savetrugalimg: if True, I will also save the true (unconvolved) galaxy images.
         :param savepsfimg: if True, I will also save the PSF stamps.
+        :param savepsfcoreimg: if True, I will save the PSF for core odd number of pixels for sextractor++.
         
         
         As an illustration, an example of the directory structure that this function produces (for ncat=2, nrea=2)::
@@ -312,6 +313,8 @@ def multi(simdir, simparams, drawcatkwargs, drawimgkwargs=None,
                                 thisdrawimgkwargs["simtrugalimgfilepath"] = os.path.join(catimgdirpath, "%s_%i_trugalimg.fits" % (catname, reaindex))
                         if savepsfimg:
                                 thisdrawimgkwargs["simpsfimgfilepath"] = os.path.join(catimgdirpath, "%s_%i_psfimg.fits" % (catname, reaindex))
+                        if savepsfcoreimg:
+                                thisdrawimgkwargs["simpsfcoreimgfilepath"] = os.path.join(catimgdirpath, "%s_%i_psfcoreimg.fits" % (catname, reaindex))
         
                         ws = _WorkerSettings(catalog, reaindex, thisdrawimgkwargs, workdir)
                         
