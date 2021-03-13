@@ -85,11 +85,10 @@ def run_SEXTRACTORPP(img_file, cat_file, sex_filter, sex_bin, sex_config, sex_pa
 
     if python_config is not None:
         python_config = "--python-config-file %s"%(python_config)
-        #python_arg = "--python-arg=%s"%("image_file=%s"%(img_file))
-        python_arg = "--python-arg=%s"%("image_file=%s psf_file=%s"%(img_file,psf_file))
-        #if psf_file is not None:
-        #    psf_flag="--python-arg=%s"%("psf_file=%s"%(psf_file))
-        #    python_arg= "%s %s"%(python_arg, psf_flag )
+        if psf_file is None:
+            python_arg = "--python-arg=%s"%("image_file=%s"%(img_file))
+        else:
+            python_arg = "--python-arg=%s"%("image_file=%s psf_file=%s"%(img_file,psf_file))
     else:
         python_arg = ""
         

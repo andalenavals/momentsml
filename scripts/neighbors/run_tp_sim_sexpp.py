@@ -59,6 +59,8 @@ def parse_args():
                         help='filename extesion of the detect image')
     parser.add_argument('--psfext', default='_psfcoreimg.fits',
                         help='filename extension of psf img ')
+    parser.add_argument('--catext', default="_cat",
+                        help='extension for the output catalog ')
     args = parser.parse_args()
     return args
 
@@ -164,7 +166,9 @@ def main():
                        "sex_filter":args.sex_filter,
                        "python_config":args.python_config,
                        "use_check":args.check,
-                       "use_psfimg":args.psf_img}
+                       "use_psfimg":args.psf_img,
+                       "catext":args.catext
+    }
 
     
     if args.runsex==False: sextractor_config=None
@@ -186,6 +190,7 @@ def main():
     catalogs= glob.glob(os.path.join(folder,'*_cat.pkl') )
     print(catalogs)
 
+    
     for cat in catalogs:
         dirname = cat.replace("_cat.pkl", "_img")
         galfilename = "%s_wngalimg.fits"%(os.path.basename(dirname).replace("_img","_0"))
@@ -194,13 +199,13 @@ def main():
         trugalname = os.path.join(dirname, trugalfilename)
 
         if args.drawsim:
-            if not os.path.isfile(galname):
+            if ( (not os.path.isfile(galname))  | (not args.skipdone)):
                 momentsml.sim.stampgrid.drawimg(momentsml.tools.io.readpickle(cat),
                                                 galname, trugalname)
                 
         if args.measure:
             file_name=os.path.join(measdir,args.name,"%s_meascat.pkl"%(galfilename.replace(".fits","")))
-            if not os.path.isfile(file_name):
+            if ( (not os.path.isfile(file_name)) | (not args.skipdone)):
                 cat_out =momentsml.meas.galsim_adamom.measure(galname,
                                                               momentsml.tools.io.readpickle(cat),
                                                               stampsize=config.drawstampsize
@@ -215,6 +220,8 @@ def main():
         momentsml.meas.run.sextractorpp(
             simdir=os.path.join(simdir,args.name), ncpu=args.ncpu,
             skipdone=args.skipdone, **sextractor_config )
+
+    
 
 if __name__ == "__main__":
     main()

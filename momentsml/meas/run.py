@@ -388,7 +388,7 @@ def _sexrun(wslist, ncpu):
 ###########################
 # RUN SEXTRACTOR++ ON SIM #
 ###########################
-def sextractorpp(simdir, sex_bin, sex_config, sex_params, sex_filter, python_config, use_check=True, use_psfimg=True, skipdone=False, ncpu=1, ext='_galimg.fits', simmeasdir=None):
+def sextractorpp(simdir, sex_bin, sex_config, sex_params, sex_filter, python_config, use_check=True, use_psfimg=True, skipdone=False, ncpu=1, ext='_galimg.fits', simmeasdir=None, catext="_cat"):
         work=simdir
         if simmeasdir is None: simmeasdir="%s"%(simdir)
         images_folders = glob.glob(os.path.join(work,'*_img') )
@@ -403,6 +403,9 @@ def sextractorpp(simdir, sex_bin, sex_config, sex_params, sex_filter, python_con
                         continue
                 assert len(filenames) ==1
                 img_file = filenames[0]
+                if ( not os.path.isfile(img_file)):
+                        logger.info("Warning %s does not exist skipping sextractor run"%(image_file)) 
+                        continue
 
                 if use_check:     
                         check_flags = sex.get_checkflags(img_path)
@@ -416,13 +419,19 @@ def sextractorpp(simdir, sex_bin, sex_config, sex_params, sex_filter, python_con
                         
                 if use_psfimg:
                         psf_file=img_file.replace(ext,psfext)
+                        if ( not os.path.isfile(psf_file)):
+                             logger.info("Warning %s does not exist skipping sextractor run"%(psf_file)) 
+                             continue
                 else:
                         psf_file= None
+
+                
+                
                 base = os.path.splitext(img_file)[0]
                 
-                cat_file = os.path.join(simmeasdir, '%s_cat.fits'%(base))
+                cat_file = os.path.join(simmeasdir, '%s%s.fits'%(base,catext))
                 if ( os.path.isfile(cat_file) & skipdone):
-                        logger.info("%s exist skipping sextractor run"%(check_file)) 
+                        logger.info("%s exist skipping sextractor run"%(cat_file)) 
                         continue
                 
                 ws = _SexppWorkerSettings(img_file, cat_file,sex_filter, sex_bin, sex_config, sex_pars, python_config, psf_file, check_flags)
