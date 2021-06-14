@@ -158,7 +158,7 @@ def make_symlog(ax, featbin, linthresh=2e-3, lim=1e-1):
 	Converts the y axis to a symlog scale with custom ticks, usually for the mcbin-plot from above
 	"""
 	
-	ax.set_yscale('symlog', linthreshy=linthresh)
+	ax.set_yscale('symlog', linthresh=linthresh)
 	ax.set_ylim([-lim, lim])
 	ticks = np.concatenate([np.arange(-linthresh, linthresh, 1e-3)])#, np.arange(lintresh, 1e-2, 9)])
 	s = ax.yaxis._scale
