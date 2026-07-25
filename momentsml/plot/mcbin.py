@@ -172,5 +172,5 @@ def make_symlog(ax, featbin, linthresh=2e-3, lim=1e-1):
         
         xlim = (featbin.low, featbin.high)
         ax.fill_between(xlim, -linthresh, linthresh, alpha=0.2, facecolor='darkgrey')
-        ax.set_xlim(xlim)
+        #ax.set_xlim(xlim)
 
